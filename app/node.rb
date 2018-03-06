@@ -2,7 +2,7 @@ require file
 
 class Node
   def initialize name
-    @recipes = []
+    @jobs = []
     # include all recipies
     Dir[
       File.join(File.dirname(__FILE__), '..', 'lib') + "**/*.rb"
@@ -13,13 +13,13 @@ class Node
     }
   end
 
-  def add_recipes recipes
-    @recipes.append! recipes
+  def add_job job
+    @jobs.append! job
   end
 
   def apply node
-    @recipes.each do |recipe|
-      recipe.call
+    @jobs.each do |job|
+      job.call
     end
   end
 end

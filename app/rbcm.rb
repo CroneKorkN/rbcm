@@ -11,9 +11,10 @@ class RBCM
     puts entry
   end
 
-  def node name
+  def node node_name
     @nodes[name] = Node.new name unless @nodes[node_name]
-    @nodes[name].add_recipes Proc.new # catches the given block
+    # Proc.new without paramaters catches the given block
+    @nodes[name].add_job Proc.new
   end
 
   def apply
