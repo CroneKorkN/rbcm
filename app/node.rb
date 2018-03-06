@@ -22,4 +22,8 @@ class Node
       job.call
     end
   end
+
+  def run
+    # run terminal command on node
+  end
 end

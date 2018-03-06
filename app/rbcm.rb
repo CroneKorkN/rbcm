@@ -1,10 +1,12 @@
+# NOTE running a recipe-job returns bash to be executed on node
+
 class RBCM
   def initialize
     @nodes = {}
   end
 
   def run command
-    log `sudo #{command}`
+    log "#{command}"
   end
 
   def log entry
@@ -23,6 +25,5 @@ class RBCM
     end
   end
 end
-# run every file in ../config/nodesö
 
-# recipe: returns bash to be executed on node
+RBCM.new.apply
