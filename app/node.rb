@@ -18,7 +18,7 @@ class Node
   end
 
   def apply node
-    node[recipes].each do |recipe|
+    @recipes.each do |recipe|
       recipe.call
     end
   end

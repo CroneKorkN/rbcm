@@ -8,6 +8,4 @@ class GceSmediaTest do
       'iotop',
       'apache2'
     ]
-
-    user
 end
