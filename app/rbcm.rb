@@ -1,16 +1,6 @@
-# NOTE running a recipe-job returns bash to be executed on node
-
 class RBCM
   def initialize
     @nodes = {}
-  end
-
-  def run command
-    log "#{command}"
-  end
-
-  def log entry
-    puts entry
   end
 
   def node node_name
@@ -24,6 +14,10 @@ class RBCM
       node.apply
     end
   end
+end
+
+def log entry
+  puts entry
 end
 
 RBCM.new.apply
