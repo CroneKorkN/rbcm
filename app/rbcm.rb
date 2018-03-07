@@ -27,8 +27,4 @@ class RBCM
   end
 end
 
-def log entry
-  puts entry
-end
-
 RBCM.new.apply
