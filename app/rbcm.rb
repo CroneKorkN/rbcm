@@ -3,11 +3,14 @@ class RBCM
     @nodes = {}
     # collects jobs from nodes with regex patterns to be apllied after all nodes are collected
     @patterns = {}
-    Dir["..config/capabilities/**/*.rb"].each do |file|
-      require file
-    end
     Dir["..config/nodes/**/*.rb"].each do |file|
       require file
+    end
+    # populate node
+    Dir['../config/capabilities/*.rb'].each do |path|
+      load 'path'
+      method_name = File.basename path, '.rb'
+      Node.send :define_method, :method_name, lambda(&method method_name.to_symbol)
     end
   end
 
