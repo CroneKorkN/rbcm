@@ -3,7 +3,7 @@ class RBCM
     @nodes = {}
     # collects jobs from nodes with regex patterns to be apllied after all nodes are collected
     @patterns = {}
-    Dir["..config/nodes/**/*.rb"].each do |file| 
+    Dir["..config/nodes/**/*.rb"].each do |file|
       require file
     end
   end
@@ -23,9 +23,7 @@ class RBCM
   end
 
   def apply
-    @nodes.each do |node|
-      node.apply
-    end
+    @nodes.collect {apply}
   end
 end
 

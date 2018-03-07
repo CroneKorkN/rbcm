@@ -13,8 +13,14 @@ class Node
 
   def apply node
     @jobs.each do |job|
-      # running a job returns bash to be executed on node later
-      job.call
+      begin
+        job.call
+      rescue NameError => e
+        #TODO get failed method name
+        #TODO prevent from calling commands twice, that were fired before failure
+        require "../config/recipes/failed_method_anme.rb"
+        job.call # populates @commands bei calling 'run'
+      end
     end
     @commands.each do |command|
       # ssh and run command
@@ -25,13 +31,14 @@ class Node
     @commands << command
   end
 
-  def import_recipes
-    Dir[
-      File.join(File.dirname(__FILE__), '..', 'lib') + "**/*.rb"
-    ].each { |file|
-      include self.class.const_get(
-        File.basename(file).gsub('.rb', '').split("_").map{|ea| ea.capitalize}.to_s
-      )
-    }
-  end
+  # require in demand maybe?
+  #def import_recipes
+  #  Dir[
+  #    File.join(File.dirname(__FILE__), '..', 'lib') + "**/*.rb"
+  #  ].each { |file|
+  #    include self.class.const_get(
+  #      File.basename(file).gsub('.rb', '').split("_").map{|ea| ea.capitalize}.to_s
+  #    )
+  #  }
+  #end
 end
