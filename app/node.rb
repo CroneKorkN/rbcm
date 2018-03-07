@@ -4,7 +4,7 @@ class Node
   def initialize name
     @jobs = []
     @commands = []
-    import_recipes
+    import_capabilities
   end
 
   def add_job job
@@ -28,15 +28,15 @@ class Node
   end
 
   def respond_to_missing?(name, include_private = false)
-    require "../recipes/#{name}" unless self.methods.include? name
+    require "../capabilities/#{name}" unless self.methods.include? name
     super
   end
 
-  #TODO require recipes on domand on NameError
+  #TODO require capabilities on domand on NameError? Perfoemance? Any Profit?
   # https://stackoverflow.com/questions/5513558/executing-code-for-every-method-call-in-a-ruby-module
   # http://blog.honeybadger.io/how-to-try-again-when-exceptions-happen-in-ruby/
   # http://ruby-doc.org/core-2.5.0/BasicObject.html
-  #def import_recipes
+  #def import_capabilities
   #  Dir[
   #    File.join(File.dirname(__FILE__), '..', 'lib') + "**/*.rb"
   #  ].each { |file|
