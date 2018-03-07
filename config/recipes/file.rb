@@ -1,12 +1,10 @@
-module Recipe::File
-  def file path,
-      exists: false,
-      includes_line: nil
+def file path,
+    exists: false,
+    includes_line: nil
 
-    apt install: 'something'
+  apt install: 'something'
 
-    if exists
-      "touch path"
-    end
+  if exists
+    "touch path"
   end
 end

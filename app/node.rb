@@ -27,14 +27,22 @@ class Node
     # ssh ....
   end
 
-  #TODO require recipes on domand on NameError
-  def import_recipes
-    Dir[
-      File.join(File.dirname(__FILE__), '..', 'lib') + "**/*.rb"
-    ].each { |file|
-      include self.class.const_get(
-        File.basename(file).gsub('.rb', '').split("_").map{|ea| ea.capitalize}.to_s
-      )
-    }
+  def respond_to_missing?(name, include_private = false)
+    require "../recipes/#{name}" unless self.methods.include? name
+    super
   end
+
+  #TODO require recipes on domand on NameError
+  # https://stackoverflow.com/questions/5513558/executing-code-for-every-method-call-in-a-ruby-module
+  # http://blog.honeybadger.io/how-to-try-again-when-exceptions-happen-in-ruby/
+  # http://ruby-doc.org/core-2.5.0/BasicObject.html
+  #def import_recipes
+  #  Dir[
+  #    File.join(File.dirname(__FILE__), '..', 'lib') + "**/*.rb"
+  #  ].each { |file|
+  #    include self.class.const_get(
+  #      File.basename(file).gsub('.rb', '').split("_").map{|ea| ea.capitalize}.to_s
+  #    )
+  #  }
+  #end
 end
