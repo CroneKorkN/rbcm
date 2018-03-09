@@ -42,9 +42,12 @@ class Node
   def self.load_capabilities
     Dir['../config/capabilities/*.rb'].each do |path|
       load path
-      method_name = File.basename path, '.rb'
-      method = lambda(&method(method_name.to_sym)). # https://www.viget.com/articles/convert-ruby-method-to-lambda/
-      self.define_method method_name, method
+      function_name = File.basename path, '.rb'
+      
+      puts function_name
+      function = lambda(&method(function_name.to_sym))
+      puts function
+      #self.define_method function_name, lambda(&method(function_name.to_sym))
     end
   end
 end

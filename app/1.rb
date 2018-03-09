@@ -4,8 +4,8 @@ class C
     load "f.rb"
     function_name = "f"
     method = lambda(&method(function_name.to_sym))
-    puts method.call
+    self.define_singleton_method function_name, &method
   end
 end
 
-C.new
+C.new.f
