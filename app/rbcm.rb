@@ -12,7 +12,7 @@ class RBCM
   def nodes names
     job = Proc.new # Proc.new without paramaters catches the given block
     [names].flatten.each do |name|
-      @patterns << job and continue if node_name.class == Rebexp
+      @patterns[name] = job and continue if node_name.class == Rebexp
       @nodes[name] = Node.new name unless @nodes[name]
       @nodes[name].add_job job
     end
