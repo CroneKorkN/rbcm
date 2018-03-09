@@ -15,7 +15,7 @@ class Node
 
   def apply node
     @jobs.collect {call}
-    @commands.each {|c| `c`}
+    @commands.collect {log(self)} # {`#{self}`}
   end
 
   def file  path,
