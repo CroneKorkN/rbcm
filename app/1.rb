@@ -2,7 +2,8 @@
 class C
   def initialize
     load "f.rb"
-    method = lambda(&method method_name)
+    function_name = "f"
+    method = lambda(&method(function_name.to_sym))
     puts method.call
   end
 end
