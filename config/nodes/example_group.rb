@@ -11,4 +11,6 @@ nodes [
       'iotop',
       'apache2'
     ]
+
+    file '/testfile', content: "blablub"
 end
