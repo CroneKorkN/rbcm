@@ -43,7 +43,7 @@ class Node
     Dir['../config/capabilities/*.rb'].each do |path|
       load path
       method_name = File.basename path, '.rb'
-      method = lambda(&method(method_name))
+      method = lambda(&method method_name)
       self.define_method method_name, method
     end
   end
