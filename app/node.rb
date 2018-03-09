@@ -1,5 +1,3 @@
-require file
-
 class Node
   def initialize name
     @name = name
@@ -42,9 +40,10 @@ class Node
 
   def self.load_capabilities
     Dir['../config/capabilities/*.rb'].each do |path|
-      load 'path'
+      load path
       method_name = File.basename path, '.rb'
-      self.define_method, :method_name, lambda(&method method_name.to_symbol)
+      method = lambda(&method(method_name))
+      self.define_method method_name, method
     end
   end
 end

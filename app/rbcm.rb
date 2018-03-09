@@ -1,6 +1,10 @@
-class RBCM
+ #!/usr/local/bin/ruby
+
+ require './node.rb'
+
+ class RBCM
   def initialize
-    Node.populate
+    Node.load_capabilities
     @nodes = {}
     # collects jobs from nodes with regex patterns to be apllied after all nodes are collected
     @patterns = {}
