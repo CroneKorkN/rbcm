@@ -14,6 +14,9 @@ class Node
   def apply node
     @jobs.collect {call}
     @commands.collect {log(self)} # {`#{self}`}
+    with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
+      write content
+    end
   end
 
   def file  path,
@@ -27,9 +30,7 @@ class Node
       if ! grep -q #{includes_line} #{path}
       then echo #{includes_line} >> #{path}
     " if includes_line
-    with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
-      write content
-    end
+
   end
 
   def run command
