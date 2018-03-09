@@ -18,12 +18,6 @@ class RBCM
     end
   end
 
-  def save_pattern node_name, job
-    with @patterns[node_name] ||= [] do
-      self << job
-    end
-  end
-
   def apply
     @nodes.collect {apply}
   end
