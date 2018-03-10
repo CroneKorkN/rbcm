@@ -24,8 +24,6 @@ class Node
         File.write self, content
       end
     end
-    # manipulations are added to
-
     # commands are placed in file
     File.write "#{@cache_path}.sh", (@manipulations+@commands).join("\n")
   end
