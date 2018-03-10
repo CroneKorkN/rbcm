@@ -19,9 +19,15 @@ class Node
   end
 
   def apply
-    # collection are executed, populating @files, @manipulations and @commands
+    # collection are executed, collecting @jobs
     @collections.each do |collection|
       instance_exec &collection
+    end
+    # @files, @manipulations and @commands
+    @jobs.each do |cap, joblist|
+      joblist.each do |params|
+        send "r_#{cap}", *params
+      end
     end
     # files are generated
     @files.each do |path, content|
@@ -74,7 +80,6 @@ class Node
       )
       define_singleton_method cap do |*params|
         @jobs[__method__] << params
-        send "r_#{__method__}", *params
       end
     end
   end

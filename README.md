@@ -31,4 +31,3 @@ Ruby Config Management
 - commands are executed on server
 
 # TODO
-- run collections after all jobs are collected
