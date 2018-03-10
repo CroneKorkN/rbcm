@@ -8,6 +8,12 @@ class Node
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = [] # strings, run as root
+    @@capabilities.each do |cap|
+      define_singleton_method "r_#{cap}".to_sym, &send(:method, cap)
+      define_singleton_method cap do |*params|
+        send "r_#{__method__}", *params
+      end
+    end
   end
 
   attr_reader :name
@@ -56,7 +62,10 @@ class Node
 
   def self.load_capabilities
     Dir['../config/capabilities/*.rb'].each do |path|
+      cache = private_methods
       load path
+      capability_name = (private_methods - cache).first.to_sym
+      @@capabilities << capability_name
     end
   end
 end

@@ -2,7 +2,7 @@ nodes [
   "fu.mo.fu",
   /.+\.ckn\.li/,
 ] do
-    hostname :auto
+    r_hostname :auto
 
     ip v4: '10.0.0.1',
       v6: '::1'
