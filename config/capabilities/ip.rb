@@ -1,4 +1,3 @@
 def ip adresses
-  p "cap ip: #{self}"
-  #run "ip #{adresses}"
+  run "ip #{adresses}"
 end

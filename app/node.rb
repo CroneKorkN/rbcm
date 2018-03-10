@@ -12,14 +12,21 @@ class Node
   end
 
   def apply
-    instance_eval &@jobs[0]
-    #@jobs.each do |job|
-      #instance_exec &job
-    #end
+    @jobs.each do |job|
+      instance_exec &job
+    end
     #@commands.collect {log(self)} # {`#{self}`}
     #with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
     #  write content
     #end
+    puts "XXXXXXXXX NODE XXXXXXXXX"
+    puts @name
+    puts "FILEs"
+    puts @files
+    puts "MANIPULATIONS"
+    puts @manipulations
+    puts "COMMANDS"
+    puts @commands
   end
 
   def file(

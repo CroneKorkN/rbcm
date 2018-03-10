@@ -24,7 +24,7 @@
 
   def apply
     @nodes.each do |name, node|
-      @nodes[name] = node.apply
+      node.apply
     end
   end
 end
