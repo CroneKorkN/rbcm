@@ -33,5 +33,4 @@ Usage
 
 # TODO
 
-- load capabilities regardless of knowing the filename
-  - load into isolated context and diff a before/after of the methodlist?
+- knowing which job added a command to controll the order
