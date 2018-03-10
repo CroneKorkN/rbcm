@@ -1,10 +1,9 @@
 Ruby Config Management
 ======================
 
-Usage
------
+# Usage
 
-`ruby app/rbcm.rb.new`
+`ruby ./rbcm.rb`
 
 # UI
 
