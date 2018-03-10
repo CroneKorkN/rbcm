@@ -31,6 +31,4 @@
   end
 end
 
-rbcm = RBCM.new
-p "APPLY"
-rbcm.apply
+RBCM.new.apply

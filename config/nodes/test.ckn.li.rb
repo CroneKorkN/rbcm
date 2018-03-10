@@ -1,6 +1,8 @@
 nodes "test.ckn.li" do
     hostname :auto
 
+    file "/wwwwwwwwwwwww", includes_line: "HALLOOOOOO"
+
     ip v4: '10.0.0.1',
       v6: '::1'
 
