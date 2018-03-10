@@ -32,4 +32,11 @@ Ruby Config Management
 
 # TODO
 
-- knowing which job added a command to control the order
+- metadata ccessible
+  - create wrapper method for each capability
+  - define cap with prefix '__real__'
+  - before actually running real_cap, the wrapper ist called
+  - wrapper saves capname and params
+  - after collecting all cap params, real_caps are invokes
+  - now every job is able to access all jobs configs
+  - how to handle multiple invokations?

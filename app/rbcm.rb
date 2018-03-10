@@ -35,9 +35,10 @@
     @nodes.each do |name, node|
       node.apply
     end
+    self
   end
 end
 
 rbcm = RBCM.new
-pp rbcm
 rbcm.apply
+pp rbcm

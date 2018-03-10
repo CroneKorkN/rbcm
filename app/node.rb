@@ -3,9 +3,12 @@ class Node
     @name = name
     @cache_path = "#{File.dirname(__FILE__)}/cache/#{@name}"
     @jobs = [] # Procs from node files
+    @config = {}
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = [] # strings, run as root
+
+    pp self.methods.sort
   end
 
   attr_reader :name
@@ -57,8 +60,15 @@ class Node
       cache = private_methods
       load path
       capability_name = (private_methods - cache).first
-      define_singleton_method capability_name, &method(capability_name)
+      define_singleton_method capability_name do |*args|
+        @config[capability_name] ||= []
+        @config[capability_name] << args
+        pp args
+        send "real_#{capability_name}", args
+      end
+      define_singleton_method "real_#{capability_name}", &method(capability_name)
     end
+    p Node.methods
   end
 end
 
