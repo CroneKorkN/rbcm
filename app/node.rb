@@ -5,18 +5,18 @@ class Node
     @name = name
     @cache_path = "#{File.dirname(__FILE__)}/cache/#{@name}"
     @jobs = [] # Procs from node files
+    @options = {} # saves all parameters passed to caps
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = [] # strings, run as root
-    @@capabilities.each do |cap|
-      define_singleton_method "r_#{cap}".to_sym, &send(:method, cap)
-      define_singleton_method cap do |*params|
-        send "r_#{__method__}", *params
-      end
-    end
+    abstractize_capabilities
   end
 
   attr_reader :name
+
+  def options cap, param
+
+  end
 
   def add_job job
     @jobs << job
@@ -66,6 +66,20 @@ class Node
       load path
       capability_name = (private_methods - cache).first.to_sym
       @@capabilities << capability_name
+    end
+  end
+
+  def abstractize_capabilities
+    @@capabilities.each do |cap|
+      @options[cap] = []
+      define_singleton_method(
+        "r_#{cap}".to_sym,
+        &send(:method, cap)
+      )
+      define_singleton_method cap do |*params|
+        @options[__method__] << params
+        send "r_#{__method__}", *params
+      end
     end
   end
 end
