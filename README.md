@@ -33,5 +33,4 @@ Usage
 
 # TODO
 
-- make pattterns work
 - knowing which job added a command to control the order

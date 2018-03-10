@@ -13,6 +13,13 @@
     Dir["../config/nodes/**/*.rb"].each do |file|
       self.instance_eval File.read(file)
     end
+    @patterns.each do |pattern, job|
+      @nodes.each do |name, node|
+        if name.match /#{pattern}/
+          node.add_job job
+        end
+      end
+    end
   end
 
   def nodes names
@@ -25,13 +32,12 @@
   end
 
   def apply
-    @patterns.each do |pattern|
-      @nodes.keys.grep(/#{pattern}/)
-    end
     @nodes.each do |name, node|
       node.apply
     end
   end
 end
 
-RBCM.new.apply
+rbcm = RBCM.new
+pp rbcm
+rbcm.apply

@@ -8,6 +8,8 @@ class Node
     @commands = [] # strings, run as root
   end
 
+  attr_reader :name
+
   def add_job job
     @jobs << job
   end

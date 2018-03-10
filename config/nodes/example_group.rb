@@ -1,6 +1,6 @@
 nodes [
   "fu.mo.fu",
-  /.+.foo.ckn.li/,
+  /.+\.ckn\.li/,
 ] do
     hostname :auto
 
