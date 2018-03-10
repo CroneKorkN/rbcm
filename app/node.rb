@@ -4,8 +4,8 @@ class Node
   def initialize name
     @name = name
     @cache_path = "#{File.dirname(__FILE__)}/cache/#{@name}"
-    @jobs = [] # Procs from node files
-    @options = {} # saves all parameters passed to caps
+    @collections = [] # Procs from node files
+    @jobs = {} # saves all parameters passed to caps
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = [] # strings, run as root
@@ -14,18 +14,14 @@ class Node
 
   attr_reader :name
 
-  def options cap, param
-
-  end
-
-  def add_job job
-    @jobs << job
+  def add_collection collection
+    @collections << collection
   end
 
   def apply
-    # job are executed, populating @files, @manipulations and @commands
-    @jobs.each do |job|
-      instance_exec &job
+    # collection are executed, populating @files, @manipulations and @commands
+    @collections.each do |collection|
+      instance_exec &collection
     end
     # files are generated
     @files.each do |path, content|
@@ -71,14 +67,14 @@ class Node
 
   def abstractize_capabilities
     @@capabilities.each do |cap|
-      @options[cap] = []
+      @jobs[cap] = []
       define_singleton_method(
         "r_#{cap}".to_sym,
         &send(:method, cap)
       )
       define_singleton_method cap do |*params|
-        @options[__method__] << params
-        send "r_#{__method__}", *params
+        @jobs[__method__] << params
+        #send "r_#{__method__}", *params
       end
     end
   end

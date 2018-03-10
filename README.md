@@ -12,7 +12,7 @@ Ruby Config Management
   - the first parameter is an array of node names or search patterns
 - also a block is given
   - user can invoke capabilities
-  - invoking a capability is called a 'job'
+  - invoking a capability is called a 'collection'
 
 # Framework
 
@@ -21,9 +21,9 @@ Ruby Config Management
 - loads the node files
 - node object is created for every nodename passed
   - the block passed to the nodes function ist cought via 'Proc.new'
-  - Proc (with jobs in it) is saved in an array in the corresponding node
-- RBCM.apply makes the nodes call the saved jobs
-- capability takes the parameters of the job and generates commands to be run
+  - Proc (with collections in it) is saved in an array in the corresponding node
+- RBCM.apply makes the nodes call the saved collections
+- capability takes the parameters of the collection and generates commands to be run
   on the node
 - commands are saved, files generated
 - files are pushed to server, file manipulations applied
@@ -31,12 +31,4 @@ Ruby Config Management
 - commands are executed on server
 
 # TODO
-
-- metadata ccessible
-  - create wrapper method for each capability
-  - define cap with prefix '__real__'
-  - before actually running real_cap, the wrapper ist called
-  - wrapper saves capname and params
-  - after collecting all cap params, real_caps are invokes
-  - now every job is able to access all jobs configs
-  - how to handle multiple invokations?
+- run collections after all jobs are collected
