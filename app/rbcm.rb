@@ -25,6 +25,9 @@
   end
 
   def apply
+    @patterns.each do |pattern|
+      @nodes.keys.grep(/#{pattern}/)
+    end
     @nodes.each do |name, node|
       node.apply
     end
