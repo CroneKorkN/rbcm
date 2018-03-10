@@ -50,7 +50,7 @@ class Node
       cached_methods = private_methods
       load path
       capability_name = (private_methods - cached_methods).first.to_sym
-      method = lambda(&method(capability_name.to_sym))
+      method = lambda(&method(capability_name))
       Node.define_method capability_name, &method
     end
   end
