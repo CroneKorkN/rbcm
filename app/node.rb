@@ -12,15 +12,10 @@ class Node
   end
 
   def apply
-    p "call jobs"
+    p "------>"
     @jobs.each do |job|
-      p hostname "aa"
-      #self.instance_exec {p self.methods}
+      instance_eval &job
     end
-    p @files
-    p @manipulations
-    p @commands
-    p "run commands"
     #@commands.collect {log(self)} # {`#{self}`}
     #with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
     #  write content
@@ -49,11 +44,10 @@ class Node
 
   def self.load_capabilities
     Dir['../config/capabilities/*.rb'].each do |path|
-      cached_methods = private_methods
+      cache = private_methods
       load path
-      capability_name = (private_methods - cached_methods).first.to_sym
-      method = lambda(&method(capability_name))
-      Node.define_method capability_name, &method
+      capability_name = (private_methods - cache).first.to_sym
+      Node.define_method capability_name, &method(capability_name)
     end
   end
 end
