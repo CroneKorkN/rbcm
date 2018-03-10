@@ -31,8 +31,7 @@ Usage
   - 'file' capability has priority over commands
 - commands are executed on server
 
-
-
 # TODO
-- load capabilities independently from filename
+
+- load capabilities regardless of knowing the filename
   - load into isolated context and diff a before/after of the methodlist?

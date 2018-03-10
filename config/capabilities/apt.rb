@@ -1,3 +1,4 @@
-def package install: name
-  run 'apt install #{name}'
+def apt install: nil
+  p self
+  #run "apt install #{install}"
 end
