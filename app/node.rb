@@ -15,12 +15,13 @@ class Node
     @jobs.each do |job|
       instance_exec &job
     end
-    #@commands.collect {log(self)} # {`#{self}`}
     @files.each do |path, content|
-      with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
-        write content
+      with "#{File.dirname(__FILE__)}/cache/#{@name}/#{path}" do
+        FileUtils.mkdir_p File.dirname(self) unless File.directory? File.dirname(self)
+        File.write self, content
       end
     end
+    File.write "#{File.dirname(__FILE__)}/cache/#{@name}.sh", @commands.join("\n")
   end
 
   def file(

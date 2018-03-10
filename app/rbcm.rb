@@ -1,5 +1,7 @@
  #!/usr/local/bin/ruby
 
+ require 'fileutils'
+ require './lib.rb'
  require './node.rb'
 
  class RBCM
