@@ -74,10 +74,8 @@ class Node
       )
       define_singleton_method cap do |*params|
         @jobs[__method__] << params
-        #send "r_#{__method__}", *params
+        send "r_#{__method__}", *params
       end
     end
   end
 end
-
-# foo.instance_exec(params, &proc) you
