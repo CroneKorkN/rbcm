@@ -9,7 +9,7 @@
     # collects jobs from nodes with regex patterns to be apllied after all nodes are collected
     @patterns = {}
     Dir["../config/nodes/**/*.rb"].each do |file|
-      load file
+      env.instance_eval(File.read(file))
     end
   end
 
