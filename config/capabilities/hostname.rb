@@ -1,4 +1,4 @@
 def hostname name
-  p self
+  p "cap hm: #{self}"
   #file '/etc/hostname', content: "bliblablubb"
 end

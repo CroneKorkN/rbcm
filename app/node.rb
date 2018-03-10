@@ -1,7 +1,7 @@
 class Node
   def initialize name
     @name = name
-    @jobs = [] # lambdas from node files
+    @jobs = [] # Procs from node files
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = [] # strings, run as root
@@ -12,10 +12,11 @@ class Node
   end
 
   def apply
-    p "------>"
-    @jobs.each do |job|
-      instance_eval &job
-    end
+    hostname 123
+    #instance_eval &@jobs[0]
+    #@jobs.each do |job|
+      #instance_exec &job
+    #end
     #@commands.collect {log(self)} # {`#{self}`}
     #with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
     #  write content
@@ -42,12 +43,16 @@ class Node
     @commands << command
   end
 
+  def foo
+    p "test: #{self}"
+  end
+
   def self.load_capabilities
     Dir['../config/capabilities/*.rb'].each do |path|
       cache = private_methods
       load path
-      capability_name = (private_methods - cache).first.to_sym
-      Node.define_method capability_name, &method(capability_name)
+      capability_name = (private_methods - cache).first
+      define_singleton_method capability_name, &method(capability_name)
     end
   end
 end

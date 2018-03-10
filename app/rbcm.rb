@@ -23,12 +23,12 @@
   end
 
   def apply
-    @nodes.each_value do |node|
-      node.apply
+    @nodes.each do |name, node|
+      @nodes[name] = node.apply
     end
   end
 end
 
 rbcm = RBCM.new
-puts "ITS A ME; MARIO"
+p "APPLY"
 rbcm.apply

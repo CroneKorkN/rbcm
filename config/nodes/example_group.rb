@@ -2,7 +2,9 @@ nodes [
   "fu.mo.fu",
   /.+.foo.ckn.li/,
 ] do
-    hostname :auto
+    p "node block: #{self}"
+
+    #hostname :auto
 
     #ip v4: '10.0.0.1',
     #  v6: '::1'
