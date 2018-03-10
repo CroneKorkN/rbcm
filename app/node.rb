@@ -12,8 +12,7 @@ class Node
   end
 
   def apply
-    hostname 123
-    #instance_eval &@jobs[0]
+    instance_eval &@jobs[0]
     #@jobs.each do |job|
       #instance_exec &job
     #end
