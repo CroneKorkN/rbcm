@@ -27,11 +27,13 @@ class Node
     #end
   end
 
-  def file  path,
-            exists: nil,
-            includes_line: nil,
-            mode: nil,
-            content: nil
+  def file(
+      path,
+      exists: nil,
+      includes_line: nil,
+      mode: nil,
+      content: nil
+    )
     @files[path] = content if content or exists
     @commands << "chmod #{mode}" if mode
     @commands << "

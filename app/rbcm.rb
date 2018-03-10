@@ -11,8 +11,6 @@
     Dir["../config/nodes/**/*.rb"].each do |file|
       self.instance_eval File.read(file)
     end
-    p @patterns
-    p @nodes
   end
 
   def nodes names
