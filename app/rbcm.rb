@@ -9,27 +9,28 @@
     # collects jobs from nodes with regex patterns to be apllied after all nodes are collected
     @patterns = {}
     Dir["../config/nodes/**/*.rb"].each do |file|
-      env.instance_eval(File.read(file))
+      self.instance_eval File.read(file)
     end
+    p @patterns
+    p @nodes
   end
 
   def nodes names
-    job = Proc.new # Proc.new without paramaters catches the given block
+    job = Proc.new # Proc.new without paramaters catches a given block
     [names].flatten.each do |name|
-      @patterns[name] = job and continue if node_name.class == Rebexp
+      @patterns[name] = job and next if name.class == Regexp
       @nodes[name] = Node.new name unless @nodes[name]
       @nodes[name].add_job job
     end
   end
 
   def apply
-    @nodes.collect {apply}
+    @nodes.each_value do |node|
+      node.apply
+    end
   end
 end
 
-def nodes names
-  puts names
-end
-
-
-RBCM.new.apply
+rbcm = RBCM.new
+puts "ITS A ME; MARIO"
+rbcm.apply

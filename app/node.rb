@@ -8,15 +8,23 @@ class Node
   end
 
   def add_job job
-    @jobs.append! job
+    @jobs << job
   end
 
-  def apply node
-    @jobs.collect {call}
-    @commands.collect {log(self)} # {`#{self}`}
-    with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
-      write content
+  def apply
+    p "call jobs"
+    @jobs.each do |job|
+      p hostname "aa"
+      #self.instance_exec {p self.methods}
     end
+    p @files
+    p @manipulations
+    p @commands
+    p "run commands"
+    #@commands.collect {log(self)} # {`#{self}`}
+    #with File.dirname "#{__FILE__}/../cache/#{@name}/#{path}/" do
+    #  write content
+    #end
   end
 
   def file  path,
@@ -37,8 +45,6 @@ class Node
     @commands << command
   end
 
-  private
-
   def self.load_capabilities
     Dir['../config/capabilities/*.rb'].each do |path|
       cached_methods = private_methods
@@ -49,3 +55,5 @@ class Node
     end
   end
 end
+
+# foo.instance_exec(params, &proc) you
