@@ -9,7 +9,7 @@
     # collects jobs from nodes with regex patterns to be apllied after all nodes are collected
     @patterns = {}
     Dir["../config/nodes/**/*.rb"].each do |file|
-      require file
+      load file
     end
   end
 
@@ -26,5 +26,10 @@
     @nodes.collect {apply}
   end
 end
+
+def nodes names
+  puts names
+end
+
 
 RBCM.new.apply

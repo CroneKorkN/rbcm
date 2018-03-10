@@ -31,7 +31,6 @@ class Node
         echo #{includes_line} >> #{path}
       fi
       " if includes_line
-
   end
 
   def run command
@@ -42,15 +41,11 @@ class Node
 
   def self.load_capabilities
     Dir['../config/capabilities/*.rb'].each do |path|
-      methods_cached = methods
+      cached_methods = private_methods
       load path
-      function_name = (methods - methods_cached).to_s
-      p path
-      p methods_cached.sort
-      p methods.sort
-      puts function_name.to_sym
-      method = lambda(&method(function_name.to_sym))
-      self.define_method function_name, &method
+      capability_name = (private_methods - cached_methods).first.to_sym
+      method = lambda(&method(capability_name.to_sym))
+      Node.define_method capability_name, &method
     end
   end
 end
