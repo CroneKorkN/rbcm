@@ -22,7 +22,7 @@ Ruby Config Management
 - node object is created for every nodename passed
   - the block passed to the nodes function ist cought via 'Proc.new'
   - Proc (with collections in it) is saved in an array in the corresponding node
-- RBCM.apply makes the nodes call the saved collections
+- RBCM.render makes the nodes call the saved collections
 - capability takes the parameters of the collection and generates commands to be run
   on the node
 - commands are saved, files generated

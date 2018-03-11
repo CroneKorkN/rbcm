@@ -1,8 +1,6 @@
  #!/usr/local/bin/ruby
 
- require 'fileutils'
  require './lib.rb'
- require './node.rb'
 
  class RBCM
   def initialize
@@ -15,14 +13,13 @@
     end
     @patterns.each do |pattern, collection|
       @nodes.each do |name, node|
-        if name.match /#{pattern}/
-          node.add_collection collection
-        end
+        node.add_collection collection if name.match /#{pattern}/
       end
     end
   end
 
-  def nodes names
+  def nodes names=nil
+    return @nodes unless names
     collection = Proc.new # Proc.new without paramaters catches a given block
     [names].flatten.each do |name|
       @patterns[name] = collection and next if name.class == Regexp
@@ -31,14 +28,25 @@
     end
   end
 
-  def apply
+  def render
     @nodes.each do |name, node|
-      node.apply
+      node.render
     end
     self
   end
+
+  def apply
+    # scp, ssh
+  end
+
+  def clear_cache
+    FileUtils.rm_rf Dir.glob("#{dir_path}/*") if dir_path.present?
+  end
 end
 
-rbcm = RBCM.new
-rbcm.apply
-pp rbcm
+with Time.now do
+  rbcm = RBCM.new
+  rbcm.render
+  pp rbcm.nodes
+  log "rbmc took #{Time.now - self}"
+end

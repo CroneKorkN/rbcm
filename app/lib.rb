@@ -1,5 +1,8 @@
-def log entry
-  puts entry
+require './node.rb'
+require 'fileutils'
+
+def log entry, warning: nil, error: nil
+  puts entry or warning or error
 end
 
 # https://mrbrdo.wordpress.com/2013/02/27/ruby-with-statement/

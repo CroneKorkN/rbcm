@@ -1,4 +1,5 @@
 class Node
+  attr_reader :name
   @@capabilities = []
 
   def initialize name
@@ -12,13 +13,11 @@ class Node
     abstractize_capabilities
   end
 
-  attr_reader :name
-
   def add_collection collection
     @collections << collection
   end
 
-  def apply
+  def render
     # collection are executed, collecting @jobs
     @collections.each do |collection|
       instance_exec &collection
@@ -26,7 +25,7 @@ class Node
     # @files, @manipulations and @commands
     @jobs.each do |cap, joblist|
       joblist.each do |params|
-        send "r_#{cap}", *params
+        send "__#{cap}", *params
       end
     end
     # files are generated
@@ -38,9 +37,24 @@ class Node
     end
     # commands are placed in file
     File.write "#{@cache_path}.sh", (@manipulations+@commands).join("\n")
+    # copy files to server scp
+    'scp'
   end
 
   private
+
+  def options cap, param=nil
+    return @jobs[cap].any? unless param
+    all = []
+    @jobs[cap].each do |job|
+      all << job[0][param].flatten.uniq
+    end
+    all
+  end
+
+  def needs capability, or: nil
+
+  end
 
   def file(
       path,
@@ -66,16 +80,20 @@ class Node
     Dir['../config/capabilities/*.rb'].each do |path|
       cache = private_methods
       load path
-      capability_name = (private_methods - cache).first.to_sym
-      @@capabilities << capability_name
+      capability_names = (private_methods - cache)
+      capability_names.each do |capability_name|
+        @@capabilities << capability_name.to_sym
+      end
+      log warning: "no cap in '#{path}'" unless capability_names.any?
     end
+    log "#{@@capabilities.count} caps loaded from #{Dir['../config/capabilities/*.rb'].length} files"
   end
 
   def abstractize_capabilities
     @@capabilities.each do |cap|
       @jobs[cap] = []
       define_singleton_method(
-        "r_#{cap}".to_sym,
+        "__#{cap}".to_sym,
         &send(:method, cap)
       )
       define_singleton_method cap do |*params|
