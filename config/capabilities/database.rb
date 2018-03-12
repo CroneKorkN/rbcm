@@ -1,7 +1,7 @@
 def database
   if options :postgres
-    needs postgres
+    needs :postgres
   elsif options :mysql
-    needs mysql
+    needs :mysql
   end
 end

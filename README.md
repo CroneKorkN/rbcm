@@ -31,3 +31,5 @@ Ruby Config Management
 - commands are executed on server
 
 # TODO
+ - add version of capability with '?'-suffix to check for config
+ - jobs handle blocks

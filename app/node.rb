@@ -99,6 +99,9 @@ class Node
       define_singleton_method cap do |*params|
         @jobs[__method__] << params
       end
+      define_singleton_method cap+"?" do |*params|
+        options cap
+      end
     end
   end
 end
