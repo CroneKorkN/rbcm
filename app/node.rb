@@ -13,7 +13,10 @@ class Node
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = CommandList.new # strings, run as root
-    abstractize_capabilities!
+    @@capabilities.each do |cap|
+      define_metaclasses cap
+    end
+    define_metaclasses :file
   end
 
   def add_collection collection
@@ -85,36 +88,34 @@ class Node
     log "#{@@capabilities.count} caps loaded from #{Dir['../config/capabilities/*.rb'].length} files"
   end
 
-  def abstractize_capabilities!
-    @@capabilities.each do |cap|
-      # move method
-      define_singleton_method(
-        "__#{cap}".to_sym,
-        &send(:method, cap)
-      )
-      # define replacewment method
-      define_singleton_method cap do |*params|
-        @jobs << Job.new(self, cap, params, @dependency_cache)
+  def define_metaclasses cap
+    # move method
+    define_singleton_method(
+      "__#{cap}".to_sym,
+      &send(:method, cap)
+    )
+    # define replacewment method
+    define_singleton_method cap do |*params|
+      @jobs << Job.new(self, cap, params)
+    end
+    # define '?'-suffix version
+    define_singleton_method "#{cap}?" do |param=nil|
+      jobs = @jobs.find_all{|job| job.capability == cap}
+      unless param
+        # return ordered prarams
+        params = jobs.collect{|job| job.ordered_params}.transpose
+      else
+        # return values of a named param
+        params = jobs.find_all{ |job|
+          job.named_params.include? param
+        }.collect{ |job|
+          job.named_params
+        }.collect{ |named_params|
+          named_params[param]
+        }
       end
-      # define '?'-suffix version
-      define_singleton_method "#{cap}?" do |param=nil|
-        jobs = @jobs.find_all{|job| job.capability == cap}
-        unless param
-          # return ordered prarams
-          params = jobs.collect{|job| job.ordered_params}.transpose
-        else
-          # return values of a named param
-          params = jobs.find_all{ |job|
-            job.named_params.include? param
-          }.collect{ |job|
-            job.named_params
-          }.collect{ |named_params|
-            named_params[param]
-          }
-        end
-        # return nil instead of empty array (sure?)
-        nil unless params.any?
-      end
+      # return nil instead of empty array (sure?)
+      nil unless params.any?
     end
   end
 end

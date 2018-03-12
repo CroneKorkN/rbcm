@@ -6,7 +6,7 @@ class Command
   def initialize line, capability, dependencies
     @capability = capability
     @line = line
-    @dependencies = dependencies
+    @dependencies = [:file] + dependencies
   end
 end
 
@@ -17,6 +17,6 @@ class CommandList < Array
   end
 
   def solve_dependencies!
-    
+
   end
 end

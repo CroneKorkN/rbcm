@@ -1,13 +1,11 @@
 class Job
   attr_accessor :capability
   attr_accessor :params
-  attr_accessor :dependencies
 
-  def initialize node, capability, params, dependencies
+  def initialize node, capability, params
     @node = node
     @capability = capability
     @params = params
-    @dependencies = dependencies
   end
 
   def ordered_params
