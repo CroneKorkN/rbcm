@@ -3,11 +3,7 @@ class Job
   attr_accessor :params
   attr_accessor :dependencies
 
-  def initialize node, capability, params, dependencies
-    @node = node
-    @capability = capability
-    @params = params
-    @dependencies = dependencies
+  def initialize @node, @capability, @params, @dependencies
   end
 
   def ordered_params
@@ -23,7 +19,7 @@ class Job
   end
 
   def named_params?
-    params.last.class == Hash 
+    params.last.class == Hash
   end
 
   def run
