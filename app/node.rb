@@ -6,7 +6,8 @@ class Node
     @name = name
     @cache_path = "#{File.dirname(__FILE__)}/cache/#{@name}"
     @collections = [] # Procs from node files
-    @jobs = {} # saves all parameters passed to caps
+    @dependency_cache = [] # save the dependencies through each collection
+    @jobs = [] # saves all parameters passed to caps
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = [] # strings, run as root
@@ -21,12 +22,11 @@ class Node
     # collection are executed, collecting @jobs
     @collections.each do |collection|
       instance_exec &collection
+      @dependency_cache = []
     end
     # @files, @manipulations and @commands
-    @jobs.each do |cap, joblist|
-      joblist.each do |params|
-        send "__#{cap}", *params
-      end
+    @jobs.each do |job|
+      job.run
     end
     # files are generated
     @files.each do |path, content|
@@ -44,16 +44,17 @@ class Node
   private
 
   def options cap, param=nil
-    return @jobs[cap].any? unless param
-    all = []
-    @jobs[cap].each do |job|
-      all << job[0][param].flatten.uniq
+    with @jobs.find_all{|job| job.capability == cap} do
+      if param
+        any?
+      else
+
+      end
     end
-    all
   end
 
   def needs capability, or: nil
-
+    @dependency_cache = capability
   end
 
   def file(
@@ -91,7 +92,6 @@ class Node
 
   def abstractize_capabilities
     @@capabilities.each do |cap|
-      @jobs[cap] = []
       # move method
       define_singleton_method(
         "__#{cap}".to_sym,
@@ -99,14 +99,20 @@ class Node
       )
       # define replacewment method
       define_singleton_method cap do |*params|
-        @jobs[__method__] << params
+        @jobs << Job.new(self, cap, params, @dependency_cache)
       end
       # define '?'-suffix version
       define_singleton_method "#{cap}?" do |*params|
         unless params.any?
-          options cap
+          @jobs.find_all{|job| job.capability == cap}.any?
         else
-          p ""
+          find_all{ |job|
+            job.params.include? param
+          }.collect{ |job|
+            job.params
+          }.find_all{ |job|
+
+          }
         end
       end
     end
