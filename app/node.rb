@@ -98,9 +98,9 @@ class Node
         jobs = @jobs.find_all{|job| job.capability == cap}
         unless param
           # return all ordered params passed
-          jobs.collect{|job| job.ordered_params}.transpose
+          params = jobs.collect{|job| job.ordered_params}.transpose
         else
-          jobs.find_all{ |job|
+          params = jobs.find_all{ |job|
             job.named_params.include? param
           }.collect{ |job|
             job.named_params
@@ -108,6 +108,7 @@ class Node
             named_params[param]
           }
         end
+        nil unless params.any?
       end
     end
   end
