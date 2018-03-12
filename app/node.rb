@@ -43,16 +43,6 @@ class Node
 
   private
 
-  def options cap, param=nil
-    with @jobs.find_all{|job| job.capability == cap} do
-      if param
-        any?
-      else
-
-      end
-    end
-  end
-
   def needs capability, or: nil
     @dependency_cache = capability
   end
@@ -102,18 +92,18 @@ class Node
         @jobs << Job.new(self, cap, params, @dependency_cache)
       end
       # define '?'-suffix version
-      define_singleton_method "#{cap}?" do |param|
+      define_singleton_method "#{cap}?" do |param=nil|
         jobs = @jobs.find_all{|job| job.capability == cap}
-        unless param.any?
+        unless param
           jobs.any?
         else
-          find_all{ |job|
+          jobs.find_all{ |job|
             job.params.include? param
           }.collect{ |job|
             job.params
-          }.find_all{ |job|
-
-          }
+          }.find_all{ |param|
+            param.class = Hash
+          }.collect
         end
       end
     end
