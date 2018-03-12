@@ -17,6 +17,6 @@ class CommandList < Array
   end
 
   def solve_dependencies!
-
+    
   end
 end

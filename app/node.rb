@@ -71,6 +71,10 @@ class Node
     ^ if includes_line
   end
 
+  def manipulate
+    needs :file
+  end
+
   def run line
     @commands << Command.new(line, @capability_cache, @dependency_cache)
   end
