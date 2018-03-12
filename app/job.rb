@@ -11,11 +11,19 @@ class Job
   end
 
   def ordered_params
-    params.pop
+    if named_params?
+      params[0..-2]
+    else
+      params
+    end
   end
 
   def named_params
-    params.last
+    params.last if named_params?
+  end
+
+  def named_params?
+    params.last.class == Hash 
   end
 
   def run

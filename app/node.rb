@@ -13,7 +13,7 @@ class Node
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = CommandList.new # strings, run as root
-    abstractize_capabilities
+    abstractize_capabilities!
   end
 
   def add_collection collection
@@ -82,7 +82,7 @@ class Node
     log "#{@@capabilities.count} caps loaded from #{Dir['../config/capabilities/*.rb'].length} files"
   end
 
-  def abstractize_capabilities
+  def abstractize_capabilities!
     @@capabilities.each do |cap|
       # move method
       define_singleton_method(
@@ -98,16 +98,14 @@ class Node
         jobs = @jobs.find_all{|job| job.capability == cap}
         unless param
           # return all ordered params passed
-          jobs.collect{|job| job.ordered_params}#.transpose
+          jobs.collect{|job| job.ordered_params}.transpose
         else
           jobs.find_all{ |job|
-            job.params.include? param
+            job.named_params.include? param
           }.collect{ |job|
             job.named_params
-          }.find_all{ |param|
-            param.class = Hash
-          }.collect{ |param|
-            #param.k
+          }.collect{ |named_params|
+            named_params[param]
           }
         end
       end
