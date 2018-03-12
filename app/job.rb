@@ -1,8 +1,14 @@
 class Job
-  def initialize
+  attr_accessor :params
+  attr_accessor :dependencies
+
+  def initialize capability, params, dependencies: dependencies
+    @capability = capability
+    @params = params
+    @dependencies = dependencies
   end
 
-  def 
-
+  def run
+    send "__#{@capability}", @params
   end
 end

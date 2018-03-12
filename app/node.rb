@@ -92,15 +92,22 @@ class Node
   def abstractize_capabilities
     @@capabilities.each do |cap|
       @jobs[cap] = []
+      # move method
       define_singleton_method(
         "__#{cap}".to_sym,
         &send(:method, cap)
       )
+      # define replacewment method
       define_singleton_method cap do |*params|
         @jobs[__method__] << params
       end
-      define_singleton_method cap+"?" do |*params|
-        options cap
+      # define '?'-suffix version
+      define_singleton_method "#{cap}?" do |*params|
+        unless params.any?
+          options cap
+        else
+          p ""
+        end
       end
     end
   end

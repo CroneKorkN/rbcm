@@ -1,4 +1,4 @@
-nodes "test.ckn.li" do
+nodes "mail.sublimity.de" do
     hostname :auto
 
     file "/wwwwwwwwwwwww", includes_line: "HALLOOOOOO"

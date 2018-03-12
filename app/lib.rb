@@ -1,5 +1,6 @@
-require './node.rb'
 require 'fileutils'
+require './job.rb'
+require './node.rb'
 
 def log entry, warning: nil, error: nil
   puts entry or warning or error
