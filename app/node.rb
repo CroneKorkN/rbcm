@@ -97,9 +97,10 @@ class Node
       define_singleton_method "#{cap}?" do |param=nil|
         jobs = @jobs.find_all{|job| job.capability == cap}
         unless param
-          # return all ordered params passed
+          # return ordered prarams
           params = jobs.collect{|job| job.ordered_params}.transpose
         else
+          # return values of a named param
           params = jobs.find_all{ |job|
             job.named_params.include? param
           }.collect{ |job|
@@ -108,6 +109,7 @@ class Node
             named_params[param]
           }
         end
+        # return nil instead of empty array (sure?)
         nil unless params.any?
       end
     end

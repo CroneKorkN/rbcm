@@ -11,13 +11,12 @@ nodes "srv.ckn.li" do
   service :postgres, :enable
   service :test, :stop
 
-
   apt install: :blablub
 
   hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
   hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
 
   apt? :install
-  p ubuntu? :ubuntu
+  ubuntu? :ubuntu
   service?
 end

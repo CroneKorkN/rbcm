@@ -1,4 +1,4 @@
 def postgres
-  needs :databse
+  needs :database
   run "postgres"
 end
