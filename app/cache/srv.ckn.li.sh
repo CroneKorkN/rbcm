@@ -1,3 +1,4 @@
+chmod 777 /matchorator
 ip aaa
 ip bbb
 ip ccc

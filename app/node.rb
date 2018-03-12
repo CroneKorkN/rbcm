@@ -38,13 +38,14 @@ class Node
       end
     end
     # commands are placed in file
-    File.write "#{@cache_path}.sh", @commands.render
+    File.write "#{@cache_path}.sh", @manipulations.join("\n")+"\n"+@commands.render
     # copy files to server scp
     'scp'
   end
 
   private
 
+  # calling 'needs' adds dependency to each command from now in this job
   def needs capability
     log error: "dont call 'needs' in node" unless @capability_cache
     log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
@@ -59,7 +60,7 @@ class Node
       content: nil
     )
     @files[path] = content if content or exists
-    @manipulations << "chmod #{mode}" if mode
+    @manipulations << "chmod #{mode} #{path}" if mode
     @manipulations << %^
       if  grep -q #{includes_line} #{path}; then
         echo #{includes_line} >> #{path}

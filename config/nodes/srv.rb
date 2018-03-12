@@ -13,12 +13,12 @@ nodes "srv.ckn.li" do
 
   apt install: :blablub
 
+  file "/matchorator", mode: 777
+
   hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
   hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
 
   apt? :install
   ubuntu? :ubuntu
   service?
-
-  needs :apt
 end

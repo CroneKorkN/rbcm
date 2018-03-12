@@ -34,3 +34,5 @@ Ruby Config Management
  - add version of capability with '?'-suffix to check for config
  - jobs handle blocks
  - per capability dependencys?
+ - files and manipulations as command-instances
+   - default files dependency on all capabilities
