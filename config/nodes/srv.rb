@@ -7,6 +7,12 @@ nodes "srv.ckn.li" do
     :'zfs-dkms'
   ]
 
+  service :apache2, :restart
+
+  hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
+  hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
+  hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
+
   if apt?
     puts apt?
     p "111111111111111"

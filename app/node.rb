@@ -1,16 +1,18 @@
 class Node
   attr_reader :name
+  attr_accessor :capability_cache
   @@capabilities = []
 
   def initialize name
     @name = name
     @cache_path = "#{File.dirname(__FILE__)}/cache/#{@name}"
     @collections = [] # Procs from node files
+    @capability_cache = nil # save the capability name of the job executed now
     @dependency_cache = [] # save the dependencies through each collection
     @jobs = [] # saves all parameters passed to caps
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
-    @commands = [] # strings, run as root
+    @commands = CommandList.new # strings, run as root
     abstractize_capabilities
   end
 
@@ -22,11 +24,11 @@ class Node
     # collection are executed, collecting @jobs
     @collections.each do |collection|
       instance_exec &collection
-      @dependency_cache = []
     end
     # @files, @manipulations and @commands
     @jobs.each do |job|
       job.run
+      @dependency_cache = []
     end
     # files are generated
     @files.each do |path, content|
@@ -36,15 +38,15 @@ class Node
       end
     end
     # commands are placed in file
-    File.write "#{@cache_path}.sh", (@manipulations+@commands).join("\n")
+    File.write "#{@cache_path}.sh", @commands.render
     # copy files to server scp
     'scp'
   end
 
   private
 
-  def needs capability, or: nil
-    @dependency_cache = capability
+  def needs capability
+    @dependency_cache << capability
   end
 
   def file(
@@ -63,8 +65,8 @@ class Node
     ^ if includes_line
   end
 
-  def run command
-    @commands << command
+  def run line
+    @commands << Command.new(line, @capability_cache, @dependency_cache)
   end
 
   def self.load_capabilities
@@ -95,15 +97,18 @@ class Node
       define_singleton_method "#{cap}?" do |param=nil|
         jobs = @jobs.find_all{|job| job.capability == cap}
         unless param
-          jobs.any?
+          # return all ordered params passed
+          jobs.collect{|job| job.ordered_params}#.transpose
         else
           jobs.find_all{ |job|
             job.params.include? param
           }.collect{ |job|
-            job.params
+            job.named_params
           }.find_all{ |param|
             param.class = Hash
-          }.collect
+          }.collect{ |param|
+            #param.k
+          }
         end
       end
     end

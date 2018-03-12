@@ -11,16 +11,16 @@ class Job
   end
 
   def ordered_params
-
+    params.pop
   end
 
   def named_params
-    @params.find_all do |param|
-      param.class == "Hash"
-    end
+    params.last
   end
 
   def run
+    @node.capability_cache = @capability
     @node.send "__#{@capability}", *@params
+    @node.capability_cache = nil
   end
 end

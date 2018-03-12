@@ -33,6 +33,6 @@ Ruby Config Management
 # TODO
  - add version of capability with '?'-suffix to check for config
  - jobs handle blocks
- - per job dependency
+ - per command dependency
    - introduce job id (hash)
    - introduce id (filename)
