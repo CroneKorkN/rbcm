@@ -46,6 +46,7 @@ class Node
   private
 
   def needs capability
+    log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist"
     @dependency_cache << capability
   end
 
