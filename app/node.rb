@@ -102,9 +102,10 @@ class Node
         @jobs << Job.new(self, cap, params, @dependency_cache)
       end
       # define '?'-suffix version
-      define_singleton_method "#{cap}?" do |*params|
-        unless params.any?
-          @jobs.find_all{|job| job.capability == cap}.any?
+      define_singleton_method "#{cap}?" do |param|
+        jobs = @jobs.find_all{|job| job.capability == cap}
+        unless param.any?
+          jobs.any?
         else
           find_all{ |job|
             job.params.include? param
