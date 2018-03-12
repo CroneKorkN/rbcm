@@ -46,7 +46,8 @@ class Node
   private
 
   def needs capability
-    log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist"
+    log error: "dont call 'needs' in node" unless @capability_cache
+    log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
     @dependency_cache << capability
   end
 

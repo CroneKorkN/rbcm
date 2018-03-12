@@ -19,4 +19,6 @@ nodes "srv.ckn.li" do
   apt? :install
   ubuntu? :ubuntu
   service?
+
+  needs :apt
 end
