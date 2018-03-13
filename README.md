@@ -36,3 +36,4 @@ Ruby Config Management
  - per capability dependencys?
  - files and manipulations as command-instances
    - default files dependency on all capabilities
+ - http://tech.tulentsev.com/2012/04/define-module-programmatically/
