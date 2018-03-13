@@ -11,9 +11,7 @@ class Node
     @capability_cache = nil # save the capability name of the job executed now
     @dependency_cache = [] # save the dependencies through each collection
     @jobs = [] # saves all parameters passed to caps
-    @files = {} # path: "content"
-    @manipulations = [] # array of commands for manipulating files
-    @commands = CommandList.new # strings, run as root
+    @commands = CommandList.new
     @@capabilities.each {|cap| define_metaclasses cap}
     define_metaclasses :file
     define_metaclasses :manipulate
@@ -28,22 +26,10 @@ class Node
     @collections.each do |collection|
       instance_exec &collection
     end
-    # @files, @manipulations and @commands
     @jobs.each do |job|
       job.run
       @dependency_cache = []
     end
-    # files are generated
-    @files.each do |path, content|
-      with @cache_path+path do
-        FileUtils.mkdir_p File.dirname(self) unless File.directory? File.dirname(self)
-        File.write self, content
-      end
-    end
-    # commands are placed in file
-    File.write "#{@cache_path}.sh", @manipulations.join("\n")+"\n"+@commands.render
-    # copy files to server scp
-    'scp'
   end
 
   private
