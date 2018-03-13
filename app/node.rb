@@ -1,4 +1,5 @@
 class Node
+  include BaseCapabilities
   attr_reader :name
   attr_accessor :capability_cache
   @@capabilities = []
@@ -13,10 +14,9 @@ class Node
     @files = {} # path: "content"
     @manipulations = [] # array of commands for manipulating files
     @commands = CommandList.new # strings, run as root
-    @@capabilities.each do |cap|
-      define_metaclasses cap
-    end
+    @@capabilities.each {|cap| define_metaclasses cap}
     define_metaclasses :file
+    define_metaclasses :manipulate
   end
 
   def add_collection collection
@@ -53,30 +53,6 @@ class Node
     log error: "dont call 'needs' in node" unless @capability_cache
     log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
     @dependency_cache << capability
-  end
-
-  def file(
-      path,
-      exists: nil,
-      includes_line: nil,
-      mode: nil,
-      content: nil
-    )
-    @files[path] = content if content or exists
-    @manipulations << "chmod #{mode} #{path}" if mode
-    @manipulations << %^
-      if  grep -q #{includes_line} #{path}; then
-        echo #{includes_line} >> #{path}
-      fi
-    ^ if includes_line
-  end
-
-  def manipulate
-    needs :file
-  end
-
-  def run line
-    @commands << Command.new(line, @capability_cache, @dependency_cache)
   end
 
   def self.load_capabilities

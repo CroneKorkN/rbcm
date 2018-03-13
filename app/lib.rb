@@ -1,4 +1,5 @@
 require 'fileutils'
+require './base_capabilities.rb'
 require './job.rb'
 require './node.rb'
 require './command.rb'

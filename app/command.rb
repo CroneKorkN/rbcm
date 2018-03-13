@@ -7,16 +7,17 @@ class Command
     @capability = capability
     @line = line
     @dependencies = [:file] + dependencies
+    @ordered = []
   end
 end
 
 class CommandList < Array
   def render
-    solve_dependencies!
-    self.collect {|command| command.line}.join("\n")
+    solve_dependencies.collect {|command| command.line}.join("\n")
   end
 
-  def solve_dependencies!
-    
+  # return with solved dependencies
+  def solve_dependencies
+    self
   end
 end

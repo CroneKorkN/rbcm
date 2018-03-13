@@ -1,4 +1,4 @@
-chmod 777 /matchorator
+
 ip aaa
 ip bbb
 ip ccc
@@ -12,3 +12,8 @@ systemctl restart apache2
 systemctl enable postgres
 systemctl stop test
 apt install blablub
+echo '' > /matchorator
+echo 'MUHAHA' > /matchorator
+chmod 777 /matchorator
+echo 'bliblablubb' > /etc/hostname
+echo 'bliblablubb' > /etc/hostname
