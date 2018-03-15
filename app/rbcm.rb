@@ -1,10 +1,14 @@
- #!/usr/local/bin/ruby
+#!/usr/local/bin/ruby
 
- require './lib.rb'
+require 'fileutils'
+require './capabilities.rb'
+require './job.rb'
+require './node.rb'
+require './command.rb'
+require './lib.rb'
 
- class RBCM
+class RBCM
   def initialize
-    Node.load_capabilities
     @nodes = {}
     # collects collections from nodes with regex patterns to be apllied after all nodes are collected
     @patterns = {}

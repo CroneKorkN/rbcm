@@ -1,5 +1,5 @@
-def ip addresses
+def ip addresses=nil
   [addresses].flatten.each do |address|
     run "ip #{address}"
-  end
+  end if addresses
 end
