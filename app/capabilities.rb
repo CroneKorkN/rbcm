@@ -39,18 +39,19 @@ module Capabilities
   (
     (private_methods - c) + [:file, :manipulate]
   ).each do |cap|
-    p 11111
     # move method
-    define_singleton_method(
+    define_method(
       "__#{cap}".to_sym,
       Proc.new(&send(:method, cap))
     )
+    public "__#{cap}"
     # define replacewment method
-    define_singleton_method cap do |*params|
+    define_method cap do |*params|
       @jobs << Job.new(self, cap, params)
     end
+    public cap
     # define '?'-suffix version
-    define_singleton_method "#{cap}?" do |param=nil|
+    define_method "#{cap}?" do |param=nil|
       jobs = @jobs.find_all{|job| job.capability == cap}
       unless param
         # return ordered prarams
@@ -68,7 +69,6 @@ module Capabilities
       # return nil instead of empty array (sure?)
       nil unless params.any?
     end
+    public "#{cap}?"
   end
-
-  p methods
 end
