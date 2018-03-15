@@ -1,10 +1,9 @@
 class Node
   attr_reader :name
   attr_accessor :capability_cache
-  p instance_methods.count
+  c = instance_methods
   include Capabilities
-  p instance_methods.count
-  p instance_methods
+  p instance_methods - c
 
   def initialize name
     @name = name
