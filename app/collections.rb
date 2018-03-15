@@ -1,3 +1,0 @@
-module Collections
-
-end

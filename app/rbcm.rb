@@ -10,25 +10,24 @@ require './command.rb'
 class RBCM
   def initialize
     @nodes = {}
-    # collects collections from nodes with regex patterns to be apllied after all nodes are collected
-    @patterns = {}
+    @patterns = {} # collects definitions from nodes with regex patterns to be apllied after all nodes are collected
     Dir["../config/nodes/**/*.rb"].each do |file|
       self.instance_eval File.read(file)
     end
-    @patterns.each do |pattern, collection|
+    @patterns.each do |pattern, definition|
       @nodes.each do |name, node|
-        node.add_collection collection if name.match /#{pattern}/
+        node << definition if name.match /#{pattern}/
       end
     end
   end
 
   def nodes names=nil
     return @nodes unless names
-    collection = Proc.new # Proc.new without paramaters catches a given block
+    definition = Proc.new # Proc.new without paramaters catches a given block
     [names].flatten.each do |name|
-      @patterns[name] = collection and next if name.class == Regexp
+      @patterns[name] = definition and next if name.class == Regexp
       @nodes[name] = Node.new name unless @nodes[name]
-      @nodes[name].add_collection collection
+      @nodes[name] << definition
     end
   end
 

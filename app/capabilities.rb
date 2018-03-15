@@ -11,7 +11,8 @@ module Capabilities
   end
 
   def run command
-    @commands << Command.new(command, @capability_cache, @dependency_cache)
+
+    pp @commands << Command.new(command, @capability_cache, @dependency_cache)
   end
 
   def manipulate command

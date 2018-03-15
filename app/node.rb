@@ -8,34 +8,38 @@ class Node
   def initialize name
     @name = name
     @cache_path = "#{File.dirname(__FILE__)}/cache/#{@name}"
-    @collections = [] # Procs from node files
+    @definitions = [] # Procs from node files
     @capability_cache = nil # save the capability name of the job executed now
-    @dependency_cache = [] # save the dependencies through each collection
+    @dependency_cache = [] # save the dependencies through each definition
     @jobs = [] # saves all parameters passed to caps
-    @commands = CommandList.new
+    @commands = []
   end
 
-  def add_collection collection
-    @collections << collection
+  def << definition
+    @definitions << definition
   end
 
   def render
-    # collection are executed, collecting @jobs
-    @collections.each do |collection|
-      instance_exec &collection
+    # definition are executed, collecting @jobs
+    @definitions.each do |definition|
+      instance_exec &definition
     end
     @jobs.each do |job|
       job.run
       @dependency_cache = []
     end
+    # order commands: solve dependencies
+
+    #@commands = resolve @commands
   end
 
-  private
-
-  # calling 'needs' adds dependency to each command from now in this job
-  def needs capability
-    log error: "dont call 'needs' in node" unless @capability_cache
-    #log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
-    @dependency_cache << capability
+  def resolve commands
+    commands.each do |command|
+      command.dependencies.each do |dependency|
+        commands - resolve(
+          pp commands.select {|command| command.capability == dependency}
+        )
+      end
+    end
   end
 end
