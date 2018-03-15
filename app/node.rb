@@ -3,7 +3,7 @@ class Node
   attr_accessor :capability_cache
   c = instance_methods
   include Capabilities
-  p instance_methods - c
+  p (instance_methods - c)
 
   def initialize name
     @name = name

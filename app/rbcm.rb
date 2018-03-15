@@ -50,6 +50,7 @@ end
 
 with Time.now do
   rbcm = RBCM.new
+  p "render:"
   rbcm.render
   pp rbcm.nodes
   log "rbmc took #{Time.now - self}"

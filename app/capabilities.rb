@@ -1,5 +1,9 @@
 module Capabilities
   # calling 'needs' adds dependency to each command from now in this job
+  @jobs = []
+  @commands = []
+  @capability_cache = []
+  @dependency_cache = []
   def needs capability
     log error: "dont call 'needs' in node" unless @capability_cache
     #log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
@@ -32,12 +36,11 @@ module Capabilities
     ^ if includes_line
   end
 
-  extend self # make methods accessile: https://stackoverflow.com/questions/2660646/send-instance-method-to-module
-
-  c = private_methods
+  extend self # make methods accessible: https://stackoverflow.com/questions/2660646/send-instance-method-to-module
+  method_cache = private_methods
   Dir['../config/capabilities/*.rb'].each {|path| load path}
   (
-    (private_methods - c) + [:file, :manipulate]
+    private_methods - method_cache + [:file, :manipulate]
   ).each do |cap|
     # move method
     define_method(
@@ -47,6 +50,7 @@ module Capabilities
     public "__#{cap}"
     # define replacewment method
     define_method cap do |*params|
+      pp self
       @jobs << Job.new(self, cap, params)
     end
     public cap
