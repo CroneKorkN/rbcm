@@ -1,9 +1,10 @@
 module Capabilities
-  # calling 'needs' adds dependency to each command from now in this job
   @jobs = []
   @commands = []
   @capability_cache = []
   @dependency_cache = []
+
+  # calling 'needs' adds dependency to each command from now in this job
   def needs capability
     log error: "dont call 'needs' in node" unless @capability_cache
     #log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
@@ -11,8 +12,10 @@ module Capabilities
   end
 
   def run command
-
-    pp @commands << Command.new(command, @capability_cache, @dependency_cache)
+    @commands << Command.new(command, @capability_cache, @dependency_cache)
+    p Command.new(command, @capability_cache, @dependency_cache)
+    p self
+    p ""
   end
 
   def manipulate command
