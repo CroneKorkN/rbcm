@@ -1,11 +1,11 @@
 #!/usr/local/bin/ruby
 
 require 'fileutils'
+require './lib.rb'
 require './capabilities.rb'
 require './job.rb'
 require './node.rb'
 require './command.rb'
-require './lib.rb'
 
 class RBCM
   def initialize

@@ -1,16 +1,4 @@
 module Capabilities
-  Dir['../config/capabilities/*.rb'].each do |path|
-    cache = private_methods
-    p private_methods.count
-    load path
-    capability_names = (private_methods - cache)
-    capability_names.each do |capability_name|
-      @@capabilities << capability_name.to_sym
-    end
-    log warning: "no cap in '#{path}'" unless capability_names.any?
-  end
-  log "#{@@capabilities.count} caps loaded from #{Dir['../config/capabilities/*.rb'].length} files"
-
   # calling 'needs' adds dependency to each command from now in this job
   def needs capability
     log error: "dont call 'needs' in node" unless @capability_cache
@@ -44,12 +32,18 @@ module Capabilities
     ^ if includes_line
   end
 
+  extend self # make methods accessile: https://stackoverflow.com/questions/2660646/send-instance-method-to-module
 
-  def define_metaclasses cap
+  c = private_methods
+  Dir['../config/capabilities/*.rb'].each {|path| load path}
+  (
+    (private_methods - c) + [:file, :manipulate]
+  ).each do |cap|
+    p 11111
     # move method
     define_singleton_method(
       "__#{cap}".to_sym,
-      &send(:method, cap)
+      Proc.new(&send(:method, cap))
     )
     # define replacewment method
     define_singleton_method cap do |*params|
@@ -75,4 +69,6 @@ module Capabilities
       nil unless params.any?
     end
   end
+
+  p methods
 end

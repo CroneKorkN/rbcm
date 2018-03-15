@@ -1,8 +1,10 @@
 class Node
-  @@capabilities = []
   attr_reader :name
   attr_accessor :capability_cache
+  p instance_methods.count
   include Capabilities
+  p instance_methods.count
+  p instance_methods
 
   def initialize name
     @name = name
@@ -12,9 +14,6 @@ class Node
     @dependency_cache = [] # save the dependencies through each collection
     @jobs = [] # saves all parameters passed to caps
     @commands = CommandList.new
-    @@capabilities.each {|cap| define_metaclasses cap}
-    define_metaclasses :file
-    define_metaclasses :manipulate
   end
 
   def add_collection collection
@@ -37,7 +36,7 @@ class Node
   # calling 'needs' adds dependency to each command from now in this job
   def needs capability
     log error: "dont call 'needs' in node" unless @capability_cache
-    log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
+    #log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
     @dependency_cache << capability
   end
 end
