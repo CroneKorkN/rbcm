@@ -51,13 +51,11 @@ module Capabilities
       "__#{cap}".to_sym,
       Proc.new(&send(:method, cap))
     )
-    public "__#{cap}"
     # define replacewment method
     define_method cap do |*params|
       pp self
       @jobs << Job.new(self, cap, params)
     end
-    public cap
     # define '?'-suffix version
     define_method "#{cap}?" do |param=nil|
       jobs = @jobs.find_all{|job| job.capability == cap}
@@ -77,6 +75,5 @@ module Capabilities
       # return nil instead of empty array (sure?)
       nil unless params.any?
     end
-    public "#{cap}?"
   end
 end

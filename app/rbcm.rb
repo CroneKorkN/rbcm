@@ -47,10 +47,10 @@ class RBCM
   end
 end
 
-with Time.now do
+#with Time.now do
   rbcm = RBCM.new
   p "render:"
   rbcm.render
   pp rbcm.nodes
-  log "rbmc took #{Time.now - self}"
-end
+#  log "rbcm took #{Time.now - self}"
+#end
