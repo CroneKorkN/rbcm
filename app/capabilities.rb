@@ -77,3 +77,5 @@ module Capabilities
     end
   end
 end
+
+p capabilities.private_methods
