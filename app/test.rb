@@ -12,9 +12,8 @@ module M
     :m?,
     Proc.new(&send(:method, :m)) # using Proc prevents bind argument must be a subclass of Object (TypeError)
   )
-  define_method :var do
-    p self
-    @a
+  define_method :var do |v|
+    @a << v
   end
   #extend self
 end
@@ -22,14 +21,15 @@ end
 class C
   include M
   def initialize
-    @a = 1
+    @a = []
     m
     apt
     ip?
+    var 3
   end
 end
 
 p 2
 pp C.instance_methods.sort
 
-p C.new.var
+p C.new

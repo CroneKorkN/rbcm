@@ -43,9 +43,7 @@ module Capabilities
   extend self # make methods accessible: https://stackoverflow.com/questions/2660646/send-instance-method-to-module
   method_cache = private_methods
   Dir['../config/capabilities/*.rb'].each {|path| load path}
-  (
-    private_methods - method_cache + [:file, :manipulate]
-  ).each do |cap|
+  (private_methods - method_cache + [:file, :manipulate]).each do |cap|
     # move method
     define_method(
       "__#{cap}".to_sym,
@@ -78,4 +76,4 @@ module Capabilities
   end
 end
 
-p capabilities.private_methods
+p Capabilities.private_methods
