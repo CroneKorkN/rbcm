@@ -1,15 +1,21 @@
 module CommandList
-  def resolve commands=nil
-    @commands ||= []
-    p commands.count if commands
-    commands ||= self
-    commands.each do |command|
-      command.dependencies.each do |dependency|
-        @commands += commands - resolve(
-          commands.select {|command| command.capability == dependency}
-        )
-      end
+  def resolve
+    @commands = []
+    self.each do |command|
+      resolve_command command
     end
-    @commands
+    @commands.uniq
+  end
+
+  private
+
+  def resolve_command this
+    self.select{ |command|
+      p this
+      this.dependencies.include? command.capability
+    }.each{ |command|
+      resolve_command command
+    }
+    @commands << this
   end
 end
