@@ -36,8 +36,14 @@ class RBCM
       end
     end
   end
+
+  def parse_definitions!
+
+  end
 end
 
 rbcm = RBCM.new
 rbcm.load_definitions!
 rbcm.parse_definitions!
+
+pp rbcm

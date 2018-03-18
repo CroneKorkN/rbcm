@@ -1,24 +1,17 @@
 # accepts a path to a node-file
-# provides each: a hash with affected nodes and with patterns
+# provides affected node name (Array) and definition (Proc)
 
 class DefinitionFile
-  attr_reader :nodes, :patterns
+  attr_reader :affected_nodes, :definition
 
   def initialize definition_file
-    @node = {}
-    @patterns = {}
     instance_eval File.read definition_file
   end
 
   private
 
   def nodes names=nil
-    names.each do |name|
-      if name.class == Regexp
-        @patterns[name] = @definition
-      else
-        @nodes[name] = @definition
-      end
-    end
+    @affected_nodes = [names].flatten
+    @definition = Proc.new # Proc.new without paramaters catches a given block
   end
 end
