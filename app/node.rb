@@ -1,9 +1,13 @@
 class Node
   def initialize
-    @definitions = []
+    @jobs = []
   end
 
-  def << definition
-    @definitions << definition
+  def << job
+    @jobs << job
+  end
+
+  def run
+    @jobs.each {|job| job.run!}
   end
 end

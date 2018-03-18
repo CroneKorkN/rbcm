@@ -1,4 +1,5 @@
 nodes "mail.sublimity.de" do
+  p self
     hostname :auto
 
     file "/wwwwwwwwwwwww", includes_line: "HALLOOOOOO"

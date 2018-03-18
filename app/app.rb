@@ -4,7 +4,8 @@ require "fileutils"
 require "./lib.rb"
 require "./capabilities.rb"
 require "./command.rb"
-require "./definition_file.rb"
+require "./node_file.rb"
+require "./definition.rb"
 require "./job.rb"
 require "./node.rb"
 
@@ -13,19 +14,23 @@ class RBCM
 
   def initialize
     @nodes = {}
+    load!
+    #run!
+    #diff!
+    #apply!
   end
 
-  def load_definitions!
+  def load!
     patterns = {}
     Dir["../config/nodes/**/*.rb"].each do |path|
-      definition_file = DefinitionFile.new(path)
-      definition_file.affected_nodes.each do |node_name|
+      node_file = NodeFile.new(path)
+      node_file.affected_nodes.each do |node_name|
         unless node_name.class == Regexp
           @nodes[node_name] = Node.new unless @nodes[node_name]
-          @nodes[node_name] << definition_file.definition
+          @nodes[node_name] << node_file.jobs
         else
           patterns[node_name] = [] unless patterns[node_name]
-          patterns[node_name] << definition_file.definition
+          patterns[node_name] << node_file.jobs
         end
       end
     end
@@ -37,13 +42,17 @@ class RBCM
     end
   end
 
-  def parse_definitions!
+  def run!
+    @nodes.each {|node| node.run!}
+  end
+
+  def diff!
+
+  end
+
+  def apply!
 
   end
 end
 
-rbcm = RBCM.new
-rbcm.load_definitions!
-rbcm.parse_definitions!
-
-pp rbcm
+pp RBCM.new
