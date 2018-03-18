@@ -10,10 +10,10 @@ class Capabilities
   end
 
   # calling 'needs' adds dependency to each command from now in this job
-  def needs capability
+  def needs *capabilities
     log error: "dont call 'needs' in node" unless @capability
     #log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
-    @dependency_cache << capability
+    @dependency_cache += [capabilities].flatten
   end
 
   def run command

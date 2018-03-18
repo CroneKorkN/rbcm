@@ -10,4 +10,6 @@ nodes "mail.sublimity.de" do
       'iotop',
       'apache2'
     ]
+
+    postgres db: "hallodb"
 end
