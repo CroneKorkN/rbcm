@@ -1,14 +1,15 @@
 class Job
   include Capabilities
-  attr_reader :commands
 
   def initialize capability, params
     @capability = capability
     @params = params
-    @commands = []
+    @dependency_cache = []
   end
 
-  def run
+  def commands
+    @commands = []
     self.send @capability, *@params
+    return @commands
   end
 end

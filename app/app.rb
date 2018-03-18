@@ -3,6 +3,7 @@
 require "fileutils"
 require "./lib.rb"
 require "./capabilities.rb"
+require "./command_list.rb"
 require "./command.rb"
 require "./node_file.rb"
 require "./definition.rb"
@@ -15,7 +16,7 @@ class RBCM
   def initialize
     @nodes = {}
     load!
-    #run!
+    run!
     #diff!
     #apply!
   end
@@ -43,7 +44,7 @@ class RBCM
   end
 
   def run!
-    @nodes.each {|node| node.run!}
+    @nodes.each {|name, node| node.run!}
   end
 
   def diff!
