@@ -2,21 +2,21 @@
 
 require "fileutils"
 require "./lib.rb"
+require "./node_file.rb"
+require "./node.rb"
 require "./capabilities.rb"
 require "./command_list.rb"
 require "./command.rb"
-require "./node_file.rb"
 require "./definition.rb"
 require "./job.rb"
-require "./node.rb"
 
 class RBCM
-  attr_accessor :nodes
+  attr_reader :nodes
 
   def initialize
     @nodes = {}
     load!
-    run!
+    #run!
     #diff!
     #apply!
   end
@@ -56,4 +56,7 @@ class RBCM
   end
 end
 
-pp RBCM.new
+rbcm = RBCM.new
+puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
+pp rbcm.nodes["srv.ckn.li"].commands
+#pp rbcm

@@ -1,14 +1,15 @@
 class Node
   def initialize
     @jobs = []
-    @commands = CommandList.new
   end
 
   def << jobs
     @jobs += jobs.flatten
   end
 
-  def run!
-    @jobs.each {|job| @commands += job.commands}
+  def commands
+    @commands ||= @jobs.collect {|job|
+      job.commands
+    }.flatten.extend(CommandList).resolve
   end
 end

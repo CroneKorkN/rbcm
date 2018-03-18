@@ -21,4 +21,7 @@ nodes "srv.ckn.li" do
   apt? :install
   #ubuntu? :ubuntu
   #service?
+
+  postgres db: "hallodb"
+
 end

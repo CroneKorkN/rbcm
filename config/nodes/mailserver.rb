@@ -11,5 +11,4 @@ nodes "mail.sublimity.de" do
       'apache2'
     ]
 
-    postgres db: "hallodb"
 end

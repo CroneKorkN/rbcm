@@ -36,8 +36,8 @@ class Node
   def resolve commands
     commands.each do |command|
       command.dependencies.each do |dependency|
-        commands - resolve(
-          pp commands.select {|command| command.capability == dependency}
+        p commands - resolve(
+          commands.select {|command| command.capability == dependency}
         )
       end
     end
