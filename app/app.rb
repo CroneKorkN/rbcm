@@ -16,7 +16,7 @@ class RBCM
   def initialize
     @nodes = {}
     load!
-    #run!
+    run!
     #diff!
     #apply!
   end
@@ -44,7 +44,7 @@ class RBCM
   end
 
   def run!
-    @nodes.each {|name, node| node.run!}
+    @nodes.each {|name, node| node.commands}
   end
 
   def diff!
@@ -56,7 +56,7 @@ class RBCM
   end
 end
 
-rbcm = RBCM.new
-puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
-pp rbcm.nodes["srv.ckn.li"].commands
+pp rbcm = RBCM.new
+#puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
+#pp rbcm.nodes["srv.ckn.li"].commands
 #pp rbcm
