@@ -14,6 +14,6 @@ class NodeFile
 
   def nodes names=nil
     @affected_nodes += [names].flatten
-    @jobs << Definition.new(Proc.new).jobs # Proc.new without paramaters catches a given block
+    @jobs += Definition.new(Proc.new).jobs # Proc.new without paramaters catches a given block
   end
 end

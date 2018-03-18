@@ -1,6 +1,4 @@
-class Job
-  include Capabilities
-
+class Job < Capabilities
   def initialize capability, params
     @capability = capability
     @params = params

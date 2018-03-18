@@ -4,12 +4,11 @@ class Node
     @commands = CommandList.new
   end
 
-  def << job
-    @jobs << job
+  def << jobs
+    @jobs += jobs.flatten
   end
 
   def run!
-    p @jobs.flatten.count
-    @jobs.flatten.each {|job| @commands += job.commands}
+    @jobs.each {|job| @commands += job.commands}
   end
 end

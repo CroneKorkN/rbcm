@@ -31,14 +31,14 @@ class RBCM
           @nodes[node_name] << node_file.jobs
         else
           patterns[node_name] = [] unless patterns[node_name]
-          patterns[node_name] << node_file.jobs
+          patterns[node_name] += node_file.jobs
         end
       end
     end
     # apply patterns after all explicit definitions are loaded
-    patterns.each do |pattern, definition|
+    patterns.each do |pattern, jobs|
       @nodes.each do |name, node|
-        node << definition if name.match /#{pattern}/
+        node << jobs if name.match /#{pattern}/
       end
     end
   end

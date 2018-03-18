@@ -1,3 +1,3 @@
 nodes [/.*/] do
-  file "/matchorator", content: "MUHAHA"
+  file "/tttttttttt", content: "MUHAHA"
 end
