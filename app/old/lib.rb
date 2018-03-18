@@ -1,3 +1,4 @@
+
 def log entry, warning: nil, error: nil
   puts entry or warning or error
 end
