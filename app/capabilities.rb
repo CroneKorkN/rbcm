@@ -1,27 +1,43 @@
 class Capabilities
   # include user-defined capabilities
-  Dir['../config/capabilities/*.rb'].each {|path| eval File.read path}
-  # define '?'-suffix version to read configuration
-  @@capabilities = instance_methods(false)
-  @@capabilities.each do |capability_name|
-    self.define_method "#{capability_name}?".to_sym do |param=nil|
-      jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-      unless param
-        # return ordered prarams
-        params = jobs.collect{|job| job.ordered_params}
-      else
-        # return values of a named param
-        params = jobs.find_all{ |job|
-          job.named_params.include? param if job.named_params
-        }.collect{ |job|
-          job.named_params
-        }.collect{ |named_params|
-          named_params[param]
-        }
+  unless defined? @@capabilities
+    Dir['../config/capabilities/*.rb'].each {|path| eval File.read path}
+    # define '?'-suffix version to read configuration
+    @@capabilities = instance_methods(false)
+    @@capabilities.each do |capability_name|
+      #####
+
+      define_method(
+        "__#{capability_name}".to_sym,
+        instance_method(capability_name)
+      )
+
+      
+
+      ######
+      self.define_method "#{capability_name}?".to_sym do |param=nil|
+        jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+        unless param
+          # return ordered prarams
+          params = jobs.collect{|job| job.ordered_params}
+        else
+          # return values of a named param
+          params = jobs.find_all{ |job|
+            job.named_params.include? param if job.named_params
+          }.collect{ |job|
+            job.named_params
+          }.collect{ |named_params|
+            named_params[param]
+          }
+        end
+        # return nil instead of empty array (sure?)
+        params.any? ? params : nil
       end
-      # return nil instead of empty array (sure?)
-      params.any? ? params : nil
     end
+  end
+
+  def self.capabilities
+    @@capabilities
   end
 
   # calling 'needs' adds dependency to each command from now in this job
@@ -57,5 +73,3 @@ class Capabilities
     ^ if includes_line
   end
 end
-
-#Capabilities.define_getters

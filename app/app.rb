@@ -53,7 +53,7 @@ rbcm.nodes.each do |name, node|
  puts "=============================================================="
  puts name
  pp node.jobs
- node.commands
+ pp node.commands
  #puts node.commands
 end
 #pp rbcm
