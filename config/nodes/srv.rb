@@ -2,18 +2,23 @@ nodes "srv.ckn.li" do
   ip "aaa"
   ip ["bbb", "ccc"]
   apt install: [
-    :apache2, :postgresql, :'redis-server',
-    :htop, :iotop,
-    :'zfs-dkms'
+    :apache2, :postgresql, :'redis-server'
   ]
 
   service :apache2, :restart
-  service :postgres, :enable
-  service :test, :stop
 
   apt install: :blablub
   apt "JODEL"
 
+  file "/MÖÖÖÖÖÖÖPULUS", content: "
+    WISSE
+    MER
+    NET
+  "
+  file "/matchorator", mode: 777
+  file "/matchorator", mode: 777
+  file "/matchorator", mode: 777
+  file "/matchorator", mode: 777
   file "/matchorator", mode: 777
 
   ubuntu :trusty
