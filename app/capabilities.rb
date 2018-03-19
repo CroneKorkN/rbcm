@@ -11,10 +11,12 @@ class Capabilities
         "__#{capability_name}".to_sym,
         instance_method(capability_name)
       )
-      define_method(capability_name.to_sym) do ||
-        send "__#{method}"
-
-
+      define_method(capability_name.to_sym) do |*params|
+        @capability_cache = capability_name
+        r = send "__#{__method__}", *params
+        @dependency_cache = []
+        return r
+      end
 
       ######
       self.define_method "#{capability_name}?".to_sym do |param=nil|
@@ -37,8 +39,6 @@ class Capabilities
       end
     end
   end
-
-  p methods
 
   def self.capabilities
     @@capabilities
