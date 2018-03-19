@@ -37,3 +37,5 @@ Ruby Config Management
  - files and manipulations as command-instances
    - default files dependency on all capabilities
  - http://tech.tulentsev.com/2012/04/define-module-programmatically/
+- run worker, not single jobs, otherwise '?'-suffix versions doesnt work and
+  local variables in node-files get lost

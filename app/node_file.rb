@@ -1,12 +1,12 @@
 # accepts a path to a node-file
-# provides affected node names and jobs lists
+# provides affected node names and definition
 
 class NodeFile
-  attr_reader :affected_nodes, :jobs
+  attr_reader :affected_nodes, :definition
 
   def initialize definition_file
     @affected_nodes = []
-    @jobs = []
+    @definition = Proc
     eval File.read definition_file
   end
 
@@ -14,6 +14,6 @@ class NodeFile
 
   def nodes names=nil
     @affected_nodes += [names].flatten
-    @jobs += Definition.new(Proc.new).jobs # Proc.new without paramaters catches a given block
+    @definition = Definition.new(Proc.new) # Proc.new without paramaters catches a given block
   end
 end

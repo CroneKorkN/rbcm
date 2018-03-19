@@ -9,6 +9,7 @@ require "./command_list.rb"
 require "./command.rb"
 require "./definition.rb"
 require "./job.rb"
+require "./command_collector.rb"
 
 class RBCM
   attr_reader :nodes
@@ -16,7 +17,7 @@ class RBCM
   def initialize
     @nodes = {}
     load!
-    run!
+    #run!
     #diff!
     #apply!
   end
@@ -28,23 +29,25 @@ class RBCM
       node_file.affected_nodes.each do |node_name|
         unless node_name.class == Regexp
           @nodes[node_name] = Node.new unless @nodes[node_name]
-          @nodes[node_name] << node_file.jobs
+          @nodes[node_name] << node_file.definition
         else
           patterns[node_name] = [] unless patterns[node_name]
-          patterns[node_name] += node_file.jobs
+          patterns[node_name] << node_file.definition
         end
       end
     end
     # apply patterns after all explicit definitions are loaded
-    patterns.each do |pattern, jobs|
-      @nodes.each do |name, node|
-        node << jobs if name.match /#{pattern}/
+    patterns.each do |pattern, definitions|
+      definitions.each do |definition|
+        @nodes.each do |name, node|
+          node << definition if name.match /#{pattern}/
+        end
       end
     end
   end
 
   def run!
-    @nodes.each {|name, node| node.commands}
+    @nodes.each {|name, node| p node.jobs}
   end
 
   def diff!
@@ -60,7 +63,7 @@ rbcm = RBCM.new
 #puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
 rbcm.nodes.each do |name, node|
  #puts name
- #pp node
+ pp node
  #puts node.commands
 end
 #pp rbcm

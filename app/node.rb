@@ -1,17 +1,19 @@
 class Node
-  attr_reader :jobs
+  attr_reader :jobs, :definitions
 
   def initialize
-    @jobs = []
+    @definitions = []
   end
 
-  def << jobs
-    @jobs += jobs
+  def << definition
+    @definitions << definition
+  end
+
+  def jobs
+    @jobs ||= @definitions.collect{|definition| definition.jobs}
   end
 
   def commands
-    @commands ||= @jobs.collect {|job|
-      job.commands self
-    }.flatten.extend(CommandList).resolve
+    @commands ||= CommandCollector.new(self).jobs.extend(CommandList).resolve
   end
 end

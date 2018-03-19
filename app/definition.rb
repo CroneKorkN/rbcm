@@ -2,11 +2,14 @@
 # accepts Proc and provides job list
 
 class Definition
-  attr_reader :jobs
+  attr_reader :definition
 
   def initialize definition
-    @jobs = []
-    instance_eval &definition
+    @definition = definition
+  end
+
+  def jobs
+    instance_eval &@definition unless @jobs
   end
 
   def method_missing capability, *params, &block

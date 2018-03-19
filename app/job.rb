@@ -1,10 +1,12 @@
-class Job < Capabilities
+# contains parameters send to capabilities
+# used to read configuration via "?"-suffix methods
+
+class Job
   attr_reader :capability, :params
 
   def initialize capability, params
     @capability = capability
     @params = params
-    @dependency_cache = []
   end
 
   def ordered_params
@@ -17,12 +19,5 @@ class Job < Capabilities
 
   def named_params?
     @params.last.class == Hash
-  end
-
-  def commands node
-    @node = node
-    @commands = []
-    self.send @capability, *@params
-    @commands
   end
 end
