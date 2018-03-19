@@ -1,16 +1,25 @@
 class Capabilities
+  # include user-defined capabilities
   Dir['../config/capabilities/*.rb'].each {|path| eval File.read path}
-
-  instance_methods(false).each do |capability_name|
+  # define '?'-suffix version to read configuration
+  @@capabilities = instance_methods(false)
+  @@capabilities.each do |capability_name|
     define_method "#{capability_name}?".to_sym do |param=nil|
       jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+      p @node.jobs.count
+      p jobs.count
+      jobs.each do |job|
+        p job.ordered_params
+        p job.named_params
+      end
       unless param
         # return ordered prarams
+        p jobs.collect{|job| job.ordered_params}.transpose
         params = jobs.collect{|job| job.ordered_params}.transpose
       else
         # return values of a named param
         params = jobs.find_all{ |job|
-          job.named_params.include? param
+          job.named_params.include? param if job.named_params
         }.collect{ |job|
           job.named_params
         }.collect{ |named_params|
@@ -54,5 +63,4 @@ class Capabilities
       fi
     ^ if includes_line
   end
-
 end

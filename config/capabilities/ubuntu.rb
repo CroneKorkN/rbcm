@@ -1,3 +1,3 @@
-def ubuntu version: nil
-  run "ip #{adresses}"
+def ubuntu version=nil
+  run "ubuntu #{version}"
 end

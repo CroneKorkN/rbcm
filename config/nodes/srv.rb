@@ -15,12 +15,14 @@ nodes "srv.ckn.li" do
 
   file "/matchorator", mode: 777
 
+  ubuntu :trusty
+
   #hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
   #hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
 
-  #apt? :install
-  #ubuntu? :ubuntu
   p apt?
+  apt? :install
+  ubuntu? :ubuntu
 
   postgres db: "hallodb"
 
