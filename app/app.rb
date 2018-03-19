@@ -60,7 +60,7 @@ rbcm = RBCM.new
 #puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
 rbcm.nodes.each do |name, node|
  #puts name
- pp node
+ #pp node
  #puts node.commands
 end
 #pp rbcm

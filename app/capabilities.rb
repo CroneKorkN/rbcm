@@ -3,12 +3,9 @@ class Capabilities
   Dir['../config/capabilities/*.rb'].each {|path| eval File.read path}
   # define '?'-suffix version to read configuration
   @@capabilities = instance_methods(false)
-
-  def define_getters
-    @@capabilities.each do |capability_name|
-      self.define_singleton_method "#{capability_name}?".to_sym do |param=nil|
-        "XXXXXXXXXXXXXXXXXXX"
-      end
+  @@capabilities.each do |capability_name|
+    self.define_method "#{capability_name}?".to_sym do |param=nil|
+      "XXXXXXXXXXXXXXXXXXX"
     end
   end
 

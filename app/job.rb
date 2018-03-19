@@ -5,7 +5,6 @@ class Job < Capabilities
     @capability = capability
     @params = params
     @dependency_cache = []
-    define_getters
   end
 
   def ordered_params
@@ -21,8 +20,6 @@ class Job < Capabilities
   end
 
   def commands node
-    p apt?
-
     @node = node
     @commands = []
     self.send @capability, *@params

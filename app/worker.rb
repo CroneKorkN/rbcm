@@ -1,0 +1,2 @@
+class Worker < Capabilities
+end
