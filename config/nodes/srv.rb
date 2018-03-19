@@ -12,6 +12,7 @@ nodes "srv.ckn.li" do
   service :test, :stop
 
   apt install: :blablub
+  apt "JODEL"
 
   file "/matchorator", mode: 777
 
@@ -20,9 +21,14 @@ nodes "srv.ckn.li" do
   #hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
   #hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
 
-  p apt?
-  apt? :install
-  ubuntu? :ubuntu
+  p ubuntu?
+
+  if apt?(:install).include? :blablub
+    p "HALLO"
+  end
+  if apt?(:install).include? :blablddub
+    p "HALLO222"
+  end
 
   postgres db: "hallodb"
 end

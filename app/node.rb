@@ -10,7 +10,7 @@ class Node
   end
 
   def jobs
-    @jobs ||= @definitions.collect{|definition| definition.jobs}
+    @jobs ||= @definitions.collect{|definition| definition.jobs}.flatten
   end
 
   def commands

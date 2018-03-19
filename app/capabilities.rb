@@ -5,7 +5,22 @@ class Capabilities
   @@capabilities = instance_methods(false)
   @@capabilities.each do |capability_name|
     self.define_method "#{capability_name}?".to_sym do |param=nil|
-      return @node.jobs.flatten.count
+      jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+      unless param
+        # return ordered prarams
+        params = jobs.collect{|job| job.ordered_params}
+      else
+        # return values of a named param
+        params = jobs.find_all{ |job|
+          job.named_params.include? param if job.named_params
+        }.collect{ |job|
+          job.named_params
+        }.collect{ |named_params|
+          named_params[param]
+        }
+      end
+      # return nil instead of empty array (sure?)
+      params.any? ? params : nil
     end
   end
 
