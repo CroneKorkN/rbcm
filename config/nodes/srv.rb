@@ -18,9 +18,9 @@ nodes "srv.ckn.li" do
   #hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
   #hostname "name", :pampa, test: 87587, test2: :iugg, test3: :iugsaiusg
 
-  apt? :install
+  #apt? :install
   #ubuntu? :ubuntu
-  #service?
+  p apt?
 
   postgres db: "hallodb"
 

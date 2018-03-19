@@ -11,7 +11,6 @@ module CommandList
 
   def resolve_command this
     self.select{ |command|
-      p this
       this.dependencies.include? command.capability
     }.each{ |command|
       resolve_command command

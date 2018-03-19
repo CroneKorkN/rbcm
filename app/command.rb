@@ -8,4 +8,8 @@ class Command
     @line = line
     @dependencies = [:file] + [dependencies].flatten - [capability]
   end
+
+  def to_s
+    "> #{@line.ljust(40, " ")} # #{@capability.to_s.ljust(10, " ")} # #{@dependencies}"
+  end
 end

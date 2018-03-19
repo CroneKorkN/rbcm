@@ -56,7 +56,10 @@ class RBCM
   end
 end
 
-pp rbcm = RBCM.new
+rbcm = RBCM.new
 #puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
-#pp rbcm.nodes["srv.ckn.li"].commands
+rbcm.nodes.each do |name, node|
+ puts name
+ puts node.commands
+end
 #pp rbcm

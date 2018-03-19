@@ -1,11 +1,24 @@
 class Capabilities
   Dir['../config/capabilities/*.rb'].each {|path| eval File.read path}
 
-  def self.define_getter_methods
-    instance_methods(false).each do |capability_name|
-      define_method "#{capability_name}?".to_sym do |param=nil|
-
+  instance_methods(false).each do |capability_name|
+    define_method "#{capability_name}?".to_sym do |param=nil|
+      jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+      unless param
+        # return ordered prarams
+        params = jobs.collect{|job| job.ordered_params}.transpose
+      else
+        # return values of a named param
+        params = jobs.find_all{ |job|
+          job.named_params.include? param
+        }.collect{ |job|
+          job.named_params
+        }.collect{ |named_params|
+          named_params[param]
+        }
       end
+      # return nil instead of empty array (sure?)
+      nil unless params.any?
     end
   end
 
@@ -42,5 +55,4 @@ class Capabilities
     ^ if includes_line
   end
 
-  define_getter_methods
 end
