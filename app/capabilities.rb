@@ -11,8 +11,10 @@ class Capabilities
         "__#{capability_name}".to_sym,
         instance_method(capability_name)
       )
+      define_method(capability_name.to_sym) do ||
+        send "__#{method}"
 
-      
+
 
       ######
       self.define_method "#{capability_name}?".to_sym do |param=nil|
@@ -35,6 +37,8 @@ class Capabilities
       end
     end
   end
+
+  p methods
 
   def self.capabilities
     @@capabilities
