@@ -3,31 +3,12 @@ class Capabilities
   Dir['../config/capabilities/*.rb'].each {|path| eval File.read path}
   # define '?'-suffix version to read configuration
   @@capabilities = instance_methods(false)
-  @@capabilities.each do |capability_name|
-    define_method "#{capability_name}?".to_sym do |param=nil|
-      jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-      p @node.jobs.count
-      p jobs.count
-      jobs.each do |job|
-        p job.ordered_params
-        p job.named_params
+
+  def define_getters
+    @@capabilities.each do |capability_name|
+      self.define_singleton_method "#{capability_name}?".to_sym do |param=nil|
+        "XXXXXXXXXXXXXXXXXXX"
       end
-      unless param
-        # return ordered prarams
-        p jobs.collect{|job| job.ordered_params}.transpose
-        params = jobs.collect{|job| job.ordered_params}.transpose
-      else
-        # return values of a named param
-        params = jobs.find_all{ |job|
-          job.named_params.include? param if job.named_params
-        }.collect{ |job|
-          job.named_params
-        }.collect{ |named_params|
-          named_params[param]
-        }
-      end
-      # return nil instead of empty array (sure?)
-      nil unless params.any?
     end
   end
 
@@ -64,3 +45,5 @@ class Capabilities
     ^ if includes_line
   end
 end
+
+#Capabilities.define_getters
