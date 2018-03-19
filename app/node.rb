@@ -10,11 +10,10 @@ class Node
   end
 
   def jobs
-    p 111
     @jobs ||= @definitions.collect{|definition| definition.jobs}
   end
 
   def commands
-    @commands ||= CommandCollector.new(self).jobs.extend(CommandList).resolve
+    @commands ||= CommandCollector.new(self).commands.extend(CommandList).resolve
   end
 end
