@@ -5,6 +5,8 @@ nodes "srv.ckn.li" do
     :apache2, :postgresql, :'redis-server'
   ]
 
+  a=2
+
   service :apache2, :restart
 
   apt install: :blablub
@@ -17,7 +19,7 @@ nodes "srv.ckn.li" do
   "
   file "/matchorator", mode: 777
   file "/matchorator", mode: 777
-  file "/matchorator", mode: 777
+  file "/var/lib/mysql", mode: 777
   file "/matchorator", mode: 777
   file "/matchorator", mode: 777
 
@@ -31,6 +33,8 @@ nodes "srv.ckn.li" do
   if apt?(:install).include? :blablddub
     p "HALLO222"
   end
+
+  p a
 
   postgres db: "hallodb"
 end

@@ -44,12 +44,12 @@ class Capabilities
   end
 
   @@capabilities.each do |capability_name|
-    #####
-
+    # copy method
     define_method(
       "__#{capability_name}".to_sym,
       instance_method(capability_name)
     )
+    # define wrapper method
     define_method(capability_name.to_sym) do |*params|
       @capability_cache = capability_name
       r = send "__#{__method__}", *params

@@ -16,4 +16,12 @@ class Node
   def commands
     @commands ||= CommandCollector.new(self).commands.extend(CommandList).resolve
   end
+
+  def affected_files
+    @affected_files ||= jobs.select{ |job|
+      job.capability == :file
+    }.collect{ |job|
+      job.ordered_params[0] || nil
+    }
+  end
 end

@@ -54,6 +54,7 @@ rbcm.nodes.each do |name, node|
  puts name
  pp node.jobs
  pp node.commands
+ pp node.affected_files
  #puts node.commands
 end
 #pp rbcm
