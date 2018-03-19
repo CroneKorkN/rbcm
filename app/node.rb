@@ -10,6 +10,7 @@ class Node
   end
 
   def jobs
+    p 111
     @jobs ||= @definitions.collect{|definition| definition.jobs}
   end
 
