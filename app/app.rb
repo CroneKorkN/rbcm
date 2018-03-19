@@ -1,19 +1,12 @@
 #!/usr/local/bin/ruby
 
-
 APPDIR = File.expand_path File.dirname(__FILE__)
 PWD = ARGV[0]
 require "fileutils"
-require "#{APPDIR}/lib.rb"
-require "#{APPDIR}/node_file.rb"
-require "#{APPDIR}/node.rb"
-require "#{APPDIR}/capabilities.rb"
-require "#{APPDIR}/command_list.rb"
-require "#{APPDIR}/command.rb"
-require "#{APPDIR}/definition.rb"
-require "#{APPDIR}/job.rb"
-require "#{APPDIR}/command_collector.rb"
-require "#{APPDIR}/remote.rb"
+[ :lib, :node_file, :node, :capabilities, :command_list, :command,
+  :command_collector, :definition, :job, :remote
+].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
+
 
 class RBCM
   attr_reader :nodes
