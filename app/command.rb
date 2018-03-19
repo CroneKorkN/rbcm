@@ -1,11 +1,14 @@
 class Command
-  attr_accessor :line
-  attr_accessor :capability
-  attr_accessor :dependencies
+  include Params
+  attr_reader :line
+  attr_reader :capability
+  attr_reader :params
+  attr_reader :dependencies
 
-  def initialize line, capability, dependencies
-    @capability = capability
+  def initialize line:, capability:, params:, dependencies:
     @line = line
+    @capability = capability
+    @params = params
     @dependencies = [:file] + [dependencies].flatten - [capability]
   end
 

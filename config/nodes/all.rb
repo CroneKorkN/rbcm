@@ -1,3 +1,3 @@
 nodes [/.*/] do
-  file "/tttttttttt", content: "MUHAHA"
+  file "/file/vong/gruppe", content: "MUHAHA"
 end

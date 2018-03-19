@@ -31,11 +31,6 @@ Ruby Config Management
 - commands are executed on server
 
 # TODO
- - add version of capability with '?'-suffix to check for config
  - jobs handle blocks
- - per capability dependencys?
- - files and manipulations as command-instances
-   - default files dependency on all capabilities
  - http://tech.tulentsev.com/2012/04/define-module-programmatically/
-- run worker, not single jobs, otherwise '?'-suffix versions doesnt work and
-  local variables in node-files get lost
+- capabilitity stack in command object

@@ -18,7 +18,12 @@ class Capabilities
   end
 
   def run command
-    @commands << Command.new(command, @capability_cache, @dependency_cache)
+    @commands << Command.new(
+      line: command,
+      capability: @capability_cache,
+      params: @params_cache,
+      dependencies: @dependency_cache
+    )
   end
 
   def manipulate command
@@ -52,6 +57,7 @@ class Capabilities
     # define wrapper method
     define_method(capability_name.to_sym) do |*params|
       @capability_cache = capability_name
+      @params_cache = params || nil
       r = send "__#{__method__}", *params
       @dependency_cache = [:file]
       return r

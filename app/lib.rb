@@ -8,3 +8,17 @@ module Kernel
     object.instance_eval &block
   end
 end
+
+module Params
+  def ordered_params
+    named_params? ? @params[0..-2] : @params
+  end
+
+  def named_params
+    @params.last if named_params?
+  end
+
+  def named_params?
+    @params.last.class == Hash
+  end
+end

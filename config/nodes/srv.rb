@@ -19,9 +19,6 @@ nodes "srv.ckn.li" do
   "
   file "/matchorator", mode: 777
   file "/matchorator", mode: 777
-  file "/var/lib/mysql", mode: 777
-  file "/matchorator", mode: 777
-  file "/matchorator", mode: 777
 
   ubuntu :trusty
 

@@ -1,5 +1,5 @@
 class CommandCollector < Capabilities
-  attr_accessor :commands
+  attr_reader :commands
 
   def initialize node
     @node = node
@@ -8,9 +8,5 @@ class CommandCollector < Capabilities
     node.definitions.each do |definition|
       instance_eval &definition.definition
     end
-  end
-
-  def ckn
-    :ckn
   end
 end

@@ -18,10 +18,10 @@ class Node
   end
 
   def affected_files
-    @affected_files ||= jobs.select{ |job|
-      job.capability == :file
-    }.collect{ |job|
-      job.ordered_params[0] || nil
+    @affected_files ||= commands.select{ |command|
+      command.capability == :file
+    }.collect{ |command|
+      command.ordered_params.first
     }
   end
 end
