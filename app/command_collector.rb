@@ -9,4 +9,8 @@ class CommandCollector < Capabilities
       instance_eval &definition.definition
     end
   end
+
+  def ckn
+    :ckn
+  end
 end

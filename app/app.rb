@@ -45,26 +45,14 @@ class RBCM
       end
     end
   end
-
-  def run!
-    @nodes.each {|name, node| p node.jobs}
-  end
-
-  def diff!
-
-  end
-
-  def apply!
-
-  end
 end
 
 rbcm = RBCM.new
 #puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
 rbcm.nodes.each do |name, node|
  #puts name
- #pp node.jobs
- #pp node.commands
+ pp node.jobs
+ node.commands
  #puts node.commands
 end
 #pp rbcm

@@ -5,13 +5,13 @@ class Capabilities
   @@capabilities = instance_methods(false)
   @@capabilities.each do |capability_name|
     self.define_method "#{capability_name}?".to_sym do |param=nil|
-      "XXXXXXXXXXXXXXXXXXX"
+      return @node.jobs.flatten.count
     end
   end
 
   # calling 'needs' adds dependency to each command from now in this job
   def needs *capabilities
-    log error: "dont call 'needs' in node" unless @capability
+    #log error: "dont call 'needs' in node" unless @capability
     #log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
     @dependency_cache += [capabilities].flatten
   end

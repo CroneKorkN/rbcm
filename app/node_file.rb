@@ -7,7 +7,7 @@ class NodeFile
   def initialize definition_file
     @affected_nodes = []
     @definition = Proc
-    eval File.read definition_file
+    instance_eval File.read definition_file
   end
 
   private

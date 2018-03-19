@@ -10,6 +10,12 @@ class Definition
     instance_eval &@definition
   end
 
+  private
+
+  # prevent strange p and puts behavious within node block
+  def p *params; end
+  def puts *param; end
+
   def method_missing capability, *params, &block
     @jobs << Job.new(capability, params)
   end
