@@ -1,15 +1,19 @@
 #!/usr/local/bin/ruby
 
+
+APPDIR = File.expand_path File.dirname(__FILE__)
+PWD = ARGV[0]
 require "fileutils"
-require "./lib.rb"
-require "./node_file.rb"
-require "./node.rb"
-require "./capabilities.rb"
-require "./command_list.rb"
-require "./command.rb"
-require "./definition.rb"
-require "./job.rb"
-require "./command_collector.rb"
+require "#{APPDIR}/lib.rb"
+require "#{APPDIR}/node_file.rb"
+require "#{APPDIR}/node.rb"
+require "#{APPDIR}/capabilities.rb"
+require "#{APPDIR}/command_list.rb"
+require "#{APPDIR}/command.rb"
+require "#{APPDIR}/definition.rb"
+require "#{APPDIR}/job.rb"
+require "#{APPDIR}/command_collector.rb"
+require "#{APPDIR}/remote.rb"
 
 class RBCM
   attr_reader :nodes
@@ -24,11 +28,11 @@ class RBCM
 
   def load!
     patterns = {}
-    Dir["../config/nodes/**/*.rb"].each do |path|
+    Dir["#{PWD}/nodes/**/*.rb"].each do |path|
       node_file = NodeFile.new(path)
       node_file.affected_nodes.each do |node_name|
         unless node_name.class == Regexp
-          @nodes[node_name] = Node.new unless @nodes[node_name]
+          @nodes[node_name] = Node.new node_name unless @nodes[node_name]
           @nodes[node_name] << node_file.definition
         else
           patterns[node_name] = [] unless patterns[node_name]
@@ -47,14 +51,19 @@ class RBCM
   end
 end
 
+p PWD
+p APPDIR
 rbcm = RBCM.new
 #puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
 rbcm.nodes.each do |name, node|
  puts "=============================================================="
  puts name
  pp node.jobs
- pp node.commands
- pp node.affected_files
+ puts node.commands
+ node.affected_files.each do |file|
+   puts node.remote.execute! "cat #{file}"
+ end
+
  #puts node.commands
 end
 #pp rbcm

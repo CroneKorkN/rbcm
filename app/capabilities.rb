@@ -1,7 +1,7 @@
 class Capabilities
   # include user-defined capabilities
   unless defined? @@capabilities
-    Dir['../config/capabilities/*.rb'].each {|path| eval File.read path}
+    Dir["#{PWD}/capabilities/*.rb"].each {|path| eval File.read path}
     # define '?'-suffix version to read configuration
     @@capabilities = instance_methods(false) + [:file, :manipulate]
   end

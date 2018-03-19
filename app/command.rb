@@ -15,4 +15,8 @@ class Command
   def to_s
     "> #{@line.ljust(40, " ")} # #{@capability.to_s.ljust(10, " ")} # #{@dependencies}"
   end
+
+  def to_s
+    "#{@capability} #{@params.to_s[1..-2]}\n  #{@line}"
+  end
 end

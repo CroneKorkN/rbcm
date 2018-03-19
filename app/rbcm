@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ruby "$(dirname $(readlink $0))/app.rb" "$(pwd)"

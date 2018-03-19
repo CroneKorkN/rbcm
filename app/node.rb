@@ -1,7 +1,8 @@
 class Node
   attr_reader :jobs, :definitions
 
-  def initialize
+  def initialize name
+    @name = name
     @definitions = []
   end
 
@@ -15,6 +16,19 @@ class Node
 
   def commands
     @commands ||= CommandCollector.new(self).commands.extend(CommandList).resolve
+  end
+
+  def diff
+    # local vs remote state
+  end
+
+  def state
+    # local state
+    
+  end
+
+  def remote
+    @remote ||= Remote.new @name
   end
 
   def affected_files

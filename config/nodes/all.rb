@@ -1,3 +1,3 @@
 nodes [/.*/] do
-  file "/file/vong/gruppe", content: "MUHAHA"
+  file "~/rbcm.state", content: "MUHAHA"
 end
