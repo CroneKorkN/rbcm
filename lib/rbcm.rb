@@ -1,12 +1,9 @@
-#!/usr/local/bin/ruby
-
 APPDIR = File.expand_path File.dirname(__FILE__)
 PWD = ARGV[0]
 require "fileutils"
 [ :lib, :node_file, :node, :capabilities, :command_list, :command,
   :command_collector, :definition, :job, :remote
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
-
 
 class RBCM
   attr_reader :nodes
@@ -20,6 +17,7 @@ class RBCM
   end
 
   def load!
+    # load project
     patterns = {}
     Dir["#{PWD}/nodes/**/*.rb"].each do |path|
       node_file = NodeFile.new(path)
@@ -44,8 +42,6 @@ class RBCM
   end
 end
 
-p PWD
-p APPDIR
 rbcm = RBCM.new
 #puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
 rbcm.nodes.each do |name, node|

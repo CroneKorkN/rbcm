@@ -4,7 +4,8 @@ class Remote
   end
 
   def execute! command
-    p `ssh pi@#{@name} 'echo \'#{command}\' >> ~/rbcm.log'`
+    `ssh root@#{@name} #{command}`
+    `ssh root@#{@name} 'echo \'#{command}\' >> ~/rbcm.log'`
   end
 
   def state
@@ -16,6 +17,6 @@ class Remote
   end
 
   def pull file
-
+    
   end
 end

@@ -34,3 +34,6 @@ Ruby Config Management
  - jobs handle blocks
  - http://tech.tulentsev.com/2012/04/define-module-programmatically/
 - capabilitity stack in command object
+- jobs dont cover indirect calls (from within cap)
+
+`rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
