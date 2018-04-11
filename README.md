@@ -31,9 +31,15 @@ Ruby Config Management
 - commands are executed on server
 
 # TODO
+
  - jobs handle blocks
  - http://tech.tulentsev.com/2012/04/define-module-programmatically/
 - capabilitity stack in command object
 - jobs dont cover indirect calls (from within cap)
+- optional seperation of metadata collection and capability execution
+  - optionally define an "!"-suffix-version of a capability
+  - executed ones after all collections are run
+  - thus, you can collect metadata with `cap do: something` and process it ones
+    via `cap!`-method
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
