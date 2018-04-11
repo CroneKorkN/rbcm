@@ -41,5 +41,6 @@ Ruby Config Management
   - executed ones after all collections are run
   - thus, you can collect metadata with `cap do: something` and process it ones
     via `cap!`-method
+  - maybe use '=' instead of '!'
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
