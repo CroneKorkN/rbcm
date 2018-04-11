@@ -1,5 +1,5 @@
-APPDIR = File.expand_path File.dirname(__FILE__)
 PWD = ARGV[0]
+APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
 [ :lib, :node_file, :node, :capabilities, :command_list, :command,
   :command_collector, :definition, :job, :remote
@@ -52,7 +52,6 @@ rbcm.nodes.each do |name, node|
  node.affected_files.each do |file|
    puts node.remote.execute! "cat #{file}"
  end
-
  #puts node.commands
 end
 #pp rbcm

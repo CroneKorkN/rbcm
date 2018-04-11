@@ -1,4 +1,4 @@
 class Diff
-  def initiated
+  def initialize
   end
 end
