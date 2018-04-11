@@ -23,8 +23,8 @@ Ruby Config Management
   - the block passed to the nodes function ist cought via 'Proc.new'
   - Proc (with definitions in it) is saved in an array in the corresponding node
 - RBCM.render makes the nodes call the saved definitions
-- capability takes the parameters of the definition and generates commands to be run
-  on the node
+- capability takes the parameters of the definition and generates commands to be
+  run on the node
 - commands are saved, files generated
 - files are pushed to server, file manipulations applied
   - 'file' capability has priority over commands
@@ -41,6 +41,8 @@ Ruby Config Management
   - executed ones after all collections are run
   - thus, you can collect metadata with `cap do: something` and process it ones
     via `cap!`-method
+  - `cap=` only gets applied to node, if `cap` has been either
   - maybe use '=' instead of '!'
+- define dependencies outside of capatability method?
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
