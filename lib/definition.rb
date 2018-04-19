@@ -2,12 +2,12 @@
 # accepts definition-Proc and provides definition-Proc and job list
 
 class Definition
-  attr_reader :definition, :jobs
+  attr_reader :content, :jobs
 
-  def initialize definition
-    @definition = definition
+  def initialize content
+    @content = content
     @jobs = []
-    instance_eval &@definition
+    instance_eval &@content
   end
 
   private

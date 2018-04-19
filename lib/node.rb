@@ -1,5 +1,5 @@
 class Node
-  attr_reader :jobs, :definitions
+  attr_reader :jobs, :definitions, :capabilities
 
   def initialize name
     @name = name
@@ -19,12 +19,12 @@ class Node
   end
 
   def diff
-    # local vs remote state
+    Diff.new self # local vs remote state
   end
 
   def state
     # local state
-    
+
   end
 
   def remote

@@ -38,11 +38,14 @@ Ruby Config Management
 - jobs dont cover indirect calls (from within cap)
 - optional seperation of metadata collection and capability execution
   - optionally define an "!"-suffix-version of a capability
-  - executed ones after all collections are run
+  - executed once after all collections are run
   - thus, you can collect metadata with `cap do: something` and process it ones
     via `cap!`-method
   - `cap=` only gets applied to node, if `cap` has been either
   - maybe use '=' instead of '!'
 - define dependencies outside of capatability method?
+- maybe `cap` only for metadata and `cap!` only for intrusive commands (file,
+  run)?
+-
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`

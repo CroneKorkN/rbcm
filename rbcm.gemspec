@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.executables << 'rbcm'
   spec.homepage    = 'https://github.com/CroneKorkN/rbcm'
   spec.license     = 'MIT'
+  spec.add_runtime_dependency 'mustache'
 end
