@@ -1,48 +1,51 @@
-require "fileutils"
+PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
-[ :lib, :node_file, :node, :capabilities, :command_list, :command,
+require "fileutils"
+[ :lib, :definition_file, :node, :capabilities, :command_list, :command,
   :command_collector, :definition, :job, :remote
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
-  attr_reader :nodes, :project_path
+  attr_reader :nodes, :groups, :project_path
 
   def initialize project_path
-    @nodes = {}
     @project_path = project_path
+    @patterns = {}
+    @nodes = {}
+    @groups = {}
+    load!
+    #run!
+    #diff!
+    #apply!
   end
 
-  def load
+  def load!
     patterns = {}
-    Dir["#{@project_path}/nodes/**/*.rb"].each do |path|
-      node_file = NodeFile.new(path)
-      node_file.affected_nodes.each do |node_name|
-        unless node_name.class == Regexp
-          @nodes[node_name] = Node.new node_name unless @nodes[node_name]
-          @nodes[node_name] << node_file.definition
-        else
-          patterns[node_name] = [] unless patterns[node_name]
-          patterns[node_name] << node_file.definition
-        end
+    Dir["#{PWD}/nodes/**/*.rb"].each do |path|
+      definition_file = DefinitionFile.new(path)
+      @groups += definition_file.groups
+      @patterns += definition_file.patterns
+      definition_file.nodes.each do |name, definition|
+        @nodes[name] = Node.new name unless @nodes[name]
+        @nodes[name] << definition
       end
     end
-    # apply patterns after all explicit definitions are loaded
-    patterns.each do |pattern, definitions|
-      definitions.each do |definition|
-        @nodes.each do |name, node|
-          node << definition if name.match /#{pattern}/
-        end
+    @patterns.each do |pattern, definition|
+      @nodes.find(/#{pattern}/).each do |node|
+        node << definition
       end
     end
-  end
-
-  def approve
-  end
-
-  def apply
   end
 end
 
-RBCM.new 23525
-#rbcm.approve
-#rbcm.apply
+rbcm = RBCM.new ARGV[0]
+#puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
+rbcm.nodes.each do |name, node|
+ puts "=============================================================="
+ puts name
+ pp node.jobs
+ puts node.commands
+ p node.affected_files
+ #puts node.commands
+end
+#pp rbcm

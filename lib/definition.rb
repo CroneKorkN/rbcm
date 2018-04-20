@@ -1,13 +1,11 @@
 # runs a definition and catches jobs
 # accepts definition-Proc and provides definition-Proc and job list
 
-class Definition
-  attr_reader :content, :jobs
-
+class Definition < Capabilities
   def initialize content
     @content = content
     @jobs = []
-    instance_eval &@content
+    instance_eval &@definition
   end
 
   private

@@ -1,8 +1,9 @@
 class Node
-  attr_reader :jobs, :definitions, :capabilities
+  attr_reader :jobs, :definitions, :groups
 
   def initialize name
     @name = name
+    @groups = {}
     @definitions = []
   end
 
@@ -19,12 +20,15 @@ class Node
   end
 
   def diff
-    Diff.new self # local vs remote state
+    # local vs remote state
   end
 
   def state
     # local state
+  end
 
+  def capabilities
+    @capabilities ||= jobs.collect{|job| job.capability}
   end
 
   def remote

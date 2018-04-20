@@ -12,10 +12,10 @@ Gem::Specification.new do |spec|
     "lib/command_list.rb",
     "lib/command.rb",
     "lib/definition.rb",
+    "lib/definition_file.rb",
     "lib/diff.rb",
     "lib/job.rb",
     "lib/lib.rb",
-    "lib/node_file.rb",
     "lib/node.rb",
     "lib/rbcm.rb",
     "lib/remote.rb",
@@ -23,5 +23,4 @@ Gem::Specification.new do |spec|
   spec.executables << 'rbcm'
   spec.homepage    = 'https://github.com/CroneKorkN/rbcm'
   spec.license     = 'MIT'
-  spec.add_runtime_dependency 'mustache'
 end

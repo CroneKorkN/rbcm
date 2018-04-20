@@ -22,3 +22,9 @@ module Params
     @params.last.class == Hash
   end
 end
+
+class Hash
+  def + hash
+    merge hash
+  end
+end

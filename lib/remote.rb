@@ -4,6 +4,7 @@ class Remote
   end
 
   def execute! command
+    p 1
     `ssh root@#{@name} #{command}`
     `ssh root@#{@name} 'echo \'#{command}\' >> ~/rbcm.log'`
   end
@@ -17,6 +18,6 @@ class Remote
   end
 
   def pull file
-    
+
   end
 end

@@ -1,13 +1,15 @@
 class Command
   include Params
-  attr_reader :line, :capability, :params, :dependencies, :check
+  attr_reader :line
+  attr_reader :capability
+  attr_reader :params
+  attr_reader :dependencies
 
-  def initialize line:, capability:, params:, dependencies:, check: nil
+  def initialize line:, capability:, params:, dependencies:
     @line = line
     @capability = capability
     @params = params
     @dependencies = [:file] + [dependencies].flatten - [capability]
-    @check = check
   end
 
   def to_s

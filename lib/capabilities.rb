@@ -1,12 +1,9 @@
-# contains all capabilities
-
 class Capabilities
   # include user-defined capabilities
   unless defined? @@capabilities
-    Dir["#{ARGV[1]}/capabilities/*.rb"].each {|path| eval File.read path}
-    @@capabilities = (
-      instance_methods(false) + [:file, :manipulate]
-    ).grep /.*[^\!]$/ # filter 'cap!'
+    Dir["#{PWD}/capabilities/*.rb"].each {|path| eval File.read path}
+    # define '?'-suffix version to read configuration
+    @@capabilities = instance_methods(false) + [:file, :manipulate]
   end
 
   def self.capabilities
@@ -20,13 +17,12 @@ class Capabilities
     @dependency_cache += [capabilities].flatten
   end
 
-  def run command, check: nil
+  def run command
     @commands << Command.new(
       line: command,
       capability: @capability_cache,
       params: @params_cache,
-      dependencies: @dependency_cache,
-      check: check
+      dependencies: @dependency_cache
     )
   end
 
@@ -66,9 +62,9 @@ class Capabilities
       @dependency_cache = [:file]
       return r
     end
-    # define '?'-suffix version to read configuration
+
+    ######
     self.define_method "#{capability_name}?".to_sym do |param=nil|
-      raise "only call #{capability_name}? in cap!" unless @getter_methods
       jobs = @node.jobs.find_all{|job| job.capability == capability_name}
       unless param
         # return ordered prarams
