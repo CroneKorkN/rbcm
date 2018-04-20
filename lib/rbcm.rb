@@ -1,25 +1,20 @@
-PWD = ARGV[0]
-APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
+APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :node_file, :node, :capabilities, :command_list, :command,
   :command_collector, :definition, :job, :remote
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
-  attr_reader :nodes
+  attr_reader :nodes, :project_path
 
-  def initialize
+  def initialize project_path
     @nodes = {}
-    load!
-    #run!
-    #diff!
-    #apply!
+    @project_path = project_path
   end
 
-  def load!
-    # load project
+  def load
     patterns = {}
-    Dir["#{PWD}/nodes/**/*.rb"].each do |path|
+    Dir["#{@project_path}/nodes/**/*.rb"].each do |path|
       node_file = NodeFile.new(path)
       node_file.affected_nodes.each do |node_name|
         unless node_name.class == Regexp
@@ -40,18 +35,14 @@ class RBCM
       end
     end
   end
+
+  def approve
+  end
+
+  def apply
+  end
 end
 
-rbcm = RBCM.new
-#puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
-rbcm.nodes.each do |name, node|
- puts "=============================================================="
- puts name
- pp node.jobs
- puts node.commands
- node.affected_files.each do |file|
-   puts node.remote.execute! "cat #{file}"
- end
- #puts node.commands
-end
-#pp rbcm
+RBCM.new 23525
+#rbcm.approve
+#rbcm.apply

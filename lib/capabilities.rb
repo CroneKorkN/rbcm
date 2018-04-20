@@ -3,7 +3,7 @@
 class Capabilities
   # include user-defined capabilities
   unless defined? @@capabilities
-    Dir["#{PWD}/capabilities/*.rb"].each {|path| eval File.read path}
+    Dir["#{ARGV[1]}/capabilities/*.rb"].each {|path| eval File.read path}
     @@capabilities = (
       instance_methods(false) + [:file, :manipulate]
     ).grep /.*[^\!]$/ # filter 'cap!'

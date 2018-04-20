@@ -2,7 +2,7 @@
 # provides affected node names and definition
 
 class NodeFile
-  attr_reader :affected_nodes, :affected_group :definition
+  attr_reader :affected_nodes, :affected_groups, :definition
 
   def initialize definition_file
     @affected_nodes = []
