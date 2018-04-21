@@ -9,20 +9,18 @@ class RBCM
   attr_reader :nodes, :groups, :project_path
 
   def initialize project_path
-    @project_path = project_path
     @patterns = {}
     @nodes = {}
     @groups = {}
-    load!
-    #run!
-    #diff!
-    #apply!
+    load_project project_path
   end
 
-  def load!
+  private
+
+  def load_project project_path
     patterns = {}
-    Dir["#{PWD}/nodes/**/*.rb"].each do |path|
-      definition_file = DefinitionFile.new(path)
+    Dir["#{project_path}/nodes/**/*.rb"].each do |definition_file_path|
+      definition_file = DefinitionFile.new(definition_file_path)
       @groups += definition_file.groups
       @patterns += definition_file.patterns
       definition_file.nodes.each do |name, definition|
@@ -39,13 +37,3 @@ class RBCM
 end
 
 rbcm = RBCM.new ARGV[0]
-#puts rbcm.nodes.first[1].commands.collect{|command| command.line}.join("\n")
-rbcm.nodes.each do |name, node|
- puts "=============================================================="
- puts name
- pp node.jobs
- puts node.commands
- p node.affected_files
- #puts node.commands
-end
-#pp rbcm

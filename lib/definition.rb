@@ -5,16 +5,8 @@ class Definition < Capabilities
   def initialize content
     @content = content
     @jobs = []
-    instance_eval &@definition
-  end
-
-  private
-
-  # prevent strange p and puts behavious within node block
-  def p *params; end
-  def puts *param; end
-
-  def method_missing capability, *params, &block
-    @jobs << Job.new(capability, params)
+    @commands = []
+    @dependency_cache = []
+    instance_eval &@content
   end
 end

@@ -56,6 +56,7 @@ class Capabilities
     )
     # define wrapper method
     define_method(capability_name.to_sym) do |*params|
+      @jobs << Job.new(capability, params)
       @capability_cache = capability_name
       @params_cache = params || nil
       r = send "__#{__method__}", *params
