@@ -2,6 +2,8 @@
 # accepts definition-Proc and provides definition-Proc and job list
 
 class Definition
+  attr_reader :content
+
   def initialize content
     @content = content
     @jobs = []
@@ -14,7 +16,8 @@ class Definition
   end
 
   def group name
-    instance_eval &Group[name]
+    p Group[name]
+    instance_eval &Group[name].content
   end
 
   def dont *args

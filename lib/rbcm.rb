@@ -12,8 +12,8 @@ class RBCM
   def initialize project_path
     @patterns = {}
     @nodes = {}
-    @groups = {}
     import_definitions "#{project_path}definitions"
+    @groups = Group.all
   end
 
   def parse

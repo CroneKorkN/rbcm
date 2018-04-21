@@ -8,4 +8,8 @@ class Group
   def self.[] name
     @@groups[name]
   end
+
+  def self.all
+    @@groups
+  end
 end

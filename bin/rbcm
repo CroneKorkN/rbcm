@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
+p "========================"
 require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
-pp rbcm
 rbcm.parse
 pp rbcm
 #rbcm.approve
-#pp rbcm
 #rbcm.appy
