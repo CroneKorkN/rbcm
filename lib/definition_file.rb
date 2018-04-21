@@ -4,11 +4,11 @@
 class DefinitionFile
   attr_reader :groups, :patterns, :nodes
 
-  def initialize definition_file
+  def initialize definition_file_path
     @groups = {}
     @patterns = {}
     @nodes = {}
-    instance_eval File.read definition_file
+    instance_eval File.read definition_file_path
   end
 
   def group name=nil

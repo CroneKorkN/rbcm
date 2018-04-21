@@ -7,11 +7,11 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Martin Wiegand"]
   spec.email       = 'martin@wiegand.tel'
   spec.files       = [
-    "lib/capabilities.rb",
     "lib/command_list.rb",
     "lib/command.rb",
     "lib/definition.rb",
     "lib/diff.rb",
+    "lib/group.rb",
     "lib/job.rb",
     "lib/lib.rb",
     "lib/definition_file.rb",
@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.executables << 'rbcm'
   spec.homepage    = 'https://github.com/CroneKorkN/rbcm'
   spec.license     = 'MIT'
+  spec.add_runtime_dependency 'quickeach', '>= 0.1.0'
 end

@@ -1,8 +1,10 @@
+require "quickeach"
+
 PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
-[ :lib, :definition_file, :node, :capabilities, :command_list, :command,
-  :command_collector, :definition, :job, :remote
+[ :lib, :definition_file, :node, :group, :command_list,
+  :command, :definition, :job, :remote
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
@@ -12,23 +14,37 @@ class RBCM
     @patterns = {}
     @nodes = {}
     @groups = {}
-    import_definitions project_path
+    import_definitions "#{project_path}definitions"
+  end
+
+  def parse
+    nodes.each.parse
+  end
+
+  def approve
+    commands.each.approve
+  end
+
+  def apply
+    commands.each.apply
   end
 
   private
 
   def import_capabilities
-
+    #auto
   end
 
-  def import_definitions project_path
-    patterns = {}
-    Dir["#{project_path}/nodes/**/*.rb"].each do |definition_file_path|
-      definition_file = DefinitionFile.new(definition_file_path)
-      definition_file.groups.each do |defnition|
+  def import_definitions definitions_path
+    p `ls #{definitions_path}`
+    p Dir["#{definitions_path}/**/*.rb"]
+    Dir["#{definitions_path}/**/*.rb"].collect{ |definition_file_path|
+      DefinitionFile.new definition_file_path
+    }.each do |definition_file|
+      definition_file.groups.each do |definition|
         Group << definition
       end
-      @patterns += definition_file.patterns
+      @patterns << definition_file.patterns
       definition_file.nodes.each do |name, definition|
         @nodes[name] = Node.new name unless @nodes[name]
         @nodes[name] << definition
@@ -41,21 +57,9 @@ class RBCM
     end
   end
 
-  def approve
-    commands.each{|command| command.approve}
-  end
-
-  def apply
-    commands.each{|command| command.apply}
-  end
-
   private
 
   def commands
-    @nodes.collect{|node| node.commands}
+    @commands ||= nodes.collect{|node| node.commands}
   end
 end
-
-rbcm = RBCM.new ARGV[0]
-rbcm.approve
-rbcm.apply

@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'rbcm'
-RBCM.new 
+rbcm = RBCM.new ARGV[1] || ARGV[0]
+p rbcm
+rbcm.approve
+rbcm.apply

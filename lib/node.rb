@@ -1,14 +1,18 @@
 class Node
-  attr_reader :jobs, :definitions, :groups
+  attr_reader :jobs, :definitions, :memberships
 
   def initialize name
     @name = name
-    @groups = {}
+    @memberships = []
     @definitions = []
   end
 
   def << definition
     @definitions << definition
+  end
+
+  def parse
+    definitions.each.parse
   end
 
   def jobs

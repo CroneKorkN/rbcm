@@ -28,22 +28,3 @@ class Hash
     merge hash
   end
 end
-
-class QuickEach
-  def initialize enumerable
-    @enumerable = enumerable
-  end
-
-  def method_missing method, *args, &block
-    @enumerable.collect do |element|
-      element.send method, *args, &block
-    end
-  end
-end
-
-class Array
-  def each
-    return QuickEach.new self unless block_given?
-    super
-  end
-end
