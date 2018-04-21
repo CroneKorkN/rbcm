@@ -33,54 +33,51 @@ class RBCM
   private
 
   def import_capabilities capabilities_path
-    with Definition do
-      remember = instance_methods(false)
-      Dir["#{PWD}/capabilities/*.rb"].each {|path|
-        eval File.read(path)
-      }
-      capabilities = instance_methods(false).grep(
-        /[^\!]$/
-      ).-(
-        remember
-      ).+(
-        [:file, :manipulate]
+    remember = Definition.instance_methods(false)
+    Dir["#{PWD}/capabilities/*.rb"].each {|path|
+      Definition.eval File.read(path)
+    }
+    Definition.capabilities = Definition.instance_methods(false).grep(
+      /[^\!]$/
+    ).-(
+      remember
+    ).+(
+      [:file, :manipulate]
+    )
+    Definition.capabilities.each do |capability_name|
+      # copy method
+      Definition.define_method(
+        "__#{capability_name}".to_sym,
+        Definition.instance_method(capability_name)
       )
+      # define wrapper method
+      Definition.define_method(capability_name.to_sym) do |*params|
+        @jobs << Job.new(capability_name, params)
+        @capability_cache = capability_name
+        @params_cache = params || nil
+        r = send "__#{__method__}", *params
+        @dependency_cache = [:file]
+        return r
+      end
 
-      capabilities.each do |capability_name|
-        # copy method
-        define_method(
-          "__#{capability_name}".to_sym,
-          instance_method(capability_name)
-        )
-        # define wrapper method
-        define_method(capability_name.to_sym) do |*params|
-          @jobs << Job.new(capability_name, params)
-          @capability_cache = capability_name
-          @params_cache = params || nil
-          r = send "__#{__method__}", *params
-          @dependency_cache = [:file]
-          return r
+      # define getter method
+      Definition.define_method "#{capability_name}?".to_sym do |param=nil|
+        jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+        unless param
+          # return ordered prarams
+          params = jobs.collect{|job| job.ordered_params}
+        else
+          # return values of a named param
+          params = jobs.find_all{ |job|
+            job.named_params.include? param if job.named_params
+          }.collect{ |job|
+            job.named_params
+          }.collect{ |named_params|
+            named_params[param]
+          }
         end
-
-        # define getter method
-        define_method "#{capability_name}?".to_sym do |param=nil|
-          jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-          unless param
-            # return ordered prarams
-            params = jobs.collect{|job| job.ordered_params}
-          else
-            # return values of a named param
-            params = jobs.find_all{ |job|
-              job.named_params.include? param if job.named_params
-            }.collect{ |job|
-              job.named_params
-            }.collect{ |named_params|
-              named_params[param]
-            }
-          end
-          # return nil instead of empty array (sure?)
-          params.any? ? params : nil
-        end
+        # return nil instead of empty array (sure?)
+        params.any? ? params : nil
       end
     end
   end
