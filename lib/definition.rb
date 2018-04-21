@@ -19,6 +19,10 @@ class Definition
     instance_eval &Group[name]
   end
 
+  def dont *args
+    p "dont #{*args}"
+  end
+
   # include user-defined capabilities
   unless defined? @@capabilities
     Dir["#{PWD}/capabilities/*.rb"].each {|path| eval File.read path}
