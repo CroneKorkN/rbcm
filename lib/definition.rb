@@ -2,15 +2,16 @@
 # accepts definition-Proc and provides definition-Proc and job list
 
 class Definition
-  # include user-defined capabilities, leave on top
-  unless defined? @@capabilities
-    Dir["#{PWD}/capabilities/*.rb"].each {|path| eval File.read path}
-    # define '?'-suffix version to read configuration
-    @@capabilities = instance_methods(false).grep(/[^\!]$/) + [:file, :manipulate]
+  def self.eval code
+    super code
   end
 
   def self.capabilities
     @@capabilities
+  end
+
+  def self.capabilities= capabilities
+    @@capabilities = capabilities
   end
 
   attr_reader :content
@@ -33,11 +34,6 @@ class Definition
   def dont *args
     p "dont #{args}"
   end
-
-  def self.capabilities
-    @@capabilities
-  end
-
 
   # calling 'needs' adds dependency to each command from now in this job
   def needs *capabilities
@@ -75,43 +71,6 @@ class Definition
         echo #{includes_line} >> #{path}
       fi
     ^ if includes_line
-  end
-
-  @@capabilities.each do |capability_name|
-    # copy method
-    define_method(
-      "__#{capability_name}".to_sym,
-      instance_method(capability_name)
-    )
-    # define wrapper method
-    define_method(capability_name.to_sym) do |*params|
-      @jobs << Job.new(capability_name, params)
-      @capability_cache = capability_name
-      @params_cache = params || nil
-      r = send "__#{__method__}", *params
-      @dependency_cache = [:file]
-      return r
-    end
-
-    ######
-    self.define_method "#{capability_name}?".to_sym do |param=nil|
-      jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-      unless param
-        # return ordered prarams
-        params = jobs.collect{|job| job.ordered_params}
-      else
-        # return values of a named param
-        params = jobs.find_all{ |job|
-          job.named_params.include? param if job.named_params
-        }.collect{ |job|
-          job.named_params
-        }.collect{ |named_params|
-          named_params[param]
-        }
-      end
-      # return nil instead of empty array (sure?)
-      params.any? ? params : nil
-    end
   end
 end
 
