@@ -13,14 +13,12 @@ class Definition
     instance_eval &@content
   end
 
-  private
-
   def group name
     instance_eval &Group[name]
   end
 
   def dont *args
-    p "dont #{*args}"
+    p "dont #{args}"
   end
 
   # include user-defined capabilities
@@ -73,7 +71,7 @@ class Definition
     ^ if includes_line
   end
 
-  @@capabilities.each do |capability_name|
+  @@capabilities.-([:group]).each do |capability_name|
     # copy method
     define_method(
       "__#{capability_name}".to_sym,
@@ -81,7 +79,7 @@ class Definition
     )
     # define wrapper method
     define_method(capability_name.to_sym) do |*params|
-      @jobs << Job.new(capability, params)
+      @jobs << Job.new(capability_name, params)
       @capability_cache = capability_name
       @params_cache = params || nil
       r = send "__#{__method__}", *params

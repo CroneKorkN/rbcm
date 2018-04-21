@@ -1,11 +1,11 @@
 class Group
   @@groups = {}
 
-  def self.[] name
-    @@groups[name]
+  def self.[]= name, definition_content
+    @@groups[name] = definition_content
   end
 
-  def self.<< definition
-    @@groups[definition.name] = definition.content
+  def self.[] name
+    @@groups[name]
   end
 end

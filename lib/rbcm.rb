@@ -1,5 +1,4 @@
-require "quickeach"
-
+#require "quickeach"
 PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
@@ -18,11 +17,11 @@ class RBCM
   end
 
   def parse
-    nodes.each.parse
+    nodes.each_value{|node| node.parse}
   end
 
   def approve
-    commands.each.approve
+    commands.each{|command| command.approve}
   end
 
   def apply
@@ -36,13 +35,11 @@ class RBCM
   end
 
   def import_definitions definitions_path
-    p `ls #{definitions_path}`
-    p Dir["#{definitions_path}/**/*.rb"]
     Dir["#{definitions_path}/**/*.rb"].collect{ |definition_file_path|
       DefinitionFile.new definition_file_path
     }.each do |definition_file|
-      definition_file.groups.each do |definition|
-        Group << definition
+      definition_file.groups.each do |name, definition|
+        Group[name] = definition
       end
       @patterns << definition_file.patterns
       definition_file.nodes.each do |name, definition|

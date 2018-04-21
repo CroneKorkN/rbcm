@@ -24,7 +24,7 @@ module Params
 end
 
 class Hash
-  def + hash
+  def << hash
     merge hash
   end
 end

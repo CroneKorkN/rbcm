@@ -12,7 +12,7 @@ class Node
   end
 
   def parse
-    definitions.each.parse
+    definitions.each{|definition| definition.parse}
   end
 
   def jobs

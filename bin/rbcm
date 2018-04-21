@@ -2,6 +2,9 @@
 
 require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
-p rbcm
-rbcm.approve
-rbcm.apply
+pp rbcm
+rbcm.parse
+pp rbcm
+#rbcm.approve
+#pp rbcm
+#rbcm.appy
