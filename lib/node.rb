@@ -12,19 +12,19 @@ class Node
   end
 
   def parse
-    definitions.each{|definition| definition.parse}
+    definitions.each.parse
   end
 
   def jobs
-    @jobs ||= definitions.collect{|definition| definition.jobs}
+    @jobs ||= definitions.each.jobs
   end
 
   def commands
-    @definitions ||= definitions.collect{|definition| definition.commands}
+    @definitions ||= definitions.each.commands
   end
 
   def capabilities
-    @capabilities ||= jobs.collect{|job| job.capability}
+    @capabilities ||= jobs.each.capability
   end
 
   def remote

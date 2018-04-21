@@ -16,7 +16,7 @@ class Definition
 
   attr_reader :content
 
-  def initialize content
+  def initialize content=nil
     @content = content
     @jobs = []
     @commands = []
@@ -71,6 +71,28 @@ class Definition
         echo #{includes_line} >> #{path}
       fi
     ^ if includes_line
+  end
+
+  # handle getter method calls
+  def method_missing name, *args, &block
+    capability_name = name.scan(/[a-z]+/).first
+    raise "no #{name}" unless @@capabilities.include? capability_name
+    jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+    unless param
+      # return ordered prarams
+      params = jobs.collect{|job| job.ordered_params}
+    else
+      # return values of a named param
+      params = jobs.find_all{ |job|
+        job.named_params.include? param if job.named_params
+      }.collect{ |job|
+        job.named_params
+      }.collect{ |named_params|
+        named_params[param]
+      }
+    end
+    # return nil instead of empty array (sure?)
+    params.any? ? params : nil
   end
 end
 
