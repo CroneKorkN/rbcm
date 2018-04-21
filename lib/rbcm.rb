@@ -12,9 +12,9 @@ class RBCM
   def initialize project_path
     @patterns = {}
     @nodes = {}
-    import_capabilities "#{project_path}capabilities"
+    import_capabilities "#{project_path}/capabilities"
     @capabilities = Definition.capabilities
-    import_definitions "#{project_path}definitions"
+    import_definitions "#{project_path}/definitions"
     @groups = Group.all
   end
 

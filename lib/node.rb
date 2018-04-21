@@ -13,22 +13,29 @@ class Node
 
   def parse
     definitions.each.parse
+    capabilities.each do |capability|
+      final_definition.send "#{capability}!"
+    end
   end
 
   def jobs
-    @jobs ||= definitions.each.jobs
+    @jobs ||= definitions.each.jobs.flatten(1)
   end
 
   def commands
-    @definitions ||= definitions.each.commands
+    @commands ||= definitions.each.commands.flatten(1)
   end
 
   def capabilities
-    @capabilities ||= jobs.each.capability
+    @capabilities ||= jobs.each.capability.uniq
   end
 
   def remote
     @remote ||= Remote.new @name
+  end
+
+  def final_definition
+    @final_definition ||= (definitions << Definition.new).last
   end
 
   def affected_files

@@ -14,7 +14,7 @@ class Definition
     @@capabilities = capabilities
   end
 
-  attr_reader :content
+  attr_reader :content, :jobs, :commands
 
   def initialize &content
     @content = content
@@ -42,7 +42,7 @@ class Definition
     @dependency_cache += [capabilities].flatten
   end
 
-  def run command
+  def run command, check: nil
     @commands << Command.new(
       line: command,
       capability: @capability_cache,
@@ -75,24 +75,33 @@ class Definition
 
   # handle getter method calls
   def method_missing name, *args, &block
-    capability_name = name.scan(/[a-z]+/).first
-    raise "no #{name}" unless @@capabilities.include? capability_name
-    jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-    unless param
-      # return ordered prarams
-      params = jobs.collect{|job| job.ordered_params}
-    else
-      # return values of a named param
-      params = jobs.find_all{ |job|
-        job.named_params.include? param if job.named_params
-      }.collect{ |job|
-        job.named_params
-      }.collect{ |named_params|
-        named_params[param]
-      }
+    capability_name = name[0..-2].to_sym
+    p name
+    p @@capabilities
+    if not @@capabilities.include? capability_name
+      p 99999
+      super
+    elsif name =~ /\!$/
+      return
+    elsif name =~ /\!$/
+      # search
+      jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+      unless param
+        # return ordered prarams
+        params = jobs.collect{|job| job.ordered_params}
+      else
+        # return values of a named param
+        params = jobs.find_all{ |job|
+          job.named_params.include? param if job.named_params
+        }.collect{ |job|
+          job.named_params
+        }.collect{ |named_params|
+          named_params[param]
+        }
+      end
+      # return nil instead of empty array (sure?)
+      params.any? ? params : nil
     end
-    # return nil instead of empty array (sure?)
-    params.any? ? params : nil
   end
 end
 
