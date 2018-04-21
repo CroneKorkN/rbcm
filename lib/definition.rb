@@ -16,7 +16,7 @@ class Definition
 
   attr_reader :content
 
-  def initialize content=nil
+  def initialize &content
     @content = content
     @jobs = []
     @commands = []

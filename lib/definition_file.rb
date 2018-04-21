@@ -12,13 +12,13 @@ class DefinitionFile
   end
 
   def group name=nil
-    @groups[name] = Definition.new(Proc.new)
+    @groups[name] = Definition.new &Proc.new
   end
 
   def node names=nil
     return @nodes unless names
     [names].flatten.each do |name|
-      definition = Definition.new(Proc.new) # Proc.new without paramaters catches a given block
+      definition = Definition.new &Proc.new # Proc.new without paramaters catches a given block
       if name.class == Regexp
         @patterns[name] = definition
       else

@@ -13,11 +13,6 @@ class Node
 
   def parse
     definitions.each.parse
-    definition = Definition.new
-    capabilities.each do |capability_name|
-      definition.send "#{capability_name}!"
-    end
-    self << definition
   end
 
   def jobs
