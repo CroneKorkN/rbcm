@@ -5,5 +5,5 @@ require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
 rbcm.parse
 pp rbcm.commands
-#rbcm.approve
-#rbcm.appy
+# rbcm.approve
+# rbcm.appy
