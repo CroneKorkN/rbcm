@@ -30,7 +30,7 @@ class RBCM
     commands.each.apply
   end
 
-  private
+  # private
 
   def import_capabilities capabilities_path
     remember = Definition.instance_methods(false)
@@ -82,9 +82,7 @@ class RBCM
     end
   end
 
-  private
-
   def commands
-    @commands ||= nodes.each.commands
+    @commands ||= nodes.each_value.collect{|node| node.commands}.flatten(1)
   end
 end

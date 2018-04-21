@@ -4,6 +4,6 @@ p "========================"
 require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
 rbcm.parse
-pp rbcm
+pp rbcm.commands
 #rbcm.approve
 #rbcm.appy
