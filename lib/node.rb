@@ -13,6 +13,7 @@ class Node
 
   def parse
     definitions.each.parse
+    p capabilities
   end
 
   def jobs
