@@ -1,4 +1,4 @@
-#require "quickeach"
+require "quickeach"
 PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
@@ -12,6 +12,7 @@ class RBCM
   def initialize project_path
     @patterns = {}
     @nodes = {}
+    @capabilities = Definition.capabilities
     import_definitions "#{project_path}definitions"
     @groups = Group.all
   end
@@ -21,7 +22,7 @@ class RBCM
   end
 
   def approve
-    commands.each{|command| command.approve}
+    commands.each.approve
   end
 
   def apply
@@ -57,6 +58,6 @@ class RBCM
   private
 
   def commands
-    @commands ||= nodes.collect{|node| node.commands}
+    @commands ||= nodes.each.commands
   end
 end

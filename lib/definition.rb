@@ -2,6 +2,17 @@
 # accepts definition-Proc and provides definition-Proc and job list
 
 class Definition
+  # include user-defined capabilities, leave on top
+  unless defined? @@capabilities
+    Dir["#{PWD}/capabilities/*.rb"].each {|path| eval File.read path}
+    # define '?'-suffix version to read configuration
+    @@capabilities = instance_methods(false).grep(/[^\!]$/) + [:file, :manipulate]
+  end
+
+  def self.capabilities
+    @@capabilities
+  end
+
   attr_reader :content
 
   def initialize content
@@ -16,19 +27,11 @@ class Definition
   end
 
   def group name
-    p Group[name]
     instance_eval &Group[name].content
   end
 
   def dont *args
     p "dont #{args}"
-  end
-
-  # include user-defined capabilities
-  unless defined? @@capabilities
-    Dir["#{PWD}/capabilities/*.rb"].each {|path| eval File.read path}
-    # define '?'-suffix version to read configuration
-    @@capabilities = instance_methods(false) + [:file, :manipulate]
   end
 
   def self.capabilities
@@ -74,7 +77,7 @@ class Definition
     ^ if includes_line
   end
 
-  @@capabilities.-([:group]).each do |capability_name|
+  @@capabilities.each do |capability_name|
     # copy method
     define_method(
       "__#{capability_name}".to_sym,
@@ -111,3 +114,5 @@ class Definition
     end
   end
 end
+
+#p Definition.instance_methods.sort
