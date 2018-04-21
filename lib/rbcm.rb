@@ -12,16 +12,22 @@ class RBCM
     @patterns = {}
     @nodes = {}
     @groups = {}
-    load_project project_path
+    import_definitions project_path
   end
 
   private
 
-  def load_project project_path
+  def import_capabilities
+
+  end
+
+  def import_definitions project_path
     patterns = {}
     Dir["#{project_path}/nodes/**/*.rb"].each do |definition_file_path|
       definition_file = DefinitionFile.new(definition_file_path)
-      @groups += definition_file.groups
+      definition_file.groups.each do |defnition|
+        Group << definition
+      end
       @patterns += definition_file.patterns
       definition_file.nodes.each do |name, definition|
         @nodes[name] = Node.new name unless @nodes[name]
@@ -34,6 +40,22 @@ class RBCM
       end
     end
   end
+
+  def approve
+    commands.each{|command| command.approve}
+  end
+
+  def apply
+    commands.each{|command| command.apply}
+  end
+
+  private
+
+  def commands
+    @nodes.collect{|node| node.commands}
+  end
 end
 
 rbcm = RBCM.new ARGV[0]
+rbcm.approve
+rbcm.apply

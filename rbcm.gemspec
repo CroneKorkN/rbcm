@@ -8,7 +8,6 @@ Gem::Specification.new do |spec|
   spec.email       = 'martin@wiegand.tel'
   spec.files       = [
     "lib/capabilities.rb",
-    "lib/command_collector.rb",
     "lib/command_list.rb",
     "lib/command.rb",
     "lib/definition.rb",

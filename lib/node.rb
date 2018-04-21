@@ -12,19 +12,11 @@ class Node
   end
 
   def jobs
-    @jobs ||= @definitions.collect{|definition| definition.jobs}.flatten
+    @jobs ||= definitions.collect{|definition| definition.jobs}
   end
 
   def commands
-    @commands ||= CommandCollector.new(self).commands.extend(CommandList).resolve
-  end
-
-  def diff
-    # local vs remote state
-  end
-
-  def state
-    # local state
+    @definitions ||= definitions.collect{|definition| definition.commands}
   end
 
   def capabilities
