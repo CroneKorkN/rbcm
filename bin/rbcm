@@ -4,6 +4,10 @@ p "========================"
 require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
 rbcm.parse
-pp rbcm.commands
+rbcm.commands
+pp rbcm
+rbcm.nodes.each_value do |node|
+  p node.memberships
+end
 # rbcm.approve
 # rbcm.appy

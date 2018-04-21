@@ -1,9 +1,8 @@
 class Node
-  attr_reader :jobs, :definitions, :memberships
+  attr_reader :jobs, :definitions
 
   def initialize name
     @name = name
-    @memberships = []
     @definitions = []
   end
 
@@ -36,6 +35,10 @@ class Node
 
   def final_definition
     @final_definition ||= (definitions << Definition.new).last
+  end
+
+  def memberships
+    definitions.each.memberships.flatten(1)
   end
 
   def affected_files

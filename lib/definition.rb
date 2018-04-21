@@ -14,13 +14,14 @@ class Definition
     @@capabilities = capabilities
   end
 
-  attr_reader :content, :jobs, :commands
+  attr_reader :content, :jobs, :commands, :memberships
 
   def initialize &content
     @content = content
     @jobs = []
     @commands = []
     @dependency_cache = []
+    @memberships = []
   end
 
   def parse
@@ -28,6 +29,7 @@ class Definition
   end
 
   def group name
+    @memberships << name
     instance_eval &Group[name].content
   end
 
