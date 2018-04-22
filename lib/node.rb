@@ -17,6 +17,14 @@ class Node
     end
   end
 
+  def check
+    commands.each.check self
+  end
+
+  def approve
+    commands.each.approve
+  end
+
   def jobs
     @jobs ||= definitions.each.jobs.flatten(1)
   end

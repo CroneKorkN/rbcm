@@ -1,23 +1,9 @@
 class Remote
-  def initialize name
-    @name = name
+  def initialize host
+    @host = host
   end
 
   def execute! command
-    p 1
-    `ssh root@#{@name} #{command}`
-    `ssh root@#{@name} 'echo \'#{command}\' >> ~/rbcm.log'`
-  end
-
-  def state
-    execute! "cat ~/rbcm.state"
-  end
-
-  def push file, content
-
-  end
-
-  def pull file
-
+    Execution.new command, @host
   end
 end

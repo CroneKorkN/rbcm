@@ -9,5 +9,5 @@ pp rbcm.commands
 rbcm.nodes.each_value do |node|
   p node.memberships
 end
-# rbcm.approve
-# rbcm.appy
+rbcm.approve
+#rbcm.apply

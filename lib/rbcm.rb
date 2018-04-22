@@ -1,8 +1,9 @@
-require "quickeach"
+require "open3"
+
 PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
-[ :lib, :definition_file, :node, :group, :command_list,
+[ :lib, :definition_file, :execution, :node, :group, :command_list,
   :command, :definition, :job, :remote
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
@@ -23,7 +24,8 @@ class RBCM
   end
 
   def approve
-    commands.each.approve
+    nodes.each_value{|node| node.check}
+    #commands.each.approve
   end
 
   def apply

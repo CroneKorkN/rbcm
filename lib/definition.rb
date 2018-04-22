@@ -49,7 +49,8 @@ class Definition
       line: command,
       capability: @capability_cache,
       params: @params_cache,
-      dependencies: @dependency_cache
+      dependencies: @dependency_cache,
+      check: check
     )
   end
 

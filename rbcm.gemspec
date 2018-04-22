@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
     "lib/command.rb",
     "lib/definition.rb",
     "lib/diff.rb",
+    "lib/execution.rb",
     "lib/group.rb",
     "lib/job.rb",
     "lib/lib.rb",
@@ -22,5 +23,5 @@ Gem::Specification.new do |spec|
   spec.executables << 'rbcm'
   spec.homepage    = 'https://github.com/CroneKorkN/rbcm'
   spec.license     = 'MIT'
-  spec.add_runtime_dependency 'quickeach', '>= 0.1.0'
+  spec.add_runtime_dependency 'quickeach', '= 0.1.0'
 end
