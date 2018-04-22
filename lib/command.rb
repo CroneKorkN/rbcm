@@ -1,3 +1,5 @@
+# ToDo: approve all changes to a spicific file at once
+
 class Command
   include Params
   attr_reader :line, :capability, :params,
@@ -28,9 +30,12 @@ class Command
   def approve
     puts "---------------------------------------------------------------------"
     puts "COMMAND: #{@line}"
-    puts "capability: #{@check}"
+    puts "capability: #{@capability}"
     puts "check: #{@check}"
     puts "unneccessary: #{@unneccessary}"
+    if [:file, :manipulate].include? @capability
+      #File.new @node, self
+    end
     if @unneccessary
       p "UNNECCESSARY"
       return

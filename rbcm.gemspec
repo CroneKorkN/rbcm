@@ -7,15 +7,15 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Martin Wiegand"]
   spec.email       = 'martin@wiegand.tel'
   spec.files       = [
-    "lib/command_list.rb",
     "lib/command.rb",
+    "lib/command_list.rb",
     "lib/definition.rb",
-    "lib/diff.rb",
+    "lib/definition_file.rb",
     "lib/execution.rb",
+    "lib/file.rb",
     "lib/group.rb",
     "lib/job.rb",
     "lib/lib.rb",
-    "lib/definition_file.rb",
     "lib/node.rb",
     "lib/rbcm.rb",
     "lib/remote.rb",

@@ -70,7 +70,9 @@ class Definition
       content: nil
     )
     # @files[path] = content if content or exists
-    run "echo '#{content}' > #{path}" if path
+    run "cat << EOFRBCM > #{path}
+      #{content}
+    EOFRBCM" if content
     manipulate "chmod #{mode} #{path}" if mode
     manipulate %^
       if  grep -q #{includes_line} #{path}; then
@@ -89,7 +91,7 @@ class Definition
       super
     elsif name =~ /\!$/
       return
-    elsif name =~ /\!$/
+    elsif name =~ /\?$/
       # search
       jobs = @node.jobs.find_all{|job| job.capability == capability_name}
       unless param

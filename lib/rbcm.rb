@@ -3,7 +3,7 @@ require "open3"
 PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
-[ :lib, :definition_file, :execution, :node, :group, :command_list,
+[ :lib, :definition_file, :file, :execution, :node, :group, :command_list,
   :command, :definition, :job, :remote
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 

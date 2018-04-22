@@ -9,4 +9,8 @@ class Job
     @capability = capability
     @params = params
   end
+
+  def to_s
+    "#{@capability} #{@params}"
+  end
 end
