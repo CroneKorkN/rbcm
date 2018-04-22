@@ -25,7 +25,7 @@ class RBCM
 
   def approve
     nodes.each_value{|node| node.check}
-    #commands.each.approve
+    commands.each.approve
   end
 
   def apply
