@@ -1,29 +1,47 @@
 class Command
   include Params
-  attr_reader :line, :capability, :params, :dependencies, :approved
+  attr_reader :line, :capability, :params,
+    :dependencies, :unneccessary, :approved
 
   def initialize line:, capability:, params:, dependencies:, check: nil
     @line = line
-    @check = check
     @capability = capability
     @params = params
     @dependencies = [:file] + [dependencies].flatten - [capability]
+    @check = check
+    @unneccessary = nil
     @approved = nil
   end
 
   def check node
     @node = node
-    @check ||= @node.remote.execute!(@check).success?
-    p @check
-    @check
+    @unneccessary = @node.remote.execute!(@check).success? if @check
+    if @unneccessary == nil
+      puts "EITHER: #{@line} (#{@check})"
+    elsif @unneccessary == false
+      puts "YES:    #{@line} (#{@check})"
+    elsif @unneccessary == true
+      puts "NO:     #{@line} (#{@check})"
+    end
   end
 
-  def approve node
-    p "#{self} unneccessary" and return if check
-    if read == "y"
-      @approved = true
+  def approve
+    puts "---------------------------------------------------------------------"
+    puts "COMMAND: #{@line}"
+    puts "check: #{@check}"
+    puts "unneccessary: #{@unneccessary}"
+    if @unneccessary
+      p "UNNECCESSARY"
+      return
     else
-      @approved = false
+      print "APROVE:"
+      if STDIN.gets.chomp == "y"
+        puts "approved"
+        @approved = true
+      else
+        puts "declined"
+        @approved = false
+      end
     end
   end
 
