@@ -15,8 +15,10 @@ class Definition
   end
 
   attr_reader :content, :jobs, :commands, :memberships
+  attr_accessor :node
 
-  def initialize &content
+  def initialize node=nil, &content
+    @node = node
     @content = content
     @jobs = []
     @commands = []
@@ -46,6 +48,7 @@ class Definition
 
   def run command, check: nil
     @commands << Command.new(
+      node: @node,
       line: command,
       capability: @capability_cache,
       params: @params_cache,

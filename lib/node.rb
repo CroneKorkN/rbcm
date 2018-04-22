@@ -7,6 +7,7 @@ class Node
   end
 
   def << definition
+    definition.node = self
     @definitions << definition
   end
 
@@ -18,7 +19,7 @@ class Node
   end
 
   def check
-    commands.each.check self
+    commands.each.check
   end
 
   def approve
@@ -42,7 +43,7 @@ class Node
   end
 
   def final_definition
-    @final_definition ||= (definitions << Definition.new).last
+    @final_definition ||= (definitions << Definition.new(self)).last
   end
 
   def memberships

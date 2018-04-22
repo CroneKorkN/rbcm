@@ -3,7 +3,8 @@ class Command
   attr_reader :line, :capability, :params,
     :dependencies, :unneccessary, :approved
 
-  def initialize line:, capability:, params:, dependencies:, check: nil
+  def initialize node:, line:, capability:, params:, dependencies:, check: nil
+    @node = node
     @line = line
     @capability = capability
     @params = params
@@ -13,8 +14,7 @@ class Command
     @approved = nil
   end
 
-  def check node
-    @node = node
+  def check
     @unneccessary = @node.remote.execute!(@check).success? if @check
     if @unneccessary == nil
       puts "EITHER: #{@line} (#{@check})"
@@ -28,13 +28,14 @@ class Command
   def approve
     puts "---------------------------------------------------------------------"
     puts "COMMAND: #{@line}"
+    puts "capability: #{@check}"
     puts "check: #{@check}"
     puts "unneccessary: #{@unneccessary}"
     if @unneccessary
       p "UNNECCESSARY"
       return
     else
-      print "APROVE:"
+      print "APROVE (y/N): "
       if STDIN.gets.chomp == "y"
         puts "approved"
         @approved = true
