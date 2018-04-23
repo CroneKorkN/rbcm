@@ -13,14 +13,13 @@ class Node
   end
 
   def parse
-    #definitions.each.parse
-    #capabilities.each{|capability| definitions.first.send "#{capability}!"}
+    @sandbox.evaluate @definitions
+    capabilities.each{|capability| sandbox.send "#{capability}!"}
     #jobs.select{|job| job.capability == :file}.each do |job|
     #  path = job.params[0]
     #  @files[path] = File.new self, path unless @files[path]
     #  @files[path] << job.params
     #end
-    @sandbox.evaluate @definitions
   end
 
   def check

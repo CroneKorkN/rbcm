@@ -32,10 +32,6 @@ class Sandbox
     end
   end
 
-  def parse
-    instance_eval &@content
-  end
-
   def group name
     @memberships << name
     instance_eval &Group[name]
@@ -60,7 +56,7 @@ class Sandbox
     )
   end
 
-  def manipulate command
+  def _manipulate command
     needs :file
     run command
   end
@@ -76,8 +72,8 @@ class Sandbox
     run "cat << EOFRBCM > #{path}
       #{content}
     EOFRBCM" if content
-    manipulate "chmod #{mode} #{path}" if mode
-    manipulate %^
+    _manipulate "chmod #{mode} #{path}" if mode
+    _manipulate %^
       if  grep -q #{includes_line} #{path}; then
         echo #{includes_line} >> #{path}
       fi
