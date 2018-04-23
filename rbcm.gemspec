@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
     "lib/node.rb",
     "lib/rbcm.rb",
     "lib/remote.rb",
+    "lib/sendbox.rb",
   ]
   spec.executables << 'rbcm'
   spec.homepage    = 'https://github.com/CroneKorkN/rbcm'

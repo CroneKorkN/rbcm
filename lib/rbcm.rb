@@ -2,7 +2,7 @@ PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
 [ :lib, :definition_file, :file, :execution, :node, :group, :command_list,
-  :command, :definition, :job, :remote
+  :command, :definition, :job, :remote, :sandbox
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
