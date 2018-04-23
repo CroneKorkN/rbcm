@@ -29,7 +29,7 @@ class Command
 
   def approve
     puts "---------------------------------------------------------------------"
-    puts "COMMAND: #{@line}"
+    puts "COMMAND: #{@line} "
     puts "capability: #{@capability}"
     puts "check: #{@check}"
     puts "obsolete: #{@obsolete} - #{@obsolete.class}"
