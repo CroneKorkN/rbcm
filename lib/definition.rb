@@ -17,11 +17,12 @@ class Definition
   attr_reader :content, :jobs, :commands, :memberships
   attr_accessor :node
 
-  def initialize node=nil, &content
+  def initialize &content
     @node = node
     @content = content
     @jobs = []
     @commands = []
+    @files = {}
     @dependency_cache = []
     @memberships = []
   end
@@ -39,10 +40,7 @@ class Definition
     p "dont #{args}"
   end
 
-  # calling 'needs' adds dependency to each command from now in this job
   def needs *capabilities
-    #log error: "dont call 'needs' in node" unless @capability
-    #log error: "dependency '#{capability}' from '#{@capability_cache}' doesn't exist" unless @@capabilities.include? capability
     @dependency_cache += [capabilities].flatten
   end
 
@@ -83,32 +81,33 @@ class Definition
 
   # handle getter method calls
   def method_missing name, *args, &block
+    puts "method #{name} missing"
     capability_name = name[0..-2].to_sym
-    p name
-    p @@capabilities
     if not @@capabilities.include? capability_name
-      p 99999
       super
     elsif name =~ /\!$/
       return
     elsif name =~ /\?$/
-      # search
-      jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-      unless param
-        # return ordered prarams
-        params = jobs.collect{|job| job.ordered_params}
-      else
-        # return values of a named param
-        params = jobs.find_all{ |job|
-          job.named_params.include? param if job.named_params
-        }.collect{ |job|
-          job.named_params
-        }.collect{ |named_params|
-          named_params[param]
-        }
-      end
-      # return nil instead of empty array (sure?)
-      params.any? ? params : nil
+      p 111111
+      p args
+      _search capability_name, args[0]
+    end
+  end
+
+  def _search capability_name, param
+    jobs = @node.jobs.find_all{|job| job.capability == capability_name}
+    unless param
+      # return ordered prarams
+      jobs.each.ordered_params
+    else
+      # return values of a named param
+      jobs.find_all{ |job|
+        job.named_params.include? param if job.named_params
+      }.collect{ |job|
+        job.named_params
+      }.collect{ |named_params|
+        named_params[param]
+      }
     end
   end
 end

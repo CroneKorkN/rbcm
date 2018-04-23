@@ -51,6 +51,10 @@ class Command
     end
   end
 
+  def apply
+    p @node.remote.execute!(@line)
+  end
+
   def to_s
     "#{@capability} #{@params.to_s[1..-2]}\n  #{@line}"
   end

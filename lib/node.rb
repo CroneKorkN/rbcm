@@ -1,9 +1,10 @@
 class Node
-  attr_reader :jobs, :definitions
+  attr_reader :jobs, :definitions, :files
 
   def initialize name
     @name = name
     @definitions = []
+    @files = {}
   end
 
   def << definition
@@ -13,8 +14,11 @@ class Node
 
   def parse
     definitions.each.parse
-    capabilities.each do |capability|
-      final_definition.send "#{capability}!"
+    capabilities.each{|capability| final_definition.send "#{capability}!"}
+    jobs.select{|job| job.capability == :file}.each do |job|
+      path = job.params[0]
+      @files[path] = File.new self, path unless @files[path]
+      @files[path] << job.params
     end
   end
 
@@ -27,15 +31,15 @@ class Node
   end
 
   def jobs
-    @jobs ||= definitions.each.jobs.flatten(1)
+    definitions.each.jobs.flatten(1)
   end
 
   def commands
-    @commands ||= definitions.each.commands.flatten(1)
+    definitions.each.commands.flatten(1)
   end
 
   def capabilities
-    @capabilities ||= jobs.each.capability.uniq
+    jobs.each.capability.uniq
   end
 
   def remote
@@ -43,7 +47,7 @@ class Node
   end
 
   def final_definition
-    @final_definition ||= (definitions << Definition.new(self)).last
+    @final_definition ||= (self << Definition.new).last
   end
 
   def memberships
