@@ -98,6 +98,7 @@ class Definition
     jobs = @node.jobs.find_all{|job| job.capability == capability_name}
     unless param
       # return ordered prarams
+      p jobs
       jobs.each.ordered_params
     else
       # return values of a named param
