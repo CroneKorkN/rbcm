@@ -14,7 +14,7 @@ class Node
 
   def parse
     definitions.each.parse
-    capabilities.each{|capability| final_definition.send "#{capability}!"}
+    capabilities.each{|capability| definitions.first.send "#{capability}!"}
     jobs.select{|job| job.capability == :file}.each do |job|
       path = job.params[0]
       @files[path] = File.new self, path unless @files[path]

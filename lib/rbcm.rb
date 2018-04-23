@@ -1,5 +1,3 @@
-require "open3"
-
 PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
@@ -29,7 +27,7 @@ class RBCM
   end
 
   def apply
-    commands.each.apply
+    commands.select{|c| c.approved}.each.apply
   end
 
   # private

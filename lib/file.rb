@@ -9,6 +9,5 @@ class File
 
   def diff
     node.remote.execute!("cat #{path}").stdout
-    
   end
 end

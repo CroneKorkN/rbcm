@@ -3,7 +3,7 @@
 class Command
   include Params
   attr_reader :line, :capability, :params,
-    :dependencies, :unneccessary, :approved
+    :dependencies, :obsolete, :approved
 
   def initialize node:, line:, capability:, params:, dependencies:, check: nil
     @node = node
@@ -12,17 +12,17 @@ class Command
     @params = params
     @dependencies = [:file] + [dependencies].flatten - [capability]
     @check = check
-    @unneccessary = nil
+    @obsolete = nil
     @approved = nil
   end
 
   def check
-    @unneccessary = @node.remote.execute!(@check).success? if @check
-    if @unneccessary == nil
+    @obsolete = @node.remote.execute!(@check).success? if @check
+    if @obsolete == nil
       puts "EITHER: #{@line} (#{@check})"
-    elsif @unneccessary == false
+    elsif @obsolete == false
       puts "YES:    #{@line} (#{@check})"
-    elsif @unneccessary == true
+    elsif @obsolete == true
       puts "NO:     #{@line} (#{@check})"
     end
   end
@@ -32,12 +32,9 @@ class Command
     puts "COMMAND: #{@line}"
     puts "capability: #{@capability}"
     puts "check: #{@check}"
-    puts "unneccessary: #{@unneccessary}"
-    if [:file, :manipulate].include? @capability
-      #File.new @node, self
-    end
-    if @unneccessary
-      p "UNNECCESSARY"
+    puts "obsolete: #{@obsolete} - #{@obsolete.class}"
+    if @obsolete
+      puts "OBSOLETE ============================================================"
       return
     else
       print "APROVE (y/N): "

@@ -1,3 +1,5 @@
+require 'open3'
+
 class Execution
   attr_reader :command, :host, :stdout, :stderr, :status
 

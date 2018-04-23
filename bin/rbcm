@@ -5,15 +5,8 @@ require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
 rbcm.parse
 rbcm.commands
-rbcm.nodes.each_value do |node|
-  p node.memberships
-end
 puts "\n\n    XXXXXXXXXXXXXXXXXXXX\nXXXXX  APPROVE  XXXX\nXXXXXXXXXXXXXXXXXXXX\n\n"
 rbcm.approve
 puts "\n\n    XXXXXXXXXXXXXXXXXXXX\nXXXXXX  APPLY  XXXXX\nXXXXXXXXXXXXXXXXXXXX\n\n"
 rbcm.apply
 puts "\n\n    XXXXXXXXXXXXXXXXXXXX\nXXXXXXX  END  XXXXXX\nXXXXXXXXXXXXXXXXXXXX\n\n"
-rbcm.nodes.each_value{ |node|
-  node.jobs.each {|job| p "#{job.capability} #{job.params}"}
-}
-rbcm.nodes.each_value{|node| pp node.files.values}
