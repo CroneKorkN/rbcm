@@ -9,7 +9,6 @@ Gem::Specification.new do |spec|
   spec.files       = [
     "lib/command.rb",
     "lib/command_list.rb",
-    "lib/definition.rb",
     "lib/definition_file.rb",
     "lib/execution.rb",
     "lib/file.rb",
@@ -19,7 +18,7 @@ Gem::Specification.new do |spec|
     "lib/node.rb",
     "lib/rbcm.rb",
     "lib/remote.rb",
-    "lib/sendbox.rb",
+    "lib/sandbox.rb",
   ]
   spec.executables << 'rbcm'
   spec.homepage    = 'https://github.com/CroneKorkN/rbcm'

@@ -17,14 +17,19 @@ class Sandbox
   attr_reader :content, :jobs, :commands, :memberships
   attr_accessor :node
 
-  def initialize &content
+  def initialize node
     @node = node
-    @content = content
     @jobs = []
     @commands = []
     @files = {}
     @dependency_cache = []
     @memberships = []
+  end
+
+  def evaluate definitions
+    [definitions].flatten.each do |definition|
+      instance_eval &definition
+    end
   end
 
   def parse
@@ -33,7 +38,7 @@ class Sandbox
 
   def group name
     @memberships << name
-    instance_eval &Group[name].content
+    instance_eval &Group[name]
   end
 
   def dont *params
@@ -118,5 +123,3 @@ class Sandbox
     end
   end
 end
-
-#p Definition.instance_methods.sort

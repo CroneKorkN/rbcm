@@ -2,7 +2,7 @@ PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "fileutils"
 [ :lib, :definition_file, :file, :execution, :node, :group, :command_list,
-  :command, :definition, :job, :remote, :sandbox
+  :command, :job, :remote, :sandbox
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
@@ -12,7 +12,7 @@ class RBCM
     @patterns = {}
     @nodes = {}
     import_capabilities "#{project_path}/capabilities"
-    @capabilities = Definition.capabilities
+    @capabilities = Sandbox.capabilities
     import_definitions "#{project_path}/definitions"
     @groups = Group.all
   end
@@ -33,25 +33,25 @@ class RBCM
   # private
 
   def import_capabilities capabilities_path
-    remember = Definition.instance_methods(false)
+    remember = Sandbox.instance_methods(false)
     Dir["#{PWD}/capabilities/*.rb"].each {|path|
-      Definition.eval File.read(path)
+      Sandbox.eval File.read(path)
     }
-    Definition.capabilities = Definition.instance_methods(false).grep(
+    Sandbox.capabilities = Sandbox.instance_methods(false).grep(
       /[^\!]$/
     ).-(
       remember
     ).+(
       [:file, :manipulate]
     )
-    Definition.capabilities.each do |capability_name|
+    Sandbox.capabilities.each do |capability_name|
       # copy method
-      Definition.define_method(
+      Sandbox.define_method(
         "__#{capability_name}".to_sym,
-        Definition.instance_method(capability_name)
+        Sandbox.instance_method(capability_name)
       )
       # define wrapper method
-      Definition.define_method(capability_name.to_sym) do |*params|
+      Sandbox.define_method(capability_name.to_sym) do |*params|
         @jobs << Job.new(capability_name, params)
         @capability_cache = capability_name
         @params_cache = params || nil

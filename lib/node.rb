@@ -4,22 +4,23 @@ class Node
   def initialize name
     @name = name
     @definitions = []
+    @sandbox = Sandbox.new self
     @files = {}
   end
 
   def << definition
-    definition.node = self
     @definitions << definition
   end
 
   def parse
-    definitions.each.parse
-    capabilities.each{|capability| definitions.first.send "#{capability}!"}
-    jobs.select{|job| job.capability == :file}.each do |job|
-      path = job.params[0]
-      @files[path] = File.new self, path unless @files[path]
-      @files[path] << job.params
-    end
+    #definitions.each.parse
+    #capabilities.each{|capability| definitions.first.send "#{capability}!"}
+    #jobs.select{|job| job.capability == :file}.each do |job|
+    #  path = job.params[0]
+    #  @files[path] = File.new self, path unless @files[path]
+    #  @files[path] << job.params
+    #end
+    @sandbox.evaluate @definitions
   end
 
   def check
@@ -31,11 +32,11 @@ class Node
   end
 
   def jobs
-    definitions.each.jobs.flatten(1)
+    @sandbox.jobs.flatten(1)
   end
 
   def commands
-    definitions.each.commands.flatten(1)
+    @sandbox.commands.flatten(1)
   end
 
   def capabilities
@@ -46,12 +47,8 @@ class Node
     @remote ||= Remote.new @name
   end
 
-  def final_definition
-    @final_definition ||= (self << Definition.new).last
-  end
-
   def memberships
-    definitions.each.memberships.flatten(1)
+    @sandbox.memberships.flatten(1)
   end
 
   def affected_files
