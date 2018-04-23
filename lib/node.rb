@@ -14,7 +14,7 @@ class Node
 
   def parse
     @sandbox.evaluate @definitions
-    capabilities.each{|capability| sandbox.send "#{capability}!"}
+    capabilities.each{|capability| @sandbox.send "#{capability}!"}
     #jobs.select{|job| job.capability == :file}.each do |job|
     #  path = job.params[0]
     #  @files[path] = File.new self, path unless @files[path]

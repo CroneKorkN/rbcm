@@ -56,7 +56,7 @@ class Sandbox
     )
   end
 
-  def _manipulate command
+  def manipulate command
     needs :file
     run command
   end
@@ -72,8 +72,8 @@ class Sandbox
     run "cat << EOFRBCM > #{path}
       #{content}
     EOFRBCM" if content
-    _manipulate "chmod #{mode} #{path}" if mode
-    _manipulate %^
+    manipulate "chmod #{mode} #{path}" if mode
+    manipulate %^
       if  grep -q #{includes_line} #{path}; then
         echo #{includes_line} >> #{path}
       fi
