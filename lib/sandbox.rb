@@ -16,15 +16,12 @@ class Sandbox
 end
 
 class Sandbox
-  attr_reader :content, :jobs, :commands, :memberships
+  attr_reader :content, :jobs
 
   def initialize node
     @node = node
     @jobs = []
-    @commands = []
-    @files = {}
     @dependency_cache = []
-    @memberships = []
     @chain = []
   end
 
@@ -34,8 +31,13 @@ class Sandbox
     end
   end
 
+  def trigger name, &block
+    @node.trigger[name] ||= []
+    @node.trigger[name] << block
+  end
+
   def group name
-    @memberships << name
+    @node.memberships << name
     @chain << "group:#{name}"
     instance_eval &Group[name]
     @chain.pop
@@ -50,7 +52,7 @@ class Sandbox
   end
 
   def run command, check: nil
-    @commands << Command.new(
+    @node.commands << Command.new(
       node: @node,
       line: command,
       check: check,

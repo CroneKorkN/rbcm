@@ -54,7 +54,7 @@ class RBCM
       )
       # define wrapper method
       Sandbox.define_method(capability_name.to_sym) do |*params|
-        @jobs << Job.new(capability_name, params)
+        @node.jobs << Job.new(capability_name, params)
         @capability_cache = capability_name
         @params_cache = params || nil
         @chain << capability_name

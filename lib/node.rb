@@ -1,11 +1,15 @@
 class Node
   attr_reader :jobs, :definitions, :files, :name
+  attr_accessor :trigger, :commands, :memberships
 
   def initialize name
     @name = name
     @definitions = []
+    @trigger = {}
     @sandbox = Sandbox.new self
     @files = {}
+    @commands = []
+    @memberships = []
   end
 
   def << definition
@@ -35,20 +39,12 @@ class Node
     @sandbox.jobs.flatten(1)
   end
 
-  def commands
-    @sandbox.commands.flatten(1)
-  end
-
   def capabilities
     jobs.each.capability.uniq
   end
 
   def remote
     @remote ||= Remote.new @name
-  end
-
-  def memberships
-    @sandbox.memberships.flatten(1)
   end
 
   def affected_files
