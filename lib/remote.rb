@@ -3,7 +3,8 @@ class Remote
     @host = host
   end
 
-  def execute! command
+  def execute command
     Execution.new command, @host
   end
+
 end

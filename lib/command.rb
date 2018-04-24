@@ -2,22 +2,22 @@
 
 class Command
   include Params
-  attr_reader :line, :capability, :params,
-    :dependencies, :obsolete, :approved
+  attr_reader :line, :params, :dependencies, :obsolete, :approved
 
-  def initialize node:, line:, capability:, params:, dependencies:, check: nil
+  def initialize node:, line:, params:, dependencies:, check: nil, chain:
+    @chain = chain
+    @capability = chain.last
     @node = node
     @line = line
-    @capability = capability
     @params = params
-    @dependencies = [:file] + [dependencies].flatten - [capability]
+    @dependencies = [:file] + [dependencies].flatten - [chain.last]
     @check = check
     @obsolete = nil
     @approved = nil
   end
 
   def check
-    @obsolete = @node.remote.execute!(@check).success? if @check
+    @obsolete = @node.remote.execute(@check).success? if @check
     if @obsolete == nil
       puts "EITHER: #{@line} (#{@check})"
     elsif @obsolete == false
@@ -30,7 +30,7 @@ class Command
   def approve
     puts "---------------------------------------------------------------------"
     puts "COMMAND: #{@line} "
-    puts "capability: #{@capability}"
+    puts "chain: #{@chain.join(" > ")}"
     puts "check: #{@check}"
     puts "obsolete: #{@obsolete} - #{@obsolete.class}"
     if @obsolete
@@ -38,19 +38,13 @@ class Command
       return
     else
       print "APROVE (y/N): "
-      if STDIN.gets.chomp == "y"
-        puts "approved"
-        @approved = true
-      else
-        puts "declined"
-        @approved = false
-      end
+      @approved = STDIN.gets == "y"
+      puts "APPROVED" if @approved
     end
   end
 
   def apply
-    pp @node.remote.execute! @line
-    @node.remote.upload
+    pp @node.remote.execute @line
   end
 
   def to_s

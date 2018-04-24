@@ -17,7 +17,6 @@ end
 
 class Sandbox
   attr_reader :content, :jobs, :commands, :memberships
-  attr_accessor :node
 
   def initialize node
     @node = node
@@ -26,6 +25,7 @@ class Sandbox
     @files = {}
     @dependency_cache = []
     @memberships = []
+    @chain = []
   end
 
   def evaluate definitions
@@ -36,7 +36,9 @@ class Sandbox
 
   def group name
     @memberships << name
+    @chain << "group:#{name}"
     instance_eval &Group[name]
+    @chain.pop
   end
 
   def dont *params
@@ -48,13 +50,15 @@ class Sandbox
   end
 
   def run command, check: nil
+    p @chain
+    p command
     @commands << Command.new(
       node: @node,
       line: command,
-      capability: @capability_cache,
+      check: check,
+      chain: [@chain].flatten(1).dup,
       params: @params_cache,
-      dependencies: @dependency_cache,
-      check: check
+      dependencies: @dependency_cache
     )
   end
 
@@ -71,7 +75,7 @@ class Sandbox
       content: nil
     )
     # @files[path] = content if content or exists
-    run "echo %^ #{content} ^ > #{path}" if content
+    run "echo #{Shellwords.escape(content)} > #{path}" if content
     manipulate "chmod #{mode} #{path}" if mode
     manipulate %^
       if  grep -q #{includes_line} #{path}; then
@@ -87,13 +91,13 @@ class Sandbox
     if not @@capabilities.include? capability_name
       super
     elsif name =~ /\!$/
-      return
+      return # dont call cap!
     elsif name =~ /\?$/
-      _search capability_name, params
+      __search capability_name, params
     end
   end
 
-  def _search capability_name, params
+  def __search capability_name, params
     jobs = @node.jobs.find_all{|job| job.capability == capability_name}
     if params.empty?
       # return ordered prarams

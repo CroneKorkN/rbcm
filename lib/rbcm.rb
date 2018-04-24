@@ -2,6 +2,7 @@ PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "net/ssh"
 require "fileutils"
+require 'shellwords'
 [ :lib, :definition_file, :file, :execution, :node, :group, :command_list,
   :command, :job, :remote, :sandbox
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
@@ -35,7 +36,7 @@ class RBCM
 
   def import_capabilities capabilities_path
     remember = Sandbox.instance_methods(false)
-    Dir["#{PWD}/capabilities/*.rb"].each {|path|
+    Dir["#{capabilities_path}/*.rb"].each {|path|
       Sandbox.eval File.read(path)
     }
     Sandbox.capabilities = Sandbox.instance_methods(false).grep(
@@ -56,7 +57,9 @@ class RBCM
         @jobs << Job.new(capability_name, params)
         @capability_cache = capability_name
         @params_cache = params || nil
+        @chain << capability_name
         r = send "__#{__method__}", *params
+        @chain.pop
         @dependency_cache = [:file]
         return r
       end
