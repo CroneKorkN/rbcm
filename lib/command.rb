@@ -24,8 +24,9 @@ class Command
   end
 
   def approve
-    puts; 96.times{print "="}; puts
-    puts "#{@chain.join(" > ")} | #{@params}"
+    puts "\n\n  \e[1m#{@node.name} > #{@chain.join(" > ")}\e[0m"
+    96.times{print "-"}; puts
+    puts "\e[4m#{@params.to_s[1..-2]}\e[0m"
     print "OBSOLETE " if @obsolete
     puts "$>_ #{@line} UNLESS #{@check}"
     if @obsolete
