@@ -9,4 +9,3 @@ rbcm.approve
 puts "\n\n    XXXXXXXXXXXXXXXXXXXX\n    XXXXXX  APPLY  XXXXX\n    XXXXXXXXXXXXXXXXXXXX\n\n"
 rbcm.apply
 puts "\n\n    XXXXXXX  END  XXXXXX\n\n"
-rbcm.nodes.values.each{|n| pp n.trigger}

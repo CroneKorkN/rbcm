@@ -3,7 +3,7 @@ require 'open3'
 class Execution
   attr_reader :command, :host, :stdout, :stderr, :status
 
-  def initialize command, host
+  def initialize host, command: nil, download: nil, upload: nil
     @command = command
     @host = host
     #@stdout, @stderr, @status = Open3.capture3 "ssh root@#{@host} #{command}"

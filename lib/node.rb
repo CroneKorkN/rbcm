@@ -1,16 +1,17 @@
 class Node
-  attr_reader :jobs, :definitions, :files, :name
-  attr_accessor :trigger, :commands, :memberships
+  attr_reader :jobs, :definitions, :files, :name, :remote
+  attr_accessor :commands, :memberships, :triggered
 
   def initialize name
     @name = name
     @definitions = []
-    @trigger = {}
     @sandbox = Sandbox.new self
-    @files = {}
+    @files = FileList.new self
+    @remote = Remote.new self
     @commands = []
     @memberships = []
     @jobs = []
+    @triggered = []
   end
 
   def << definition
@@ -38,9 +39,5 @@ class Node
 
   def capabilities
     jobs.each.capability.uniq
-  end
-
-  def remote
-    @remote ||= Remote.new @name
   end
 end

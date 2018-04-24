@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
     "lib/command_list.rb",
     "lib/definition_file.rb",
     "lib/execution.rb",
-    "lib/file.rb",
+    "lib/file_list.rb",
     "lib/group.rb",
     "lib/job.rb",
     "lib/lib.rb",

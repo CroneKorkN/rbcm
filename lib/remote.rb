@@ -1,9 +1,10 @@
 class Remote
-  def initialize host
-    @host = host
+  def initialize node
+    @node = node
+    @files = FileList.new self
   end
 
   def execute command
-    Execution.new command, @host
+    Execution.new @node.name, command: command
   end
 end

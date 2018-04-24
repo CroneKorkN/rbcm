@@ -6,7 +6,7 @@ class Command
     :approved, :triggered_by
 
   def initialize node:, line:, params:, dependencies:,
-      check: nil, chain:, triggered_by: nil
+      check: nil, chain:, triggered_by: nil, trigger: nil
     @chain = chain
     @capability = chain.last
     @node = node
@@ -16,6 +16,8 @@ class Command
     @check = check
     @obsolete = nil
     @approved = nil
+    @trigger = trigger
+    @triggered_by = triggered_by
   end
 
   def check
@@ -30,8 +32,9 @@ class Command
     if @obsolete
       return
     else
-      print "APROVE (y/N): "
+      print "APROVE (g,y/N): " # o: apply to ahole group
       @approved = STDIN.gets.chomp == "y"
+      @node.triggered << @trigger
     end
   end
 

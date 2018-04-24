@@ -4,7 +4,7 @@ class FileList < Hash
   end
 
   def << path, action
-    self[path] || = File.new node, path
+    self[path] ||= File.new node, path
     self[path] << action
   end
 end

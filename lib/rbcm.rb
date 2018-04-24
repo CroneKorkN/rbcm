@@ -3,7 +3,7 @@ APPDIR = File.expand_path File.dirname(__FILE__)
 require "net/ssh"
 require "fileutils"
 require 'shellwords'
-[ :lib, :definition_file, :file, :execution, :node, :group, :command_list,
+[ :lib, :definition_file, :file_list, :execution, :node, :group, :command_list,
   :command, :job, :remote, :sandbox
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
