@@ -50,8 +50,6 @@ class Sandbox
   end
 
   def run command, check: nil
-    p @chain
-    p command
     @commands << Command.new(
       node: @node,
       line: command,
@@ -114,11 +112,9 @@ class Sandbox
     elsif params.first.class == Hash
       if params.first.keys.first == :with
         # return values of a named param
-        j = jobs.find_all{ |job|
+        jobs.find_all{ |job|
           job.named_params.keys.include? params.first.values.first if job.named_params?
         }.each.named_params
-        p j
-        j
       end
     end
   end

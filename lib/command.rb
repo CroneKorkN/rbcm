@@ -17,35 +17,28 @@ class Command
   end
 
   def check
-    @obsolete = @node.remote.execute(@check).success? if @check
-    if @obsolete == nil
-      puts "EITHER: #{@line} (#{@check})"
-    elsif @obsolete == false
-      puts "YES:    #{@line} (#{@check})"
-    elsif @obsolete == true
-      puts "NO:     #{@line} (#{@check})"
-    end
+    print "CHECKING $>_ #{@check}"
+    @obsolete ||= @node.remote.execute(@check).success? if @check
+    puts @obsolete ? " OK" : " CHANGE"
+    @obsolete
   end
 
   def approve
-    puts "---------------------------------------------------------------------"
+    puts; 96.times{print "="}; puts
+    puts "#{@chain.join(" > ")} | #{@params}"
     print "OBSOLETE " if @obsolete
-    puts "COMMAND: #{@line} "
-    puts "chain: #{@chain.join(" > ")}"
-    puts "check: #{@check}"
-    puts "obsolete: #{@obsolete} - #{@obsolete.class}"
+    puts "$>_ #{@line} UNLESS #{@check}"
     if @obsolete
-      puts "OBSOLETE ============================================================"
       return
     else
       print "APROVE (y/N): "
-      @approved = STDIN.gets == "y"
-      puts "APPROVED" if @approved
+      @approved = STDIN.gets.chomp == "y"
     end
   end
 
   def apply
-    pp @node.remote.execute @line
+    p 111111
+    p @node.remote.execute @line
   end
 
   def to_s

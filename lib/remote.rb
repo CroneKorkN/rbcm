@@ -6,5 +6,4 @@ class Remote
   def execute command
     Execution.new command, @host
   end
-
 end

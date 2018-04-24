@@ -29,6 +29,7 @@ class RBCM
   end
 
   def apply
+    p commands.select{|c| p c.approved}.count 
     commands.select{|c| c.approved}.each.apply
   end
 

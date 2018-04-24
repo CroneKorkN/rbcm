@@ -6,7 +6,6 @@ class Execution
   def initialize command, host
     @command = command
     @host = host
-    puts "ssh root@#{@host} #{command}"
     #@stdout, @stderr, @status = Open3.capture3 "ssh root@#{@host} #{command}"
     Net::SSH.start(@host, 'root') do |ssh|
       ssh.exec!(@command) do |ch, stream, data|
@@ -19,10 +18,10 @@ class Execution
         end
       end
     end
-
     #Net::SCP.start("remote.host.com", "username", :password => "password") do |scp|
     #  scp.upload! StringIO.new("some data to upload"), "/remote/path"
     #end
+    return self
   end
 
   def success?

@@ -1,12 +1,11 @@
 #!/usr/bin/env ruby
 
-p "========================"
+p "=============================================================================="
 require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
 rbcm.parse
-rbcm.commands
 puts "\n\n    XXXXXXXXXXXXXXXXXXXX\n    XXXXX  APPROVE  XXXX\n    XXXXXXXXXXXXXXXXXXXX\n\n"
 rbcm.approve
 puts "\n\n    XXXXXXXXXXXXXXXXXXXX\n    XXXXXX  APPLY  XXXXX\n    XXXXXXXXXXXXXXXXXXXX\n\n"
 rbcm.apply
-puts "\n\n    XXXXXXXXXXXXXXXXXXXX\n    XXXXXXX  END  XXXXXX\n    XXXXXXXXXXXXXXXXXXXX\n\n"
+puts "\n\n    XXXXXXX  END  XXXXXX\n\n"
