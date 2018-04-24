@@ -29,6 +29,7 @@ class Command
 
   def approve
     puts "---------------------------------------------------------------------"
+    print "OBSOLETE " if @obsolete
     puts "COMMAND: #{@line} "
     puts "chain: #{@chain.join(" > ")}"
     puts "check: #{@check}"
