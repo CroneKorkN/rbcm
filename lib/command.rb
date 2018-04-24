@@ -49,7 +49,8 @@ class Command
   end
 
   def apply
-    p @node.remote.execute!(@line)
+    pp @node.remote.execute! @line
+    @node.remote.upload
   end
 
   def to_s

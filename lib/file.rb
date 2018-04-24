@@ -1,4 +1,4 @@
-class File
+class File_
   def initialize node, path
     @actions = []
   end

@@ -1,5 +1,5 @@
 class Node
-  attr_reader :jobs, :definitions, :files
+  attr_reader :jobs, :definitions, :files, :name
 
   def initialize name
     @name = name
@@ -15,9 +15,10 @@ class Node
   def parse
     @sandbox.evaluate @definitions
     capabilities.each{|capability| @sandbox.send "#{capability}!"}
+    # jobs -> files
     #jobs.select{|job| job.capability == :file}.each do |job|
     #  path = job.params[0]
-    #  @files[path] = File.new self, path unless @files[path]
+    #  @files[path] ||= File.new self, path
     #  @files[path] << job.params
     #end
   end

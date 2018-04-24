@@ -13,7 +13,9 @@ class Sandbox
   def self.capabilities= capabilities
     @@capabilities = capabilities
   end
+end
 
+class Sandbox
   attr_reader :content, :jobs, :commands, :memberships
   attr_accessor :node
 
@@ -69,9 +71,7 @@ class Sandbox
       content: nil
     )
     # @files[path] = content if content or exists
-    run "cat << EOFRBCM > #{path}
-      #{content}
-    EOFRBCM" if content
+    run "echo %^ #{content} ^ > #{path}" if content
     manipulate "chmod #{mode} #{path}" if mode
     manipulate %^
       if  grep -q #{includes_line} #{path}; then
