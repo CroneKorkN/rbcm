@@ -43,12 +43,4 @@ class Node
   def remote
     @remote ||= Remote.new @name
   end
-
-  def affected_files
-    @affected_files ||= commands.select{ |command|
-      command.capability == :file
-    }.collect{ |command|
-      command.ordered_params.first
-    }
-  end
 end

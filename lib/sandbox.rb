@@ -20,9 +20,9 @@ class Sandbox
 
   def initialize node
     @node = node
-    @jobs = []
     @dependency_cache = []
     @chain = []
+    @trigger_cache =[]
   end
 
   def evaluate definitions
@@ -32,8 +32,9 @@ class Sandbox
   end
 
   def trigger name, &block
-    @node.trigger[name] ||= []
-    @node.trigger[name] << block
+    @trigger_cache << name
+    instance_eval &block
+    @trigger_cache.pop
   end
 
   def group name
@@ -58,7 +59,8 @@ class Sandbox
       check: check,
       chain: [@chain].flatten(1).dup,
       params: @params_cache,
-      dependencies: @dependency_cache
+      dependencies: @dependency_cache,
+      triggered_by: @trigger_chache
     )
   end
 
@@ -71,6 +73,7 @@ class Sandbox
       path,
       exists: nil,
       includes_line: nil,
+      after: nil,
       mode: nil,
       content: nil
     )
@@ -86,7 +89,7 @@ class Sandbox
 
   # handle getter method calls
   def method_missing name, *params, &block
-    puts "method #{name} missing"
+    log "method #{name} missing"
     capability_name = name[0..-2].to_sym
     if not @@capabilities.include? capability_name
       super

@@ -2,9 +2,11 @@
 
 class Command
   include Params
-  attr_reader :line, :params, :dependencies, :obsolete, :approved
+  attr_reader :line, :params, :dependencies, :obsolete,
+    :approved, :triggered_by
 
-  def initialize node:, line:, params:, dependencies:, check: nil, chain:
+  def initialize node:, line:, params:, dependencies:,
+      check: nil, chain:, triggered_by: nil
     @chain = chain
     @capability = chain.last
     @node = node
@@ -24,11 +26,7 @@ class Command
   end
 
   def approve
-    print "\n\e[7m\e[1m #{@node.name} > #{@chain.join(" > ")} \e[0m"
-    print " OBSOLETE" if @obsolete
-    puts
-    puts "\e[4m#{@params.to_s[1..-2]}\e[0m"
-    puts "$>_ #{@line} UNLESS #{@check}"
+    puts self
     if @obsolete
       return
     else
@@ -43,6 +41,9 @@ class Command
   end
 
   def to_s
-    "#{@capability} #{@params.to_s[1..-2]}\n  #{@line}"
+    (@obsolete ? "\e[30;42m" : "\e[30;43m") +
+    "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m\n" +
+    "\ \ \e[4m#{@params.to_s[1..-2]}\e[0m\n" +
+    "\ \ $>_ \e[1m#{@line}\e[0m \e[2mUNLESS #{@check}\e[0m\n"
   end
 end
