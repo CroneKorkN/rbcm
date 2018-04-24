@@ -10,6 +10,7 @@ class Node
     @files = {}
     @commands = []
     @memberships = []
+    @jobs = []
   end
 
   def << definition
@@ -33,10 +34,6 @@ class Node
 
   def approve
     commands.each.approve
-  end
-
-  def jobs
-    @sandbox.jobs.flatten(1)
   end
 
   def capabilities
