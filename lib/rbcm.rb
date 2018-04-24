@@ -20,11 +20,11 @@ class RBCM
   end
 
   def parse
-    nodes.each_value{|node| node.parse}
+    nodes.values.each.parse
   end
 
   def approve
-    nodes.each_value{|node| node.check}
+    nodes.values.each.check
     commands.each.approve
   end
 
