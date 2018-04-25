@@ -3,11 +3,11 @@
 class Command
   include Params
   attr_reader :line, :params, :dependencies, :obsolete,
-    :approved, :triggered_by
+    :approved, :triggered_by, :chain, :capability
 
   def initialize node:, line:, params:, dependencies:,
       check: nil, chain:, triggered_by: nil, trigger: nil
-    @chain_cache = chain
+    @chain = chain
     @capability = chain.last
     @node = node
     @line = line
@@ -18,6 +18,14 @@ class Command
     @approved = nil
     @trigger = trigger
     @triggered_by = triggered_by
+  end
+
+  def siblings
+    @node.commands.select{ |command|
+      command.chain == @chain and
+      command.capability == @capability and
+      command.params == @params
+    }
   end
 
   def check
@@ -46,10 +54,11 @@ class Command
   def to_s
     [
       @obsolete ? "\e[30;42m" : "\e[30;43m",
-      "\e[1m  #{@node.name} > #{@chain_cache.join(" > ")}  \e[0m\n",
+      "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m\n",
       "\ \ \e[4m#{@params.to_s[1..-2]}\e[0m\n",
       "\ \ $>_ \e[1m#{@line}\e[0m \e[2mUNLESS #{@check}\e[0m\n",
-      "trigger: #{@trigger}, triggered_by: #{@triggered_by}"
+      "trigger: #{@trigger}, triggered_by: #{@triggered_by}",
+      "SIBLINGS: #{siblings}"
     ].join
   end
 end

@@ -1,6 +1,7 @@
 PWD = ARGV[0]
 APPDIR = File.expand_path File.dirname(__FILE__)
 require "net/ssh"
+require "net/scp"
 require "fileutils"
 require 'shellwords'
 [ :lib, :definition_file, :file_list, :execution, :node, :group, :command_list,
@@ -17,24 +18,6 @@ class RBCM
     import_definitions "#{project_path}/definitions"
     @groups = Group.all
   end
-
-  def parse
-    nodes.values.each.parse
-  end
-
-  def approve
-    nodes.values.each.check
-    nodes.values.each.approve
-    #while commands.select{|c| c.obsolete == false and c.approved == nil}.any?
-    #  commands.select{|c| c.obsolete == false and c.approved == nil}.first.approve
-    #end
-  end
-
-  def apply
-    commands.select{|c| c.approved}.each.apply
-  end
-
-  # private
 
   def import_capabilities capabilities_path
     Sandbox.import_capabilities capabilities_path
@@ -60,7 +43,19 @@ class RBCM
     end
   end
 
-  def commands
-    nodes.values.each.commands.flatten(1)
+  def parse
+    nodes.values.each.parse
+  end
+
+  def approve
+    nodes.values.each.check
+    nodes.values.each.approve
+    #while commands.select{|c| c.obsolete == false and c.approved == nil}.any?
+    #  commands.select{|c| c.obsolete == false and c.approved == nil}.first.approve
+    #end
+  end
+
+  def apply
+    nodes.values.each.commands.flatten(1).select{|c| c.approved}.each.apply
   end
 end
