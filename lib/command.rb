@@ -63,15 +63,15 @@ class Command
 
   def diff
     if @capability == :file
-      return @diff if @diff
-      path = @params[0]
-      [ @node.remote.files[path],
-        @node.files[path]
-      ].join(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-      #return Diffy::Diff.new(
-      #  @node.remote.files[path],
+      #return @diff if @diff
+      #path = @params[0]
+      #[ @node.remote.files[path],
       #  @node.files[path]
-      #)
+      #].join(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+      return @diff ||= Diffy::Diff.new(
+        @node.remote.files[path],
+        @node.files[path]
+      )
     else
       return "\ \ $>_ \e[1m#{@line}\e[0m \e[2m CHECK #{@check}\e[0m"
     end
