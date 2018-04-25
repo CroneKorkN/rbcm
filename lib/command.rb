@@ -43,17 +43,18 @@ class Command
   end
 
   def approve
+    # check if neccessary
     check unless [true, false].include? @obsolete
+    # print info
     puts self
     puts diff
-    if @obsolete
-      return
-    else
-      print "APROVE (g,y/N): " # o: apply to ahole group
-      @approved = ["g", "y"].include? STDIN.gets.chomp
-      siblings.each.approved = true if siblings.any?
-      @node.triggered << @trigger
-    end
+    # finish if obsolete
+    return if @obsolete
+    # interact
+    print "APROVE (g,y/N): " # o: apply to ahole group
+    @approved = [:g, :y].include? STDIN.gets.chomp.to_sym
+    siblings.each.approved = true if @approved == :g
+    @node.triggered << @trigger
   end
 
   def apply
@@ -62,11 +63,15 @@ class Command
 
   def diff
     if @capability == :file
+      return @diff if @diff
       path = @params[0]
-      return Diffy::Diff.new(
-        @node.remote.files[path],
+      [ @node.remote.files[path],
         @node.files[path]
-      )
+      ].join(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+      #return Diffy::Diff.new(
+      #  @node.remote.files[path],
+      #  @node.files[path]
+      #)
     else
       return "\ \ $>_ \e[1m#{@line}\e[0m \e[2m CHECK #{@check}\e[0m"
     end

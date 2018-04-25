@@ -9,6 +9,7 @@ class Sandbox
     @dependency_cache = []
     @chain_cache = []
     @trigger_cache =[]
+    @check_cache = []
   end
 
   def evaluate definitions
@@ -38,6 +39,12 @@ class Sandbox
 
   def needs *capabilities
     @dependency_cache += [capabilities].flatten
+  end
+
+  def check command, &block
+    @check_cache << command
+    instance_eval &block
+    @check_cache.pop
   end
 
   def run command, check: nil
