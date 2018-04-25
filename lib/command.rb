@@ -32,9 +32,10 @@ class Command
 
   def check
     log "CHECKING $>_ #{@check}"
+    path = @params[0]
     if @capability == :file
-      @node.files[@params[0]] = named_params[:content]
-      @obsolete = diff == ""
+      @node.files[path] = named_params[:content]
+      @obsolete = @node.remote.files[path] == @node.files[path]
     elsif @check
       @obsolete = @node.remote.execute(@check).success?
     else
@@ -47,10 +48,10 @@ class Command
     check unless [true, false].include? @obsolete
     # print info
     puts self
-    puts diff
     # finish if obsolete
     return if @obsolete
     # interact
+    puts diff
     print "APROVE (g,y/N): " # o: apply to ahole group
     @approved = [:g, :y].include? STDIN.gets.chomp.to_sym
     siblings.each.approved = true if @approved == :g
@@ -64,10 +65,9 @@ class Command
   def diff
     if @capability == :file
       path = @params[0]
-      @diff ||= [
-        @node.remote.files[path],
+      [ @node.remote.files[path],
         @node.files[path]
-      ].join(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+      ].join("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
       #return @diff ||= Diffy::Diff.new(
       #  @node.remote.files[path],
       #  @node.files[path]
