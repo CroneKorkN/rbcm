@@ -6,12 +6,15 @@ Gem::Specification.new do |spec|
   spec.description = "manage your servers via simple config-files"
   spec.authors     = ["Martin Wiegand"]
   spec.email       = 'martin@wiegand.tel'
+  spec.executables << 'rbcm'
+  spec.homepage    = 'https://github.com/CroneKorkN/rbcm'
+  spec.license     = 'MIT'
   spec.files       = [
     "lib/command.rb",
     "lib/command_list.rb",
     "lib/definition_file.rb",
     "lib/execution.rb",
-    "lib/file_list.rb",
+    "lib/file_system.rb",
     "lib/group.rb",
     "lib/job.rb",
     "lib/lib.rb",
@@ -20,10 +23,8 @@ Gem::Specification.new do |spec|
     "lib/remote.rb",
     "lib/sandbox.rb",
   ]
-  spec.executables << 'rbcm'
-  spec.homepage    = 'https://github.com/CroneKorkN/rbcm'
-  spec.license     = 'MIT'
   spec.add_runtime_dependency 'net-ssh'
   spec.add_runtime_dependency 'net-scp'
-  spec.add_runtime_dependency 'quickeach', '= 0.1.0'
+  spec.add_runtime_dependency 'quickeach'
+  spec.add_runtime_dependency 'diffy'
 end

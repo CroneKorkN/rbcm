@@ -1,12 +1,13 @@
 class Node
-  attr_reader :jobs, :definitions, :files, :name, :remote
+  attr_reader :jobs, :definitions, :files, :name, :remote, :rbcm
   attr_accessor :commands, :memberships, :triggered
 
-  def initialize name
+  def initialize rbcm, name
+    @rbcm = rbcm
     @name = name
     @definitions = []
     @sandbox = Sandbox.new self
-    @files = FileList.new self
+    @files = FileSystem.new self
     @remote = Remote.new self
     @commands = []
     @memberships = []

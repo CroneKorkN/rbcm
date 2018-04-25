@@ -33,7 +33,7 @@ class Sandbox
   end
 
   def dont *params
-    p "dont #{params}"
+    puts "dont #{params}"
   end
 
   def needs *capabilities

@@ -1,10 +1,11 @@
-PWD = ARGV[0]
-APPDIR = File.expand_path File.dirname(__FILE__)
 require "net/ssh"
 require "net/scp"
 require "fileutils"
-require 'shellwords'
-[ :lib, :definition_file, :file_list, :execution, :node, :group, :command_list,
+require "shellwords"
+require "diffy"
+
+APPDIR = File.expand_path File.dirname(__FILE__)
+[ :lib, :definition_file, :file_system, :execution, :node, :group, :command_list,
   :command, :job, :remote, :sandbox
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
@@ -16,7 +17,6 @@ class RBCM
     @nodes = {}
     import_capabilities "#{project_path}/capabilities"
     import_definitions "#{project_path}/definitions"
-    @groups = Group.all
   end
 
   def import_capabilities capabilities_path
@@ -32,7 +32,7 @@ class RBCM
       end
       @patterns << definition_file.patterns
       definition_file.nodes.each do |name, definition|
-        @nodes[name] = Node.new name unless @nodes[name]
+        @nodes[name] = Node.new self, name unless @nodes[name]
         @nodes[name] << definition
       end
     end
@@ -50,12 +50,16 @@ class RBCM
   def approve
     nodes.values.each.check
     nodes.values.each.approve
-    #while commands.select{|c| c.obsolete == false and c.approved == nil}.any?
-    #  commands.select{|c| c.obsolete == false and c.approved == nil}.first.approve
+    #while approvable = commands.select{|c| c.obsolete == false and c.approved == nil}
+    #  approvable.first.approve if approvable.any?
     #end
   end
 
+  def commands
+    nodes.values.each.commands.flatten(1)
+  end
+
   def apply
-    nodes.values.each.commands.flatten(1).select{|c| c.approved}.each.apply
+    commands.select{|c| c.approved}.each.apply
   end
 end

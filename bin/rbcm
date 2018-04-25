@@ -4,8 +4,5 @@ p "=============================================================================
 require 'rbcm'
 rbcm = RBCM.new ARGV[1] || ARGV[0]
 rbcm.parse
-puts "\n\n    XXXXXXXXXXXXXXXXXXXX\n    XXXXX  APPROVE  XXXX\n    XXXXXXXXXXXXXXXXXXXX\n\n"
 rbcm.approve
-puts "\n\n    XXXXXXXXXXXXXXXXXXXX\n    XXXXXX  APPLY  XXXXX\n    XXXXXXXXXXXXXXXXXXXX\n\n"
 rbcm.apply
-puts "\n\n    XXXXXXX  END  XXXXXX\n\n"
