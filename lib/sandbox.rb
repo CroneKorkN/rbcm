@@ -21,7 +21,7 @@ class Sandbox
   def initialize node
     @node = node
     @dependency_cache = []
-    @chain = []
+    @chain_cache = []
     @trigger_cache =[]
   end
 
@@ -33,15 +33,17 @@ class Sandbox
 
   def trigger name, &block
     @trigger_cache << name
+    @chain_cache << "trigger:#{name}"
     instance_eval &block
     @trigger_cache.pop
+    @chain_cache.pop
   end
 
   def group name
     @node.memberships << name
-    @chain << "group:#{name}"
+    @chain_cache << "group:#{name}"
     instance_eval &Group[name]
-    @chain.pop
+    @chain_cache.pop
   end
 
   def dont *params
@@ -57,10 +59,10 @@ class Sandbox
       node: @node,
       line: command,
       check: check,
-      chain: [@chain].flatten(1).dup,
-      params: @params_cache,
-      dependencies: @dependency_cache,
-      triggered_by: @trigger_chache
+      chain: [@chain_cache].flatten(1).dup,
+      params: @params_cache.dup,
+      dependencies: @dependency_cache.dup,
+      triggered_by: @trigger_cache.dup
     )
   end
 

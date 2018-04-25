@@ -25,7 +25,10 @@ class RBCM
 
   def approve
     nodes.values.each.check
-    commands.each.approve
+    nodes.values.each.approve
+    #while commands.select{|c| c.obsolete == false and c.approved == nil}.any?
+    #  commands.select{|c| c.obsolete == false and c.approved == nil}.first.approve
+    #end
   end
 
   def apply
@@ -35,14 +38,14 @@ class RBCM
   # private
 
   def import_capabilities capabilities_path
-    remember = Sandbox.instance_methods(false)
+    instance_methods_cache = Sandbox.instance_methods(false)
     Dir["#{capabilities_path}/*.rb"].each {|path|
       Sandbox.eval File.read(path)
     }
     Sandbox.capabilities = Sandbox.instance_methods(false).grep(
       /[^\!]$/
     ).-(
-      remember
+      instance_methods_cache
     ).+(
       [:file, :manipulate]
     )
@@ -55,11 +58,26 @@ class RBCM
       # define wrapper method
       Sandbox.define_method(capability_name.to_sym) do |*params|
         @node.jobs << Job.new(capability_name, params)
-        @capability_cache = capability_name
         @params_cache = params || nil
-        @chain << capability_name
+        @chain_cache << capability_name
         r = send "__#{__method__}", *params
-        @chain.pop
+        @chain_cache.pop
+        @dependency_cache = [:file]
+        return r
+      end
+      next unless Sandbox.instance_methods(false).include? "#{capability_name}!".to_sym
+      # copy method
+      Sandbox.define_method(
+        "__#{capability_name}!".to_sym,
+        Sandbox.instance_method("#{capability_name}!")
+      )
+      # define wrapper method
+      Sandbox.define_method("#{capability_name}!".to_sym) do |*params|
+        @node.jobs << Job.new(capability_name, params)
+        @params_cache = params || nil
+        @chain_cache << "#{capability_name}!"
+        r = send "__#{__method__}", *params
+        @chain_cache.pop
         @dependency_cache = [:file]
         return r
       end
@@ -87,6 +105,6 @@ class RBCM
   end
 
   def commands
-    @commands ||= nodes.each_value.collect{|node| node.commands}.flatten(1)
+    nodes.values.each.commands.flatten(1)
   end
 end

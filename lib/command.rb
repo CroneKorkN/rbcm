@@ -7,7 +7,7 @@ class Command
 
   def initialize node:, line:, params:, dependencies:,
       check: nil, chain:, triggered_by: nil, trigger: nil
-    @chain = chain
+    @chain_cache = chain
     @capability = chain.last
     @node = node
     @line = line
@@ -44,9 +44,12 @@ class Command
   end
 
   def to_s
-    (@obsolete ? "\e[30;42m" : "\e[30;43m") +
-    "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m\n" +
-    "\ \ \e[4m#{@params.to_s[1..-2]}\e[0m\n" +
-    "\ \ $>_ \e[1m#{@line}\e[0m \e[2mUNLESS #{@check}\e[0m\n"
+    [
+      @obsolete ? "\e[30;42m" : "\e[30;43m",
+      "\e[1m  #{@node.name} > #{@chain_cache.join(" > ")}  \e[0m\n",
+      "\ \ \e[4m#{@params.to_s[1..-2]}\e[0m\n",
+      "\ \ $>_ \e[1m#{@line}\e[0m \e[2mUNLESS #{@check}\e[0m\n",
+      "trigger: #{@trigger}, triggered_by: #{@triggered_by}"
+    ].join
   end
 end
