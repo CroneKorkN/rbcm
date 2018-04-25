@@ -38,50 +38,7 @@ class RBCM
   # private
 
   def import_capabilities capabilities_path
-    instance_methods_cache = Sandbox.instance_methods(false)
-    Dir["#{capabilities_path}/*.rb"].each {|path|
-      Sandbox.eval File.read(path)
-    }
-    Sandbox.capabilities = Sandbox.instance_methods(false).grep(
-      /[^\!]$/
-    ).-(
-      instance_methods_cache
-    ).+(
-      [:file, :manipulate]
-    )
-    Sandbox.capabilities.each do |capability_name|
-      # copy method
-      Sandbox.define_method(
-        "__#{capability_name}".to_sym,
-        Sandbox.instance_method(capability_name)
-      )
-      # define wrapper method
-      Sandbox.define_method(capability_name.to_sym) do |*params|
-        @node.jobs << Job.new(capability_name, params)
-        @params_cache = params || nil
-        @chain_cache << capability_name
-        r = send "__#{__method__}", *params
-        @chain_cache.pop
-        @dependency_cache = [:file]
-        return r
-      end
-      next unless Sandbox.instance_methods(false).include? "#{capability_name}!".to_sym
-      # copy method
-      Sandbox.define_method(
-        "__#{capability_name}!".to_sym,
-        Sandbox.instance_method("#{capability_name}!")
-      )
-      # define wrapper method
-      Sandbox.define_method("#{capability_name}!".to_sym) do |*params|
-        @node.jobs << Job.new(capability_name, params)
-        @params_cache = params || nil
-        @chain_cache << "#{capability_name}!"
-        r = send "__#{__method__}", *params
-        @chain_cache.pop
-        @dependency_cache = [:file]
-        return r
-      end
-    end
+    Sandbox.import_capabilities capabilities_path
   end
 
   def import_definitions definitions_path
