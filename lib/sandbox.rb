@@ -2,20 +2,6 @@
 # accepts definition-Proc and provides definition-Proc and job list
 
 class Sandbox
-  def self.eval code
-    super code
-  end
-
-  def self.capabilities
-    @@capabilities
-  end
-
-  def self.capabilities= capabilities
-    @@capabilities = capabilities
-  end
-end
-
-class Sandbox
   attr_reader :content, :jobs
 
   def initialize node
@@ -126,26 +112,26 @@ class Sandbox
     end
   end
 
-  def import_capabilities capabilities_path
-    instance_methods_cache = Sandbox.instance_methods(false)
+  def self.import_capabilities capabilities_path
+    instance_methods_cache = instance_methods(false)
     Dir["#{capabilities_path}/*.rb"].each {|path|
-      Sandbox.eval File.read(path)
+      eval File.read(path)
     }
-    Sandbox.capabilities = Sandbox.instance_methods(false).grep(
+    @@capabilities = instance_methods(false).grep(
       /[^\!]$/
     ).-(
       instance_methods_cache
     ).+(
       [:file, :manipulate]
     )
-    Sandbox.capabilities.each do |capability_name|
+    @@capabilities.each do |capability_name|
       # copy method
-      Sandbox.define_method(
+      define_method(
         "__#{capability_name}".to_sym,
-        Sandbox.instance_method(capability_name)
+        instance_method(capability_name)
       )
       # define wrapper method
-      Sandbox.define_method(capability_name.to_sym) do |*params|
+      define_method(capability_name.to_sym) do |*params|
         @node.jobs << Job.new(capability_name, params)
         @params_cache = params || nil
         @chain_cache << capability_name
@@ -154,14 +140,14 @@ class Sandbox
         @dependency_cache = [:file]
         return r
       end
-      next unless Sandbox.instance_methods(false).include? "#{capability_name}!".to_sym
+      next unless instance_methods(false).include? "#{capability_name}!".to_sym
       # copy method
-      Sandbox.define_method(
+      define_method(
         "__#{capability_name}!".to_sym,
-        Sandbox.instance_method("#{capability_name}!")
+        instance_method("#{capability_name}!")
       )
       # define wrapper method
-      Sandbox.define_method("#{capability_name}!".to_sym) do |*params|
+      define_method("#{capability_name}!".to_sym) do |*params|
         @node.jobs << Job.new(capability_name, params)
         @params_cache = params || nil
         @chain_cache << "#{capability_name}!"

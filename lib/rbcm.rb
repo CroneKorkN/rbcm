@@ -14,7 +14,6 @@ class RBCM
     @patterns = {}
     @nodes = {}
     import_capabilities "#{project_path}/capabilities"
-    @capabilities = Sandbox.capabilities
     import_definitions "#{project_path}/definitions"
     @groups = Group.all
   end
