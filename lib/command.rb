@@ -34,7 +34,6 @@ class Command
     log "CHECKING $>_ #{@check}"
     path = @params[0]
     if @capability == :file
-      @node.files[path] = named_params[:content]
       @obsolete = @node.remote.files[path] == @node.files[path]
     elsif @check
       @obsolete = @node.remote.execute(@check).success?

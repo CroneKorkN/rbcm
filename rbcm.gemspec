@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
     "lib/execution.rb",
     "lib/file_system.rb",
     "lib/group.rb",
+    "lib/group_list.rb",
     "lib/job.rb",
     "lib/lib.rb",
     "lib/node.rb",

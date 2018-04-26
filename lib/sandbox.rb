@@ -26,11 +26,15 @@ class Sandbox
     @chain_cache.pop
   end
 
-  def group name
-    @node.memberships << name
-    @chain_cache << "group:#{name}"
-    instance_eval &Group[name]
-    @chain_cache.pop
+  def group name, &block
+    if block_given?
+      @node.rbcm.group_additions[name] << block
+    else
+      @node.memberships << name
+      @chain_cache << "group:#{name}"
+      instance_eval &Group[name]
+      @chain_cache.pop
+    end
   end
 
   def dont *params
