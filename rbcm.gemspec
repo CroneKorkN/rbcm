@@ -23,8 +23,8 @@ Gem::Specification.new do |spec|
     "lib/remote.rb",
     "lib/sandbox.rb",
   ]
-  spec.add_runtime_dependency 'net-ssh'
-  spec.add_runtime_dependency 'net-scp'
-  spec.add_runtime_dependency 'quickeach'
-  spec.add_runtime_dependency 'diffy'
+  spec.add_runtime_dependency 'quickeach', "= 0.1.0"
+  spec.add_runtime_dependency 'net-ssh', "= 4.2.0"
+  spec.add_runtime_dependency 'net-scp', "= 1.2.1"
+  spec.add_runtime_dependency 'diffy', "= 3.2.0"
 end
