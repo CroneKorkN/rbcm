@@ -114,6 +114,9 @@ class Sandbox
         named_params[params.first]
       }
     elsif params.first.class == Hash
+      if params.first[:nodes] == :all
+        jobs = @node.rbcm.nodes.values.each.jobs.flatten(1).find_all{|job| job.capability == capability_name}
+      end
       if params.first.keys.first == :with
         # return values of a named param
         jobs.find_all{ |job|
