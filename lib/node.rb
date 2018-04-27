@@ -22,10 +22,7 @@ class Node
   def parse
     @sandbox.evaluate @definitions
     @memberships.each do |membership|
-      next unless @rbcm.group_additions[membership]
-      @rbcm.group_additions[membership].each do |definition|
-        @sandbox.evaluate definition
-      end
+      @sandbox.evaluate @rbcm.group_additions[membership] if @rbcm.group_additions[membership]
     end
     capabilities.each{|capability| @sandbox.send "#{capability}!"}
     # jobs -> files
