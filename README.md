@@ -33,9 +33,9 @@ a `capabilities/`- and a `nodes/`-directory
 ## capabilities
 
 Nodes are defined by calling capabilities. Capabilities are methods residing in
-files in `capabilities/` directory. Each capability may have a second incarnation,
-ending with a bang ("cap!"). The bang-version is called once on each node if
-the node called the non-bang-version before.
+files in `capabilities/` directory. Each capability may have a second
+incarnation with a bang suffix ("cap!"). The bang version is called once on each
+node if the node called the non-bang-version before.
 ```
 def ip v4: nil, mac: nil
   # may call further capabilities
@@ -45,10 +45,26 @@ def ip!
   # called once at the end
 end
 ```
-
-User defined apabilities extend the set of base capabilities by further
+User defined capabilities extend the set of base capabilities by further
 mechanisms. They are meant to use the base capabilities to actually generate
 actions to be executed on the server.
+
+## getting state
+
+Every capability has a questionmark suffix version to access jobs called so far.
+```
+node "example.com" do
+  user "alice"
+  user "bob", :no_home
+  user?    # [["alice", "bob"], [nil, :no_home]]
+  user?[0] # ["alice", "bob"] <- grouped by ordered param number
+  ip v4: "10.0.0.1", v6: "2000::f0f0:1212"
+  ip v4: "192.168.1.55"
+  ip?(:v4) # ["10.0.0.1", "192.168.1.55"]
+  ip?(:v4) # ["2000::f0f0:1212"]
+  ip?(with: :v6) # [{v4: "10.0.0.1", v6: "2000::f0f0:1212"}]
+end
+```
 
 ### base capabilities
 
@@ -100,8 +116,8 @@ end
 ## expand groups
 
 Groups can be expanded from within other groups or nodes. This way, you can add
-definition to other nodes, being in the expanded group. Local variables can be
-used to pass local state.
+definition from one to another node, which is member of the expanded group.
+Local variables can be used to pass local state.
 ```
 group :dhcp-clients do
   host = @name
