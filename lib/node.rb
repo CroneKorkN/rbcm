@@ -28,7 +28,6 @@ class Node
   end
 
   def approve
-    puts self
     commands.each.approve
   end
 
@@ -41,7 +40,7 @@ class Node
   end
 
   def to_s
-    [ "\e[30;44m\ \ #{@name}\e[0m",
+    [ "\e[30;106m\e[1m\ \ #{@name}\ \ \e[0m",
       "\ \ MEMBERSHIPS #{@memberships}",
       "\ \ TRIGGERED #{@triggered}"
     ].join "\n"

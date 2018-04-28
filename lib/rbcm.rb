@@ -73,6 +73,7 @@ class RBCM
   end
 
   def apply
+    puts "\nAPPLYING\n\n"
     commands.select{|c| c.approved}.each.apply
   end
 end

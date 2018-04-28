@@ -60,11 +60,11 @@ class Command
 
   def apply
     response = @node.remote.execute(@line)
-    [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;41m",
+    puts [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;41m",
       "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m",
       "\n\ \ \e[4m#{@params.to_s[1..-2]}\e[0m",
+      response
     ].join
-    puts response
   end
 
   def diff
