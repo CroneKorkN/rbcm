@@ -36,7 +36,9 @@ class Node
   end
 
   def additions
-    @rbcm.group_additions.select{|group, additions| memberships.include? group}.flatten(1)
+    @rbcm.group_additions.select{ |group, additions|
+      memberships.include? group
+    }.flatten(1)
   end
 
   def to_s
