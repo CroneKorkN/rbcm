@@ -1,8 +1,6 @@
 Ruby Config Management
 ======================
 
-# Usage
-
 Navigate into a configuration dir and call rbcm.
 `>_ rbcm`
 
