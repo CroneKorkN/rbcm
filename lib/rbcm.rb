@@ -10,13 +10,13 @@ APPDIR = File.expand_path File.dirname(__FILE__)
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
-  attr_reader :nodes, :groups, :project_path
+  attr_reader :nodes, :groups
   attr_accessor :group_additions
 
   def initialize project_path
     @patterns = {}
     @nodes = {}
-    @group_additions = GroupList.new
+    @group_additions = {}
     import_capabilities "#{project_path}/capabilities"
     import_definitions "#{project_path}/definitions"
   end
@@ -46,7 +46,18 @@ class RBCM
   end
 
   def parse
+    # parse base definitions
     nodes.values.each.parse
+    # parse cross-definitions
+    nodes.values.each do |node|
+      node.sandbox.evaluate node.additions
+    end
+    # apply final capabilities
+    nodes.values.each do |node|
+      node.capabilities.each do |capability|
+        node.sandbox.send "#{capability}!"
+      end
+    end
   end
 
   def approve

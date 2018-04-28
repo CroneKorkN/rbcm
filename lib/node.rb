@@ -1,5 +1,5 @@
 class Node
-  attr_reader :jobs, :definitions, :files, :name, :remote, :rbcm
+  attr_reader :jobs, :definitions, :files, :name, :remote, :rbcm, :sandbox
   attr_accessor :commands, :memberships, :triggered
 
   def initialize rbcm, name
@@ -20,17 +20,7 @@ class Node
   end
 
   def parse
-    @sandbox.evaluate @definitions
-    @memberships.each do |membership|
-      @sandbox.evaluate @rbcm.group_additions[membership] if @rbcm.group_additions[membership]
-    end
-    capabilities.each{|capability| @sandbox.send "#{capability}!"}
-    # jobs -> files
-    #jobs.select{|job| job.capability == :file}.each do |job|
-    #  path = job.params[0]
-    #  @files[path] ||= File.new self, path
-    #  @files[path] << job.params
-    #end
+    @sandbox.evaluate definitions
   end
 
   def check
@@ -43,5 +33,9 @@ class Node
 
   def capabilities
     jobs.each.capability.uniq
+  end
+
+  def additions
+    @rbcm.group_additions.select{|group, additions| memberships.include? group}.flatten(1)
   end
 end

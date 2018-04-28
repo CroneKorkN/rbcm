@@ -1,15 +1,6 @@
-class GroupList
-  def initialize
-    @groups = {}
-  end
-
-  def []= group, definition
-    @groups[group] = [] unless @groups[group]
-    @groups[group] << definition
-  end
-
+class GroupList < Hash
   def [] group
-    @groups[group] = [] unless @groups[group]
-    @groups[group]
+    self[group] = [] unless self[group]
+    super
   end
 end

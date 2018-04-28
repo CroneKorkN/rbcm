@@ -28,6 +28,7 @@ class Sandbox
 
   def group name, &block
     if block_given?
+      @node.rbcm.group_additions[name] ||= []
       @node.rbcm.group_additions[name] << block
     else
       @node.memberships << name
