@@ -31,6 +31,7 @@ class Sandbox
       @node.rbcm.group_additions[name] ||= []
       @node.rbcm.group_additions[name] << block
     else
+      raise "undefined group #{name}" unless Group[name]
       @node.memberships << name
       @chain_cache << "group:#{name}"
       instance_eval &Group[name]
