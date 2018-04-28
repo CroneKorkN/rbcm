@@ -5,7 +5,7 @@ class FileSystem
   end
 
   def [] path
-    @files[path] ||= @node.remote.execute("cat '#{path}'").stdout
+    @files[path] ||= @node.remote.execute("cat '#{path}'").stdout || ""
   end
 
   def []= path, content

@@ -6,6 +6,7 @@ class Sandbox
 
   def initialize node
     @node = node
+    @name = node.name
     @dependency_cache = []
     @chain_cache = []
     @trigger_cache =[]
