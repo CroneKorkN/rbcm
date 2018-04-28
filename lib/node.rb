@@ -7,8 +7,8 @@ class Node
     @name = name
     @definitions = []
     @sandbox = Sandbox.new self
-    @files = FileSystem.new self
     @remote = Remote.new self
+    @files = FileSystemMirror.new self, @remote.files
     @commands = []
     @memberships = []
     @jobs = []
