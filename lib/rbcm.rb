@@ -5,7 +5,7 @@ require "shellwords"
 require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
-[ :lib, :definition_file, :file_system, :execution, :node, :group, :command_list,
+[ :lib, :definition_file, :file_system, :node, :group, :command_list,
   :command, :job, :remote, :sandbox, :group_list
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
