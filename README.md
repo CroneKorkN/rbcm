@@ -49,8 +49,8 @@ actions to be executed on the server.
 
 ### base capabilities
 
-The two built-in base capabilities `file` and `run` are neccessary to
-actually generate actions to be executed on the server.
+The base capabilities `file` and `run` are neccessary to actually generate
+actions to be executed on the server.
 
 ### file
 
@@ -64,6 +64,18 @@ file "/etc/dhcp/dhcpd.conf", content: "i am in"
 run "apt-get install -y #{install}",
   check: "dpkg-query -l #{install}"
 ```
+
+### needs
+
+Jobs following a call of `needs :capability` will get a dependency on
+`:capability`.
+
+### trigger
+
+Jobs defined within a `trigger :trigger_name {}` block will trigger jobs
+triggered by `:trigger_name`.
+
+
 ### reading state
 
 Every capability has a questionmark suffix version to access jobs called so far.
