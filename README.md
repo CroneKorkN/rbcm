@@ -21,7 +21,11 @@ The user approves each action interactively.
  - identical actions on multiple nodes can be approved at once by choosing "o"
  - multiple changes to a file can be approved individually by choosing "i"
 
-# HowTo
+### execute
+
+All approved actions are being executed.
+
+# Documentation
 
 Rbcm expects to be calles from within a configuration-directory. There must be
 a `capabilities/`- and a `nodes/`-directory
