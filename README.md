@@ -15,7 +15,7 @@ Applying actually passes three steps: checking, approving and execution.
 Rbcm compares the affected files and executes the command-checks. Unneccessary
 commands are marked and will be skipped in the approvemnt process.
 
-### aprove
+### approve
 
 The user approves each action interactively.
  - identical actions on multiple nodes can be approved at once by choosing "o"
@@ -49,23 +49,6 @@ User defined capabilities extend the set of base capabilities by further
 mechanisms. They are meant to use the base capabilities to actually generate
 actions to be executed on the server.
 
-## getting state
-
-Every capability has a questionmark suffix version to access jobs called so far.
-```
-node "example.com" do
-  user "alice"
-  user "bob", :no_home
-  user?    # [["alice", "bob"], [nil, :no_home]]
-  user?[0] # ["alice", "bob"] <- grouped by ordered param number
-  ip v4: "10.0.0.1", v6: "2000::f0f0:1212"
-  ip v4: "192.168.1.55"
-  ip?(:v4) # ["10.0.0.1", "192.168.1.55"]
-  ip?(:v4) # ["2000::f0f0:1212"]
-  ip?(with: :v6) # [{v4: "10.0.0.1", v6: "2000::f0f0:1212"}]
-end
-```
-
 ### base capabilities
 
 The two built-in base capabilities `file` and `run` are neccessary to
@@ -82,6 +65,22 @@ file "/etc/dhcp/dhcpd.conf", content: "i am in"
 ```
 run "apt-get install -y #{install}",
   check: "dpkg-query -l #{install}"
+```
+### reading state
+
+Every capability has a questionmark suffix version to access jobs called so far.
+```
+node "example.com" do
+  user "alice"
+  user "bob", :no_home
+  user?    # [["alice", "bob"], [nil, :no_home]]
+  user?[0] # ["alice", "bob"] <- grouped by ordered param number
+  ip v4: "10.0.0.1", v6: "2000::f0f0:1212"
+  ip v4: "192.168.1.55"
+  ip?(:v4) # ["10.0.0.1", "192.168.1.55"]
+  ip?(:v4) # ["2000::f0f0:1212"]
+  ip?(with: :v6) # [{v4: "10.0.0.1", v6: "2000::f0f0:1212"}]
+end
 ```
 
 ## nodes
