@@ -28,6 +28,7 @@ class Node
   end
 
   def approve
+    puts self
     commands.each.approve
   end
 
@@ -37,5 +38,12 @@ class Node
 
   def additions
     @rbcm.group_additions.select{|group, additions| memberships.include? group}.flatten(1)
+  end
+
+  def to_s
+    [ "\e[30;44m\ \ #{@name}\e[0m",
+      "\ \ MEMBERSHIPS #{@memberships}",
+      "\ \ TRIGGERED #{@triggered}"
+    ].join "\n"
   end
 end
