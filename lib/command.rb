@@ -37,7 +37,7 @@ class Command
       @node.files[path] = named_params[:content]
       @obsolete = @node.remote.files[path].chomp == @node.files[path].chomp
     elsif @check
-      @obsolete = @node.remote.execute(@check).success?
+      @obsolete = @node.remote.execute(@check).exitstatus == 0
     else
       @obsolete = false
     end

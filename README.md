@@ -72,9 +72,13 @@ Jobs following a call of `needs :capability` will get a dependency on
 
 ### trigger
 
-Jobs defined within a `trigger :trigger_name {}` block will trigger jobs
-triggered by `:trigger_name`.
-
+Jobs defined within a `trigger :trigger_name {}` block trigger jobs triggered by
+`:trigger_name`.
+```
+trigger :reload_dhcp do
+  dhcp_server conf: "dns-servers: 8.8.8.8;"
+end
+```
 
 ### reading state
 
