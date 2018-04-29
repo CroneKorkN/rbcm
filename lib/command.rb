@@ -3,7 +3,7 @@
 class Command < Action
   include Params
   attr_reader :line, :params, :dependencies, :obsolete,
-    :approved, :triggered_by, :chain, :capability
+    :approved, :triggered_by, :chain, :capability, :node
   attr_writer :approved
 
   def initialize node:, line:, params:, dependencies:,
@@ -75,7 +75,7 @@ class Command < Action
       #  @node.files[path]
       #).diff
     else
-      "\ \ $>_ \e[1m#{@line}\e[0m \e[2m CHECK #{@check}\e[0m"
+      "\ \ $>_ \e[1m#{@line}\e[0m\e[2m CHECK #{@check}\e[0m"
     end
   end
 
@@ -83,7 +83,7 @@ class Command < Action
     [ @obsolete ? "\e[30;42m" : "\e[30;43m",
       "\e[1m\ \ #{@chain.join(" > ")}  \e[0m",
       @trigger.any? ? " triggers \e[30;46m\e[1m #{@trigger.join(", ")} \e[0m" : "",
-      " siblings: #{siblings.count}",
+      siblings.any? ? "\n\ \ siblings: #{siblings.each.node.each.name.join(", ")}" : "",
       "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
     ].join
   end
