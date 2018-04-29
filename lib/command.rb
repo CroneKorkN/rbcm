@@ -47,17 +47,18 @@ class Command < Action
     puts self
     puts diff unless @capability == :file
     # finish if obsolete
-    return if @obsolete
+    return if @obsolete or @approved
     # interact
     print "APROVE (g,y/N): " # o: apply to ahole group
-    @approved = [:g, :y].include? STDIN.gets.chomp.to_sym
-    siblings.each.approved = true if @approved == :g
+    input = STDIN.gets.chomp.to_sym
+    @approved = [:g, :y].include? input
+    siblings.each.approved = true if input == :g
     @node.triggered << @trigger
   end
 
   def apply
     response = @node.remote.execute(@line)
-    puts [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;41m",
+    puts [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m",
       "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m",
       "\n\ \ \e[4m#{@params.to_s[1..-2]}\e[0m",
       "\e[3m\n#{response.to_s}\e[0m"
