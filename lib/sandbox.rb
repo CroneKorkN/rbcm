@@ -101,7 +101,7 @@ class Sandbox
 
   # handle getter method calls
   def method_missing name, *params, &block
-    log "method #{name} missing"
+    log "method #{name} missing on #{@name}"
     capability_name = name[0..-2].to_sym
     if not @@capabilities.include? capability_name
       super
@@ -176,9 +176,8 @@ class Sandbox
       )
       # define wrapper method
       define_method("#{capability_name}!".to_sym) do |*params|
-        @node.jobs << Job.new(capability_name, params)
-        @params_cache = params || nil
-        @chain_cache << "#{capability_name}!"
+        @params_cache = params
+        @chain_cache << "#{__method__}!"
         r = send "__#{__method__}", *params
         @chain_cache.pop
         @dependency_cache = [:file]

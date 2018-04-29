@@ -48,6 +48,7 @@ class Command < Action
     puts diff unless @capability == :file
     # finish if obsolete
     return if @obsolete or @approved
+    puts diff if @capability == :file
     # interact
     print "APROVE (g,y/N): " # o: apply to ahole group
     input = STDIN.gets.chomp.to_sym
@@ -58,10 +59,10 @@ class Command < Action
 
   def apply
     response = @node.remote.execute(@line)
-    puts [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m",
-      "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m",
+    print [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m",
+      "\e[1m  #{@chain.join(" > ")}  \e[0m",
       "\n\ \ \e[4m#{@params.to_s[1..-2]}\e[0m",
-      "\e[3m\n#{response.to_s}\e[0m"
+      "\n\e[3m#{response.to_s.chomp}\e[0m\n"
     ].join
   end
 
