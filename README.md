@@ -72,11 +72,23 @@ Jobs following a call of `needs :capability` will get a dependency on
 
 ### trigger
 
-Jobs defined within a `trigger :trigger_name {}` block trigger jobs triggered by
-`:trigger_name`.
+Actions can trigger or can be triggered by other actions. Actions with
+`triggered_by`-attributes will only be approved and applied, if the
+corresponding trigger has been activated.
 ```
 trigger :reload_dhcp do
   dhcp_server conf: "dns-servers: 8.8.8.8;"
+end
+triggered_by :reload_dhcp do
+  systemctl reload: :dhcpd
+end
+```
+Every job automatically activiated a trigger with the name of the actions
+capability.
+```
+dhcp_server conf: "dns-servers: 8.8.8.8;"
+triggered_by :dhcp_server do
+  systemctl reload: :dhcpd
 end
 ```
 
