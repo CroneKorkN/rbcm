@@ -8,7 +8,7 @@ class Sandbox
     @node = node
     @name = node.name
     @dependency_cache = []
-    @chain_cache = []
+    @chain_cache = [node.name]
     @trigger_cache = []
     @triggered_by_cache = []
     @check_cache = []
