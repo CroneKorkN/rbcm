@@ -47,14 +47,15 @@ class RBCM
 
   def parse
     # parse base definitions
+    log "parsing nodes"
     nodes.values.each.parse
-    p 222222222222
-    p group_additions
     # parse cross-definitions
+    log "parsing additions"
     nodes.values.each do |node|
       node.sandbox.evaluate node.additions
     end
     # apply final capabilities
+    log "appling 'cap!'"
     nodes.values.each do |node|
       node.capabilities.each do |capability|
         node.sandbox.send "#{capability}!"

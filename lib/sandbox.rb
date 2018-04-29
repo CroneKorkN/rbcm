@@ -10,12 +10,11 @@ class Sandbox
     @dependency_cache = []
     @chain_cache = []
     @trigger_cache = []
+    @triggered_by_cache = []
     @check_cache = []
   end
 
   def evaluate definitions
-    p 111111111
-    p definitions
     [definitions].flatten.each do |definition|
       instance_eval &definition
     end
@@ -26,6 +25,14 @@ class Sandbox
     @chain_cache << "trigger:#{name}"
     instance_eval &block
     @trigger_cache.pop
+    @chain_cache.pop
+  end
+
+  def triggered_by name, &block
+    @triggered_by_cache << name
+    @chain_cache << "triggered_by:#{name}"
+    instance_eval &block
+    @triggered_by_cache.pop
     @chain_cache.pop
   end
 
@@ -64,7 +71,8 @@ class Sandbox
       chain: [@chain_cache].flatten(1).dup,
       params: @params_cache.dup,
       dependencies: @dependency_cache.dup,
-      triggered_by: @trigger_cache.dup
+      trigger: @trigger_cache.dup,
+      triggered_by: @triggered_by_cache.dup
     )
   end
 
@@ -152,6 +160,7 @@ class Sandbox
       # define wrapper method
       define_method(capability_name.to_sym) do |*params|
         @node.jobs << Job.new(capability_name, params)
+        @node.triggered << capability_name
         @params_cache = params || nil
         @chain_cache << capability_name
         r = send "__#{__method__}", *params

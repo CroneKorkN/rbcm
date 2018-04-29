@@ -7,7 +7,7 @@ class Command
   attr_writer :approved
 
   def initialize node:, line:, params:, dependencies:,
-      check: nil, chain:, triggered_by: nil, trigger: nil
+      check: nil, chain:, trigger: nil, triggered_by: nil
     @chain = chain
     @capability = chain.last
     @node = node
@@ -17,7 +17,7 @@ class Command
     @check = check
     @obsolete = nil
     @approved = nil
-    @trigger = trigger
+    @trigger = [trigger, chain.last].flatten(1)
     @triggered_by = triggered_by
   end
 
@@ -84,8 +84,8 @@ class Command
 
   def to_s
     [ @obsolete ? "\e[30;42m" : "\e[30;43m",
-      "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m",
-      "\n\ \ \e[4m#{@params.to_s[1..-2]}\e[0m",
+      "\e[1m\ \ #{[@node.name, @chain].flatten.join(" > ")}  \e[0m",
+      "\n\ \ \e[4m#{@params.to_s[1..-2][0..200]}\e[0m",
       "\n\ \ siblings: #{siblings.count}, trigger: #{@trigger}, triggered_by: #{@triggered_by}"
     ].join
   end
