@@ -26,7 +26,7 @@ All approved actions are being executed.
 # Documentation
 
 Rbcm expects to be calles from within a configuration-directory. There must be
-a `capabilities/`- and a `nodes/`-directory
+a `capabilities/`- and a `definitions/`-directory
 
 ## capabilities
 
@@ -111,7 +111,7 @@ end
 
 ## nodes
 
-Nodes represent a real server; they reside in the `nodes/`-directory.
+Nodes represent a real server; they reside in the `definitions/`-directory.
 ```
 node :example.com do
   # defintion
@@ -125,7 +125,7 @@ Further actions:
 ## groups
 
 Groups can be used to apply definition to multiple nodes. They also reside in
-the `nodes/`-directory.
+the `definitions/`-directory.
 ```
 group :dhcp-clients do
   # definition

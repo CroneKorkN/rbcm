@@ -5,8 +5,8 @@ require "shellwords"
 require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
-[ :lib, :definition_file, :file_system, :node, :group, :command_list,
-  :command, :job, :remote, :sandbox, :group_list
+[ :lib, :action, :definition_file, :file_system, :file_action, :node, :group,
+  :command_list, :command, :job, :remote, :sandbox, :group_list
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
@@ -76,7 +76,7 @@ class RBCM
   end
 
   def apply
-    puts "\nAPPLYING\n\n"
+    puts "\n======== APPLYING ========\n\n"
     commands.select{|c| c.approved}.each.apply
   end
 end

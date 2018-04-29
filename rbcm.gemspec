@@ -10,10 +10,12 @@ Gem::Specification.new do |spec|
   spec.homepage    = 'https://github.com/CroneKorkN/rbcm'
   spec.license     = 'MIT'
   spec.files       = [
+    "lib/action.rb",
     "lib/command.rb",
     "lib/command_list.rb",
     "lib/definition_file.rb",
     "lib/file_system.rb",
+    "lib/file_action.rb",
     "lib/group.rb",
     "lib/group_list.rb",
     "lib/job.rb",

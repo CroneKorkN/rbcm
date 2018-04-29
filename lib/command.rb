@@ -1,6 +1,6 @@
 # ToDo: approve all changes to a spicific file at once
 
-class Command
+class Command < Action
   include Params
   attr_reader :line, :params, :dependencies, :obsolete,
     :approved, :triggered_by, :chain, :capability
@@ -48,10 +48,10 @@ class Command
     check unless [true, false].include? @obsolete
     # print info
     puts self
+    puts diff unless @capability == :file
     # finish if obsolete
     return if @obsolete
     # interact
-    puts diff
     print "APROVE (g,y/N): " # o: apply to ahole group
     @approved = [:g, :y].include? STDIN.gets.chomp.to_sym
     siblings.each.approved = true if @approved == :g
@@ -63,7 +63,7 @@ class Command
     puts [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;41m",
       "\e[1m  #{@node.name} > #{@chain.join(" > ")}  \e[0m",
       "\n\ \ \e[4m#{@params.to_s[1..-2]}\e[0m",
-      "\n#{response}"
+      "\e[3m\n#{response.to_s}\e[0m"
     ].join
   end
 
@@ -85,8 +85,8 @@ class Command
   def to_s
     [ @obsolete ? "\e[30;42m" : "\e[30;43m",
       "\e[1m\ \ #{[@node.name, @chain].flatten.join(" > ")}  \e[0m",
-      "\n\ \ \e[4m#{@params.to_s[1..-2][0..200]}\e[0m",
-      "\n\ \ siblings: #{siblings.count}, trigger: #{@trigger}, triggered_by: #{@triggered_by}"
+      "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
+      "\n\ \ siblings: #{siblings.count}; trigger: \e[30;46m\e[1m#{@trigger.join(", ")}\e[0m"
     ].join
   end
 end

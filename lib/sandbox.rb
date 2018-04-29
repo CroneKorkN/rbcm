@@ -54,7 +54,7 @@ class Sandbox
   end
 
   def needs *capabilities
-    @dependency_cache += [capabilities].flatten
+    @dependency_cache += [capabilities].flatten(1)
   end
 
   def check command, &block
@@ -161,7 +161,7 @@ class Sandbox
       define_method(capability_name.to_sym) do |*params|
         @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
-        @params_cache = params || nil
+        @params_cache = params
         @chain_cache << capability_name
         r = send "__#{__method__}", *params
         @chain_cache.pop
