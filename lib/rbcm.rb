@@ -48,6 +48,8 @@ class RBCM
   def parse
     # parse base definitions
     nodes.values.each.parse
+    p 222222222
+    p node.additions
     # parse cross-definitions
     nodes.values.each do |node|
       node.sandbox.evaluate node.additions

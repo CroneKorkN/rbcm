@@ -14,6 +14,8 @@ class Sandbox
   end
 
   def evaluate definitions
+    p 111111111
+    p definitions
     [definitions].flatten.each do |definition|
       instance_eval &definition
     end

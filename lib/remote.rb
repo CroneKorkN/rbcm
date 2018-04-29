@@ -2,11 +2,12 @@ class Remote
   attr_reader :files
 
   def initialize node
+    @host = node.name
     @files = FileSystem.new node
-    @session = Net::SSH.start node.name, 'root'
   end
 
   def execute command
+    @session ||= Net::SSH.start @host, 'root'
     @session.exec! command
   end
 end
