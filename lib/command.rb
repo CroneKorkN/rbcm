@@ -85,8 +85,9 @@ class Command < Action
   def to_s
     [ @obsolete ? "\e[30;42m" : "\e[30;43m",
       "\e[1m\ \ #{[@node.name, @chain].flatten.join(" > ")}  \e[0m",
+      " triggers \e[30;46m\e[1m#{@trigger.join(", ")}\e[0m"
       "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
-      "\n\ \ siblings: #{siblings.count}; trigger: \e[30;46m\e[1m#{@trigger.join(", ")}\e[0m"
+      "\n\ \ siblings: #{siblings.count}"
     ].join
   end
 end
