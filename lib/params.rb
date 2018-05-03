@@ -1,13 +1,13 @@
 class Params < Array
   def ordered_params
-    named_params? ? self[0..-2] : @params
+    named_params? ? self[0..-2] : self
   end
 
   def named_params
-    @params.last if named_params?
+    last if named_params?
   end
 
   def named_params?
-    @params.last.class == Hash
+    last.class == Hash
   end
 end

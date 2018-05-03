@@ -25,7 +25,7 @@ end
 
 class Hash
   def << hash
-    merge hash
+    merge! hash
   end
 end
 

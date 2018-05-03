@@ -12,6 +12,7 @@ class Node
     @commands = []
     @memberships = []
     @jobs = []
+    @blocked_jobs = []
     @triggered = []
   end
 

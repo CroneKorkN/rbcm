@@ -50,7 +50,7 @@ class Command < Action
     return if @obsolete or @approved
     puts diff if @capability == :file
     # interact
-    print "APROVE (g,y/N): " # o: apply to ahole group
+    print "APROVE (#{"g," if siblings.any?}y,N): " # o: apply to ahole group
     input = STDIN.gets.chomp.to_sym
     @approved = [:g, :y].include? input
     siblings.each.approved = true if input == :g

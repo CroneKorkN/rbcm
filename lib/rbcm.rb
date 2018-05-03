@@ -34,12 +34,13 @@ class RBCM
       end
       @patterns << definition_file.patterns
       definition_file.nodes.each do |name, definition|
-        @nodes[name] = Node.new self, name unless @nodes[name]
+        @nodes[name] ||= Node.new self, name
         @nodes[name] << definition
       end
     end
     @patterns.each do |pattern, definition|
-      @nodes.find(/#{pattern}/).each do |node|
+      @nodes.select{|name, node| name =~ /#{pattern}/}.each do |node|
+        p "___________________________________"
         node << definition
       end
     end
@@ -76,7 +77,7 @@ class RBCM
   end
 
   def apply
-    puts "\n======== APPLYING ========\n\n"
+    puts "\n======== APPLYING #{commands.select{|c| c.approved}.count} ========\n\n"
     commands.select{|c| c.approved}.each.apply
   end
 end
