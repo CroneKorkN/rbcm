@@ -3,7 +3,7 @@
 class Command < Action
   include Params
   attr_reader :line, :params, :dependencies, :obsolete,
-    :approved, :triggered_by, :chain, :capability, :node
+    :approved, :triggered_by, :chain, :capability, :node, :trigger
   attr_writer :approved
 
   def initialize node:, line:, params:, dependencies:,
@@ -40,6 +40,15 @@ class Command < Action
     end
   end
 
+  def not_triggered
+    return false if triggered_by.empty?
+    p @node.triggered
+    p triggered_by
+    return false if triggered_by.one?{|triggered_by| @node.triggered.include? triggered_by}
+    puts "NOT TRIGGERED"
+    return true
+  end
+
   def approve
     # check if neccessary
     check unless [true, false].include? @obsolete
@@ -47,7 +56,9 @@ class Command < Action
     puts self
     puts diff unless @capability == :file
     # finish if obsolete
-    return if @obsolete or @approved
+    p triggered_by
+    p not_triggered
+    return if @obsolete or @approved or not_triggered
     puts diff if @capability == :file
     # interact
     print "APROVE (#{"g," if siblings.any?}y,N): " # o: apply to ahole group

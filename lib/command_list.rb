@@ -30,7 +30,7 @@ module CommandList
     self.select{ |command|
       this.trigger.one?{|trigger| command.triggered_by.include? trigger}
     }.each{ |command|
-      resolve_command_trigger command
+      resolve_command_triggers command
     }
     @commands << this
   end

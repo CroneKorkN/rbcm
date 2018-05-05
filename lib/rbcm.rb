@@ -66,7 +66,7 @@ class RBCM
 
   def approve
     nodes.values.each.check
-    commands.each.extend(CommandList).approve
+    commands.extend(CommandList).resolve_triggers.each.approve
     #while approvable = commands.select{|c| c.obsolete == false and c.approved == nil}
     #  approvable.first.approve if approvable.any?
     #end
