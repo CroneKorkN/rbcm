@@ -177,7 +177,7 @@ class Sandbox
       # define wrapper method
       define_method("#{capability_name}!".to_sym) do |*params|
         @params_cache = params
-        @chain_cache << "#{__method__}!"
+        @chain_cache << "#{__method__}"
         r = send "__#{__method__}", *params
         @chain_cache.pop
         @dependency_cache = [:file]
