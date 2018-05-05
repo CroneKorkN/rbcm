@@ -2,12 +2,11 @@
 # used to read configuration via "?"-suffix methods
 
 class Job
-  include Params
   attr_reader :capability, :params
 
   def initialize capability, params
     @capability = capability
-    @params = params
+    @params = Params.new params
   end
 
   def to_s

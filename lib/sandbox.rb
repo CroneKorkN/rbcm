@@ -113,31 +113,38 @@ class Sandbox
     end
   end
 
-  def __search capability_name, params
-    jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-    if params.empty?
-      # return ordered prarams
-      jobs.each.ordered_params
-    elsif params.first.class == Symbol
-      # return values of a named param
-      jobs.find_all{ |job|
-        job.named_params.include? params.first if job.named_params
-      }.collect{ |job|
-        job.named_params
-      }.collect{ |named_params|
-        named_params[params.first]
-      }
-    elsif params.first.class == Hash
-      if params.first[:nodes] == :all
-        jobs = @node.rbcm.nodes.values.each.jobs.flatten(1).find_all{|job| job.capability == capability_name}
+  def __search capability_name, search_params
+    search_params = Params.new search_params
+    # scope
+    #if search_params.named.include? :scope
+    #  if search_params.named[:scope] == :global
+    #    scope = @node.rbcm.nodes.values.each.jobs.flatten(1)
+    #  else
+    #    raise "unknown scope '#{search_params.named[:scope]}'"
+    #  end
+    #  search_params.named.delete! :scope
+    #else
+      scope = @node.jobs
+    #end
+    # filter
+    jobs = scope.select{|job| job.capability == capability_name}
+    # search
+    log "SEARCH #{capability_name}? #{search_params}"
+    jobs.collect{ |job|
+      p job.params.named
+      if search_params.ordered.empty? # ip?
+        r = job.params.ordered
+      elsif job.params.named[search_params.ordered.first]
+        if search_params.named.include? :with # ip? with: :v4
+          r = job.params.named
+        else
+          p "======"
+          p job.params.named
+          r = job.params.named[search_params.named.keys.first]
+        end
       end
-      if params.first.keys.first == :with
-        # return values of a named param
-        jobs.find_all{ |job|
-          job.named_params.keys.include? params.first.values.first if job.named_params?
-        }.each.named_params
-      end
-    end
+      r
+    }.compact
   end
 
   def self.import_capabilities capabilities_path
@@ -162,7 +169,7 @@ class Sandbox
       define_method(capability_name.to_sym) do |*params|
         @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
-        @params_cache = params
+        @params_cache = Params.new params
         @chain_cache << capability_name
         r = send "__#{__method__}", *params
         @chain_cache.pop
@@ -177,7 +184,7 @@ class Sandbox
       )
       # define wrapper method
       define_method("#{capability_name}!".to_sym) do |*params|
-        @params_cache = params
+        @params_cache = Params.new params
         @chain_cache << "#{__method__}"
         r = send "__#{__method__}", *params
         @chain_cache.pop

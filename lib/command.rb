@@ -1,7 +1,6 @@
 # ToDo: approve all changes to a spicific file at once
 
 class Command < Action
-  include Params
   attr_reader :line, :params, :dependencies, :obsolete,
     :approved, :triggered_by, :chain, :capability, :node
   attr_writer :approved
@@ -12,7 +11,7 @@ class Command < Action
     @capability = chain.last
     @node = node
     @line = line
-    @params = params
+    @params = Params.new params
     @dependencies = [:file] + [dependencies].flatten - [chain.last]
     @check = check
     @obsolete = nil
@@ -29,9 +28,9 @@ class Command < Action
 
   def check
     log "CHECKING $>_ #{@check}"
-    path = @params[0]
+    path = @params.ordered.first
     if @capability == :file
-      @node.files[path] = named_params[:content]
+      @node.files[path] = @params.named[:content]
       @obsolete = @node.remote.files[path].chomp == @node.files[path].chomp
     elsif @check
       @obsolete = @node.remote.execute(@check).exitstatus == 0
@@ -61,14 +60,14 @@ class Command < Action
     response = @node.remote.execute(@line)
     print [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m",
       "\e[1m  #{@chain.join(" > ")}  \e[0m",
-      "\n\ \ \e[4m#{@params.to_s[1..-2]}\e[0m",
+      "\n\ \ \e[4m#{@params}\e[0m",
       "\n\e[3m#{response.to_s.chomp}\e[0m\n"
     ].join
   end
 
   def diff
     if @capability == :file
-      path = @params[0]
+      path = @params.ordered.first
       [ @node.remote.files[path],
         @node.files[path]
       ].join("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
@@ -86,7 +85,7 @@ class Command < Action
       "\e[1m\ \ #{@chain.join(" > ")}  \e[0m",
       @trigger.any? ? " triggers \e[30;46m\e[1m #{@trigger.join(", ")} \e[0m" : "",
       siblings.any? ? "\n\ \ siblings: #{siblings.each.node.each.name.join(", ")}" : "",
-      "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
+      "\n\ \ \e[4m#{@params}\e[0m",
     ].join
   end
 end

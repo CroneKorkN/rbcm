@@ -9,7 +9,7 @@ module Kernel
   end
 end
 
-module Params
+module Params_
   def ordered_params
     named_params? ? @params[0..-2] : @params
   end

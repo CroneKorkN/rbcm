@@ -6,7 +6,7 @@ require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :action, :definition_file, :file_system, :file_action, :node,
-  :command_list, :command, :job, :remote, :sandbox, :array_hash
+  :command_list, :command, :job, :remote, :sandbox, :array_hash, :params
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
