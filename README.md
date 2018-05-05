@@ -175,8 +175,8 @@ end
 ```ruby
 def ip address, mac: nil
 end  
-#
 ```
+
 `capabilities/dhcpd.rb`:
 ```ruby
 def dhcpd!
