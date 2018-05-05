@@ -167,6 +167,70 @@ group :dhcp_clients do
 end
 ```
 
+# Examples
+
+## dhcp server und clients
+
+`capabilities/ip.rb`:
+```ruby
+def ip address, mac: nil
+end  
+#
+```
+`capabilities/dhcpd.rb`:
+```ruby
+def dhcpd!
+  hosts = dhcpd?(with: :host).collect{ |host|
+    "host #{host[:host]} {
+      hardware ethernet #{host[:mac]};
+      fixed-address #{host[:ip]};
+    }"
+  }
+  file '/etc/dhcp/dhcpd.conf', content: hosts.join("\n")
+end
+```
+
+`definitions/router.rb`:
+```ruby
+node 'router.example.com' do
+end
+```
+
+`definitions/pc.rb`:
+```ruby
+node 'pc.example.com' do
+  ip '10.0.0.2', mac: "22:22:22:22:22:22"
+end
+```
+
+`definitions/notebook.rb`:
+```ruby
+node 'notebook.example.com' do
+  ip '10.0.0.3', mac: "33:33:33:33:33:33"
+end
+```
+
+`definitions/dhcp_clients.rb`:
+```ruby
+group :dhcp_clients do
+  host = @name
+  ip = ip?.first.first
+  mac = ip?(:mac).first
+  group :dhcp_servers do
+    dhcpd host: host,
+      mac: mac,
+      ip:  ip
+  end
+end
+```
+
+`definitions/dhcp_servers.rb`:
+```ruby
+group :dhcp_servers do
+  apt install: :'isc-dhcp-server'
+end
+```
+
 # TODO
 
 - triggers
