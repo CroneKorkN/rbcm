@@ -8,18 +8,18 @@ Navigate into a configuration dir and call rbcm.
 
 Applying actually passes three steps: checking, approving and execution.
 
-### check
+### 1/3 check
 
 Rbcm compares the affected files and executes the command-checks. Unneccessary
 commands are marked and will be skipped in the approvemnt process.
 
-### approve
+### 2/3 approve
 
 The user approves each action interactively.
  - identical actions on multiple nodes can be approved at once by choosing "o"
  - multiple changes to a file can be approved individually by choosing "i"
 
-### execute
+### 3/3 execute
 
 All approved actions are being executed.
 
@@ -34,7 +34,7 @@ Nodes are defined by calling capabilities. Capabilities are methods residing in
 files in `capabilities/` directory. Each capability may have a second
 incarnation with a bang suffix ("cap!"). The bang version is called once on each
 node if the node called the non-bang-version before.
-```
+```ruby
 def ip v4: nil, mac: nil
   # may call further capabilities
 end
@@ -54,13 +54,13 @@ actions to be executed on the server.
 
 ### file
 
-```
+```ruby
 file "/etc/dhcp/dhcpd.conf", content: "i am in"
 ```
 
 ### run
 
-```
+```ruby
 run "apt-get install -y #{install}",
   check: "dpkg-query -l #{install}"
 ```
@@ -75,7 +75,8 @@ Jobs following a call of `needs :capability` will get a dependency on
 Actions can trigger or can be triggered by other actions. Actions with
 `triggered_by`-attributes will only be approved and applied, if the
 corresponding trigger has been activated.
-```
+
+```ruby
 trigger :reload_dhcp do
   dhcp_server conf: "dns-servers: 8.8.8.8;"
 end
@@ -83,9 +84,11 @@ triggered_by :reload_dhcp do
   systemctl reload: :dhcpd
 end
 ```
+
 Every job automatically activiated a trigger with the name of the actions
 capability.
-```
+
+```ruby
 dhcp_server conf: "dns-servers: 8.8.8.8;"
 triggered_by :dhcp_server do
   systemctl reload: :dhcpd
@@ -95,7 +98,8 @@ end
 ### reading state
 
 Every capability has a questionmark suffix version to access jobs called so far.
-```
+
+```ruby
 node "example.com" do
   user "alice"
   user "bob", :no_home
@@ -112,11 +116,13 @@ end
 ## nodes
 
 Nodes represent a real server; they reside in the `definitions/`-directory.
-```
+
+```ruby
 node :example.com do
   # defintion
 end
 ```
+
 Further actions:
  - call capabilities
  - include groups
@@ -126,13 +132,16 @@ Further actions:
 
 Groups can be used to apply definition to multiple nodes. They also reside in
 the `definitions/`-directory.
-```
+
+```ruby
 group :dhcp-clients do
   # definition
 end
 ```
+
 Nodes need to include a groups definition.
-```
+
+```ruby
 node :example.com do
   group :dhcp-clients
 end
@@ -143,7 +152,8 @@ end
 Groups can be expanded from within other groups or nodes. This way, you can add
 definition from one to another node, which is member of the expanded group.
 Local variables can be used to pass local state.
-```
+
+```ruby
 group :dhcp-clients do
   host = @name
   ip = ip?(:v4).first
@@ -158,8 +168,6 @@ end
 
 - triggers
 - file diff
-- command siblings
-
 - auto apply via git integration
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
