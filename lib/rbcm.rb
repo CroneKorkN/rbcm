@@ -5,8 +5,8 @@ require "shellwords"
 require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
-[ :lib, :action, :definition_file, :file_system, :file_action, :node, :group,
-  :command_list, :command, :job, :remote, :sandbox, :group_list
+[ :lib, :action, :definition_file, :file_system, :file_action, :node,
+  :command_list, :command, :job, :remote, :sandbox, :array_hash
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
@@ -16,7 +16,8 @@ class RBCM
   def initialize project_path
     @patterns = {}
     @nodes = {}
-    @group_additions = {}
+    @groups = ArrayHash.new
+    @group_additions = ArrayHash.new
     import_capabilities "#{project_path}/capabilities"
     import_definitions "#{project_path}/definitions"
   end
@@ -30,7 +31,7 @@ class RBCM
       DefinitionFile.new definition_file_path
     }.each do |definition_file|
       definition_file.groups.each do |name, definition|
-        Group[name] = definition
+        @groups[name] << definition
       end
       @patterns << definition_file.patterns
       definition_file.nodes.each do |name, definition|
