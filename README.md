@@ -145,7 +145,7 @@ end
 Nodes need to include a groups definition.
 
 ```ruby
-node :example.com do
+node "example.com" do
   group :dhcp_clients
 end
 ```
@@ -207,7 +207,6 @@ end
 `definitions/dhcp_servers.rb`:
 ```ruby
 group :dhcp_servers do
-  apt install: :'isc-dhcp-server'
 end
 ```
 
