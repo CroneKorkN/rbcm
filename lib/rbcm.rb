@@ -77,7 +77,7 @@ class RBCM
   end
 
   def apply
-    puts "\n======== APPLYING #{commands.select{|c| c.approved}.count} ========\n\n"
-    commands.select{|c| c.approved}.each.apply
+    puts "\n======== APPLYING #{commands.select.approved.count} ========\n\n"
+    commands.select.approved.each.apply
   end
 end
