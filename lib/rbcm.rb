@@ -78,6 +78,6 @@ class RBCM
 
   def apply
     puts "\n======== APPLYING #{commands.select.approved.count} ========\n\n"
-    commands.select.approved.each.apply
+    commands.select.approved.extend(CommandList).resolve.each.apply
   end
 end
