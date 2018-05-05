@@ -66,7 +66,7 @@ class RBCM
 
   def approve
     nodes.values.each.check
-    nodes.values.each.approve
+    commands.each.extend(CommandList).approve
     #while approvable = commands.select{|c| c.obsolete == false and c.approved == nil}
     #  approvable.first.approve if approvable.any?
     #end
@@ -78,6 +78,6 @@ class RBCM
 
   def apply
     puts "\n======== APPLYING #{commands.select.approved.count} ========\n\n"
-    commands.select.approved.extend(CommandList).resolve.each.apply
+    commands.select.approved.extend(CommandList).resolve_dependencies.each.apply
   end
 end

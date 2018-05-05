@@ -29,6 +29,12 @@ class Hash
   end
 end
 
+class Array
+  def include_one? array
+    (self & array).any?
+  end
+end
+
 #
 # quickeach
 #
