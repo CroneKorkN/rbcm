@@ -137,7 +137,7 @@ Groups can be used to apply definition to multiple nodes. They also reside in
 the `definitions/`-directory.
 
 ```ruby
-group :dhcp-clients do
+group :dhcp_clients do
   # definition
 end
 ```
@@ -146,7 +146,7 @@ Nodes need to include a groups definition.
 
 ```ruby
 node :example.com do
-  group :dhcp-clients
+  group :dhcp_clients
 end
 ```
 
@@ -157,11 +157,11 @@ definition from one to another node, which is member of the expanded group.
 Local variables can be used to pass local state.
 
 ```ruby
-group :dhcp-clients do
+group :dhcp_clients do
   host = @name
   ip = ip?(:v4).first
   ip = ip?(:mac).first
-  group :dhcp-servers do
+  group :dhcp_servers do
     dhcp host: host, ip: ip, mac: mac
   end
 end
