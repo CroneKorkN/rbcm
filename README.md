@@ -193,6 +193,7 @@ end
 `definitions/router.rb`:
 ```ruby
 node 'router.example.com' do
+  group :dhcp_serves
 end
 ```
 
@@ -200,6 +201,7 @@ end
 ```ruby
 node 'pc.example.com' do
   ip '10.0.0.2', mac: "22:22:22:22:22:22"
+  group :dhcp_clients
 end
 ```
 
@@ -207,6 +209,7 @@ end
 ```ruby
 node 'notebook.example.com' do
   ip '10.0.0.3', mac: "33:33:33:33:33:33"
+  group :dhcp_clients
 end
 ```
 
