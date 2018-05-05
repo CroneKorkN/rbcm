@@ -55,13 +55,13 @@ actions to be executed on the server.
 The base capabilities `file` and `run` are neccessary to actually generate
 actions to be executed on the server.
 
-### file
+#### file
 
 ```ruby
 file "/etc/dhcp/dhcpd.conf", content: "i am in"
 ```
 
-### run
+#### run
 
 ```ruby
 run "apt-get install -y #{install}",
@@ -145,7 +145,7 @@ end
 Nodes need to include a groups definition.
 
 ```ruby
-node "example.com" do
+node "example.com"  do
   group :dhcp_clients
 end
 ```
