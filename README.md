@@ -190,6 +190,27 @@ def dhcpd!
 end
 ```
 
+`definitions/dhcp_clients.rb`:
+```ruby
+group :dhcp_clients do
+  host = @name
+  ip = ip?.first.first
+  mac = ip?(:mac).first
+  group :dhcp_servers do
+    dhcpd host: host,
+      mac: mac,
+      ip:  ip
+  end
+end
+```
+
+`definitions/dhcp_servers.rb`:
+```ruby
+group :dhcp_servers do
+  apt install: :'isc-dhcp-server'
+end
+```
+
 `definitions/router.rb`:
 ```ruby
 node 'router.example.com' do
@@ -210,27 +231,6 @@ end
 node 'notebook.example.com' do
   ip '10.0.0.3', mac: "33:33:33:33:33:33"
   group :dhcp_clients
-end
-```
-
-`definitions/dhcp_clients.rb`:
-```ruby
-group :dhcp_clients do
-  host = @name
-  ip = ip?.first.first
-  mac = ip?(:mac).first
-  group :dhcp_servers do
-    dhcpd host: host,
-      mac: mac,
-      ip:  ip
-  end
-end
-```
-
-`definitions/dhcp_servers.rb`:
-```ruby
-group :dhcp_servers do
-  apt install: :'isc-dhcp-server'
 end
 ```
 
