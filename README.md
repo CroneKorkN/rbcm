@@ -2,6 +2,7 @@ Ruby Config Management
 ======================
 
 Navigate into a configuration dir and call rbcm.
+
 `>_ rbcm`
 
 ## applying
@@ -23,17 +24,18 @@ The user approves each action interactively.
 
 All approved actions are being executed.
 
-# Documentation
+# documentation
 
-Rbcm expects to be calles from within a configuration-directory. There must be
-a `capabilities/`- and a `definitions/`-directory
+Rbcm expects to be called from within a configuration-directory. It must contain
+each, a `capabilities/`- and a `definitions/`-directory.
 
 ## capabilities
 
-Nodes are defined by calling capabilities. Capabilities are methods residing in
-files in `capabilities/` directory. Each capability may have a second
-incarnation with a bang suffix ("cap!"). The bang version is called once on each
-node if the node called the non-bang-version before.
+Nodes are defined by calling capabilities. Capabilities are user defined methods
+residing in files in `capabilities/` directory. Each capability may have a
+second incarnation with a bang suffix ("cap!"). The bang version is called once
+on each node if the node called the non-bang-version before.
+
 ```ruby
 def ip v4: nil, mac: nil
   # may call further capabilities
@@ -43,6 +45,7 @@ def ip!
   # called once at the end
 end
 ```
+
 User defined capabilities extend the set of base capabilities by further
 mechanisms. They are meant to use the base capabilities to actually generate
 actions to be executed on the server.
