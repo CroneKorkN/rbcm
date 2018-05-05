@@ -42,9 +42,7 @@ class Command < Action
 
   def not_triggered
     return false if triggered_by.empty?
-    p @node.triggered
-    p triggered_by
-    return false if triggered_by.one?{|triggered_by| @node.triggered.include? triggered_by}
+    return false if triggered_by.one?{|triggered_by| @node.triggered.flatten.include? triggered_by}
     puts "NOT TRIGGERED"
     return true
   end

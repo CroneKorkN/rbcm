@@ -21,7 +21,7 @@ module CommandList
     self.select{ |command|
       this.dependencies.include? command.capability
     }.each{ |command|
-      resolve_command command
+      resolve_command_dependencies command
     }
     @commands << this
   end
