@@ -40,8 +40,7 @@ class RBCM
       end
     end
     @patterns.each do |pattern, definition|
-      @nodes.select{|name, node| name =~ /#{pattern}/}.each do |node|
-        p "___________________________________"
+      @nodes.select{|name, node| name =~ /#{pattern}/}.each do |name, node|
         node << definition
       end
     end
