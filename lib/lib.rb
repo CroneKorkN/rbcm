@@ -9,19 +9,6 @@ module Kernel
   end
 end
 
-module OldParams
-  def ordered_params
-    named_params? ? @params[0..-2] : @params
-  end
-
-  def named_params
-    @params.last if named_params?
-  end
-
-  def named_params?
-    @params.last.class == Hash
-  end
-end
 
 class Hash
   def << hash

@@ -1,7 +1,6 @@
 # ToDo: approve all changes to a spicific file at once
 
 class Command < Action
-  include OldParams
   attr_reader :line, :params, :dependencies, :obsolete,
     :approved, :triggered_by, :chain, :capability, :node, :trigger
   attr_writer :approved
@@ -31,7 +30,8 @@ class Command < Action
     log "CHECKING $>_ #{@check}"
     path = @params[0]
     if @capability == :file
-      @node.files[path] = named_params[:content]
+      p params.class
+      @node.files[path] = params[:content]
       @obsolete = @node.remote.files[path].chomp == @node.files[path].chomp
     elsif @check
       @obsolete = @node.remote.execute(@check).exitstatus == 0

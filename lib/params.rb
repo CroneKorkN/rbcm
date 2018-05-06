@@ -17,4 +17,16 @@ class Params
   def sendable
     [*ordered, named]
   end
+
+  def empty?
+    true if ordered.none? and named.none?
+  end
+
+  def first
+    ordered[0]
+  end
+
+  def second
+    ordered[1]
+  end
 end

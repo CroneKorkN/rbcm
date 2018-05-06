@@ -101,9 +101,10 @@ class Sandbox
   end
 
   # handle getter method calls
-  def method_missing name, *params, &block
+  def method_missing name, *named, **ordered, &block
     log "method #{name} missing on #{@name}"
     capability_name = name[0..-2].to_sym
+    params = Params.new named, ordered
     if not @@capabilities.include? capability_name
       super
     elsif name =~ /\!$/
@@ -117,25 +118,28 @@ class Sandbox
     jobs = @node.jobs.find_all{|job| job.capability == capability_name}
     if params.empty?
       # return ordered prarams
-      jobs.each.ordered_params
+      jobs.collect{|job| job.params.ordered}
     elsif params.first.class == Symbol
       # return values of a named param
       jobs.find_all{ |job|
-        job.named_params.include? params.first if job.named_params
+        job.params.named.include? params.first if job.params.named.any?
       }.collect{ |job|
-        job.named_params
+        job.params.named
       }.collect{ |named_params|
         named_params[params.first]
       }
-    elsif params.first.class == Hash
-      if params.first[:nodes] == :all
+    elsif params.named.any?
+      if params[:nodes] == :all
         jobs = @node.rbcm.nodes.values.each.jobs.flatten(1).find_all{|job| job.capability == capability_name}
       end
-      if params.first.keys.first == :with
+      p "=============---------------================"
+      if params[:with]
         # return values of a named param
         jobs.find_all{ |job|
-          job.named_params.keys.include? params.first.values.first if job.named_params?
-        }.each.named_params
+          job.params.named.keys.include? params[:with] if job.params.named.any?
+        }.collect{ |job|
+          job.params.named
+        }
       end
     end
   end
@@ -161,9 +165,9 @@ class Sandbox
       # define wrapper method
       define_method(capability_name.to_sym) do |*ordered, **named|
         params = Params.new ordered, named
-        @node.jobs << Job.new(capability_name, params.sendable)
+        @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
-        @params_cache = params.sendable
+        @params_cache = params
         @chain_cache << capability_name
         r = send "__#{__method__}", *params.sendable
         @chain_cache.pop
