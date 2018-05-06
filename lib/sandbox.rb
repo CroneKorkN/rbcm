@@ -64,7 +64,7 @@ class Sandbox
     @check_cache.pop
   end
 
-  def run command, check: nil
+  def run command, check: nil, trigger: nil
     @node.commands << Command.new(
       node: @node,
       line: command,
@@ -72,7 +72,7 @@ class Sandbox
       chain: [@chain_cache].flatten(1).dup,
       params: @params_cache.dup,
       dependencies: @dependency_cache.dup,
-      trigger: @trigger_cache.dup,
+      trigger: [@trigger_cache.dup, trigger].flatten(1),
       triggered_by: @triggered_by_cache.dup
     )
   end
