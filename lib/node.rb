@@ -24,14 +24,6 @@ class Node
     @sandbox.evaluate definitions
   end
 
-  def check
-    commands.each.check
-  end
-
-  def approve
-    commands.each.approve
-  end
-
   def capabilities
     jobs.each.capability.uniq
   end
