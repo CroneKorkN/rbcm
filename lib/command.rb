@@ -62,7 +62,7 @@ class Command < Action
     @approved = [:g, :y].include? input
     siblings.each.approved = true if input == :g
     @node.triggered << @trigger
-    @trigger.any? ? " triggered: \e[30;46m\e[1m #{@trigger.join(", ")} \e[0m" : ""
+    puts @trigger.any? ? " triggered: \e[30;46m\e[1m #{@trigger.join(", ")} \e[0m" : ""
   end
 
   def apply
