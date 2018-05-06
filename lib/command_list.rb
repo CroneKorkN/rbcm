@@ -4,7 +4,7 @@ module CommandList
     self.each do |command|
       resolve_command_dependencies command
     end
-    @commands
+    @commands.uniq
   end
 
   def resolve_triggers
@@ -12,7 +12,7 @@ module CommandList
     self.each do |command|
       resolve_command_triggers command
     end
-    @commands
+    @commands.reverse.uniq.reverse
   end
 
   private

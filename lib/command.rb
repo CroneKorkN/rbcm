@@ -54,8 +54,6 @@ class Command < Action
     puts self
     puts diff unless @capability == :file
     # finish if obsolete
-    p triggered_by
-    p not_triggered
     return if @obsolete or @approved or not_triggered
     puts diff if @capability == :file
     # interact
@@ -64,6 +62,7 @@ class Command < Action
     @approved = [:g, :y].include? input
     siblings.each.approved = true if input == :g
     @node.triggered << @trigger
+    @trigger.any? ? " triggered: \e[30;46m\e[1m #{@trigger.join(", ")} \e[0m" : ""
   end
 
   def apply
@@ -93,7 +92,6 @@ class Command < Action
   def to_s
     [ @obsolete ? "\e[30;42m" : "\e[30;43m",
       "\e[1m\ \ #{@chain.join(" > ")}  \e[0m",
-      @trigger.any? ? " triggers \e[30;46m\e[1m #{@trigger.join(", ")} \e[0m" : "",
       siblings.any? ? "\n\ \ siblings: #{siblings.each.node.each.name.join(", ")}" : "",
       "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
     ].join
