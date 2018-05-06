@@ -13,4 +13,8 @@ class Params
   def to_s
     [ordered, named.collect{|k,v| "#{k}: #{v}"}].join(', ')
   end
+
+  def sendable
+    [*ordered, named]
+  end
 end
