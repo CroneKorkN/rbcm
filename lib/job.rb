@@ -2,7 +2,7 @@
 # used to read configuration via "?"-suffix methods
 
 class Job
-  include Params
+  include OldParams
   attr_reader :capability, :params
 
   def initialize capability, params

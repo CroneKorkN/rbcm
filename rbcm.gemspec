@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     "lib/job.rb",
     "lib/lib.rb",
     "lib/node.rb",
-#    "lib/params.rb",
+    "lib/params.rb",
     "lib/rbcm.rb",
     "lib/remote.rb",
     "lib/sandbox.rb",

@@ -159,7 +159,9 @@ class Sandbox
         instance_method(capability_name)
       )
       # define wrapper method
-      define_method(capability_name.to_sym) do |*params|
+      define_method(capability_name.to_sym) do |*ordered, **named|
+        p Params.new ordered, named
+        params = [*ordered, named]
         @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
         @params_cache = params

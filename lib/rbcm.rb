@@ -6,7 +6,7 @@ require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :action, :definition_file, :file_system, :file_action, :node,
-  :command_list, :command, :job, :remote, :sandbox, :array_hash
+  :command_list, :command, :job, :remote, :sandbox, :array_hash, :params
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
@@ -56,11 +56,9 @@ class RBCM
       node.sandbox.evaluate node.additions
     end
     # apply final capabilities
-    log "appling 'cap!'"
+    log "parsing 'cap!'"
     nodes.values.each do |node|
-      node.capabilities.each do |capability|
-        node.sandbox.send "#{capability}!"
-      end
+      node.capabilities.each {|capability| node.sandbox.send "#{capability}!"}
     end
   end
 

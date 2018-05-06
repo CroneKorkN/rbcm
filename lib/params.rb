@@ -1,13 +1,7 @@
 class Params < Array
-  def ordered_params
-    named_params? ? self[0..-2] : self
-  end
+  attr_reader :ordered, :named
 
-  def named_params
-    last if named_params?
-  end
-
-  def named_params?
-    last.class == Hash
+  def initialize ordered, named
+    @ordered, @named = ordered, named
   end
 end

@@ -1,7 +1,7 @@
 # ToDo: approve all changes to a spicific file at once
 
 class Command < Action
-  include Params
+  include OldParams
   attr_reader :line, :params, :dependencies, :obsolete,
     :approved, :triggered_by, :chain, :capability, :node, :trigger
   attr_writer :approved
@@ -17,7 +17,7 @@ class Command < Action
     @check = check
     @obsolete = nil
     @approved = nil
-    @trigger = [trigger, chain.last].flatten(1)
+    @trigger = trigger + [chain.last]
     @triggered_by = triggered_by
   end
 
@@ -43,7 +43,7 @@ class Command < Action
   def not_triggered
     return false if triggered_by.empty?
     return false if triggered_by.one?{|triggered_by| @node.triggered.flatten.include? triggered_by}
-    puts "NOT TRIGGERED"
+    log "NOT TRIGGERED"
     return true
   end
 
@@ -69,7 +69,7 @@ class Command < Action
     response = @node.remote.execute(@line)
     print [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m",
       "\e[1m  #{@chain.join(" > ")}  \e[0m",
-      "\n\ \ \e[4m#{@params.to_s[1..-2]}\e[0m",
+      "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}\e[0m",
       "\n\e[3m#{response.to_s.chomp}\e[0m\n"
     ].join
   end
@@ -77,13 +77,13 @@ class Command < Action
   def diff
     if @capability == :file
       path = @params[0]
-      [ @node.remote.files[path],
-        @node.files[path]
-      ].join("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
-      #return @diff ||= Diffy::Diff.new(
-      #  @node.remote.files[path],
+      #[ @node.remote.files[path],
       #  @node.files[path]
-      #).diff
+      #].join("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
+      return @diff ||= Diffy::Diff.new(
+        @node.remote.files[path],
+        @node.files[path]
+      ).to_s(:color)
     else
       "\ \ $>_ \e[1m#{@line}\e[0m\e[2m CHECK #{@check}\e[0m"
     end
@@ -92,8 +92,8 @@ class Command < Action
   def to_s
     [ @obsolete ? "\e[30;42m" : "\e[30;43m",
       "\e[1m\ \ #{@chain.join(" > ")}  \e[0m",
+      "\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
       siblings.any? ? "\n\ \ siblings: #{siblings.each.node.each.name.join(", ")}" : "",
-      "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
     ].join
   end
 end
