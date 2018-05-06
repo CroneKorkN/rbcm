@@ -69,7 +69,7 @@ class Command < Action
     response = @node.remote.execute(@line)
     print [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m",
       "\e[1m  #{@chain.join(" > ")}  \e[0m",
-      "\n\ \ \e[4m#{@params.to_s[1..-2][0..160]}\e[0m",
+      "\n\ \ \e[4m#{@params.to_s[0..160]}\e[0m",
       "\n\e[3m#{response.to_s.chomp}\e[0m\n"
     ].join
   end
@@ -92,7 +92,7 @@ class Command < Action
   def to_s
     [ @obsolete ? "\e[30;42m" : "\e[30;43m",
       "\e[1m\ \ #{@chain.join(" > ")}  \e[0m",
-      "\ \ \e[4m#{@params.to_s[1..-2][0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
+      "\ \ \e[4m#{@params.to_s[0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
       siblings.any? ? "\n\ \ siblings: #{siblings.each.node.each.name.join(", ")}" : "",
     ].join
   end
