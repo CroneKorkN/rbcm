@@ -61,6 +61,7 @@ class Action
     return if @obsolete or @approved or not_triggered
     puts diff if @capability == :file
     # interact
+    puts "\n  siblings: #{siblings.each.node.each.name.join(", ")}" if siblings.any?
     print "APROVE (#{"g," if siblings.any?}y,N): " # o: apply to ahole group
     input = STDIN.gets.chomp.to_sym
     @approved = [:g, :y].include? input
@@ -96,8 +97,6 @@ class Action
     else
       color = "\e[30;43m"
     end
-    [ "\n\e[1m#{color}  #{@chain.join(" > ")}  \e[0m  #{@params}\e[0m",
-      siblings.any? ? "\n\ \ siblings: #{siblings.each.node.each.name.join(", ")}" : "",
-    ].join
+    "\e[1m#{color}  #{@chain.join(" > ")}#{" (*#{siblings.count+1})" if siblings.any?}  \e[0m  #{@params}\e[0m"
   end
 end

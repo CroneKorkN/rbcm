@@ -38,8 +38,10 @@ class Sandbox
 
   def group name, &block
     if block_given?
+      # send to group
       @node.rbcm.group_additions[name] << block
     else
+      # include group
       raise "undefined group #{name}" unless @node.rbcm.groups[name]
       @node.memberships << name
       @chain_cache << "group:#{name}"
