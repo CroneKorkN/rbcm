@@ -51,7 +51,7 @@ class Command < Action
     # check if neccessary
     check unless [true, false].include? @obsolete
     # print info
-    puts self
+    puts self.to_s
     puts diff unless @capability == :file
     # finish if obsolete
     return if @obsolete or @approved or not_triggered
@@ -67,11 +67,8 @@ class Command < Action
 
   def apply
     response = @node.remote.execute(@line)
-    print [ response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m",
-      "\e[1m  #{@chain.join(" > ")}  \e[0m",
-      "\n\ \ \e[4m#{@params.to_s[0..160]}\e[0m",
-      "\n\e[3m#{response.to_s.chomp}\e[0m\n"
-    ].join
+    puts self.to_s(response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m")
+    puts response.to_s.chomp
   end
 
   def diff
@@ -89,10 +86,15 @@ class Command < Action
     end
   end
 
-  def to_s
-    [ @obsolete ? "\e[30;42m" : "\e[30;43m",
-      "\e[1m\ \ #{@chain.join(" > ")}  \e[0m",
-      "\ \ \e[4m#{@params.to_s[0..160]}#{" …" if @params.to_s.length > 160}\e[0m",
+  def to_s set_color=nil
+    if set_color
+      color = set_color
+    elsif @obsolete
+      color = "\e[30;42m"
+    else
+      color = "\e[30;43m"
+    end
+    [ "\n\e[1m#{color}  #{@chain.join(" > ")}  \e[0m  #{@params}\e[0m",
       siblings.any? ? "\n\ \ siblings: #{siblings.each.node.each.name.join(", ")}" : "",
     ].join
   end
