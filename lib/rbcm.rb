@@ -6,14 +6,16 @@ require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :action, :definition_file, :file_system, :file_action, :node,
-  :command_list, :command, :job, :remote, :sandbox, :array_hash, :params
+  :command_list, :command, :job, :remote, :sandbox, :array_hash, :params,
+  :template
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
-  attr_reader :nodes, :groups
+  attr_reader :nodes, :groups, :project_path
   attr_accessor :group_additions
 
   def initialize project_path
+    @project_path = project_path
     @patterns = {}
     @nodes = {}
     @groups = ArrayHash.new

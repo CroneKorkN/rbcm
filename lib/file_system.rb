@@ -8,7 +8,11 @@ class FileSystem
   def [] path
     return @files[path] ||= @mirror[path] if @mirror
     log "DOWNLOADING '#{path}'"
-    @files[path] ||= @node.remote.execute("cat '#{path}'")
+    if (result = @node.remote.execute("cat '#{path}'")).exitstatus == 0
+      @files[path] ||= result
+    else
+      @files[path] ||= ""
+    end
   end
 
   def []= path, content

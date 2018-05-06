@@ -88,10 +88,14 @@ class Sandbox
       includes_line: nil,
       after: nil,
       mode: nil,
-      content: nil
+      content: nil,
+      template: nil
     )
     # @files[path] = content if content or exists
-    run "echo #{Shellwords.escape(content)} > #{path}" if content
+    content = Template.new(
+      @node.rbcm.project_path, template
+    ).render if template
+    run %[mkdir -p "$(dirname "#{path}")" && echo #{Shellwords.escape(content)} > "#{path}"] if content
     manipulate "chmod #{mode} #{path}" if mode
     manipulate %^
       if  grep -q #{includes_line} #{path}; then
@@ -146,7 +150,7 @@ class Sandbox
 
   def self.import_capabilities capabilities_path
     instance_methods_cache = instance_methods(false)
-    Dir["#{capabilities_path}/*.rb"].each {|path|
+    Dir["#{capabilities_path}/**/*.rb"].each {|path|
       eval File.read(path)
     }
     @@capabilities = instance_methods(false).grep(
@@ -156,6 +160,7 @@ class Sandbox
     ).+(
       [:file, :manipulate]
     )
+    log "CAPABILITIES #{@@capabilities}"
     @@capabilities.each do |capability_name|
       # copy method
       define_method(

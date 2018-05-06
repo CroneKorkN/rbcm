@@ -28,7 +28,14 @@ class Action
     log "CHECKING $>_ #{@check}"
     path = @params[0]
     if @capability == :file
-      @node.files[path] = params[:content]
+      if params[:template]
+        content = Template.new(
+          @node.rbcm.project_path, params[:template]
+        ).render
+      else
+        content = params[:content]
+      end
+      @node.files[path] = content
       @obsolete = @node.remote.files[path].chomp == @node.files[path].chomp
     elsif @check
       @obsolete = @node.remote.execute(@check).exitstatus == 0
@@ -65,15 +72,13 @@ class Action
   def apply
     response = @node.remote.execute(@line)
     puts self.to_s(response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m")
+    puts @line if response.exitstatus != 0
     puts response.to_s.chomp
   end
 
   def diff
     if @capability == :file
       path = @params[0]
-      #[ @node.remote.files[path],
-      #  @node.files[path]
-      #].join("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
       return @diff ||= Diffy::Diff.new(
         @node.remote.files[path],
         @node.files[path]

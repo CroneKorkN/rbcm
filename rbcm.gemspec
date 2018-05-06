@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
     "lib/rbcm.rb",
     "lib/remote.rb",
     "lib/sandbox.rb",
+    "lib/template.rb",
   ]
   spec.add_runtime_dependency 'quickeach', "= 0.1.0"
   spec.add_runtime_dependency 'net-ssh', "= 4.2.0"
