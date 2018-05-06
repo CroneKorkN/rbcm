@@ -160,13 +160,12 @@ class Sandbox
       )
       # define wrapper method
       define_method(capability_name.to_sym) do |*ordered, **named|
-        p Params.new ordered, named
-        params = [*ordered, named]
-        @node.jobs << Job.new(capability_name, params)
+        params = Params.new ordered, named
+        @node.jobs << Job.new(capability_name, params.sendable)
         @node.triggered << capability_name
-        @params_cache = params
+        @params_cache = params.sendable
         @chain_cache << capability_name
-        r = send "__#{__method__}", *params
+        r = send "__#{__method__}", *params.sendable
         @chain_cache.pop
         @dependency_cache = [:file]
         return r
