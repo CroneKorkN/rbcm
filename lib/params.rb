@@ -6,8 +6,8 @@ class Params
   end
 
   def [] id
-    ordered[id] if id.class == Integer
-    named[id] if id.class == Symbol
+    return ordered[id] if id.class == Integer
+    return named[id] if id.class == Symbol
   end
 
   def to_s
