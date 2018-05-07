@@ -8,10 +8,6 @@ class Sandbox
     @node = node
     @name = node.name
     @dependency_cache = []
-    @chain_cache = [node.name]
-    @trigger_cache = []
-    @triggered_by_cache = []
-    @check_cache = []
     @cache = {chain: [], trigger: [], triggered_by: [], check: []}
   end
 
@@ -22,13 +18,13 @@ class Sandbox
   end
 
   def trigger name, &block
-    caching trigger: name, chain: "trigger:#{name}" do
+    cache trigger: name, chain: "trigger:#{name}" do
       instance_eval &block
     end
   end
 
   def triggered_by name, &block
-    caching triggered_by: name, chain: "triggered_by:#{name}" do
+    cache triggered_by: name, chain: "triggered_by:#{name}" do
       instance_eval &block
     end
   end
@@ -39,7 +35,7 @@ class Sandbox
     else # include group
       raise "undefined group #{name}" unless @node.rbcm.groups[name]
       @node.memberships << name
-      caching chain: "group:#{name}" do
+      cache chain: "group:#{name}" do
         @node.rbcm.groups[name].each do |definition|
           instance_eval &definition
         end
@@ -56,7 +52,7 @@ class Sandbox
   end
 
   def check action, &block
-    caching check: action do
+    cache check: action do
       instance_eval &block
     end
   end
@@ -66,11 +62,11 @@ class Sandbox
       node: @node,
       line: action,
       check: check,
-      chain: [@chain_cache].flatten(1).dup,
+      chain: @cache[:chain].dup.flatten(1),
       params: @params_cache.dup,
       dependencies: @dependency_cache.dup,
-      trigger: [@trigger_cache.dup, trigger].flatten(1),
-      triggered_by: [triggered_by, @triggered_by_cache.dup].flatten(1)
+      trigger: [@cache[:trigger].dup, trigger].flatten(1),
+      triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1)
     )
   end
 
@@ -82,9 +78,9 @@ class Sandbox
        node: @node,
        path: path,
        params: Params.new([path], named),
-       chain: [@chain_cache.dup].flatten(1),
-       trigger: [@trigger_cache.dup, trigger].flatten(1),
-       triggered_by: @triggered_by_cache.dup
+       chain: [@cache[:chain].dup].flatten(1),
+       trigger: [@cache[:trigger].dup, trigger].flatten(1),
+       triggered_by: @cache[:triggered_by].dup
      )
   end
 
@@ -156,7 +152,7 @@ class Sandbox
         @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
         @params_cache = params
-        caching trigger: params[:trigger],
+        cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
               chain: capability_name do
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
@@ -171,7 +167,7 @@ class Sandbox
       )
       # define wrapper method
       define_method("#{capability_name}!".to_sym) do
-        caching chain: __method__ do
+        cache chain: __method__ do
           send "__#{__method__}"
         end
         @dependency_cache = [:file]
@@ -179,19 +175,15 @@ class Sandbox
     end
   end
 
-  def caching trigger: nil,
-      triggered_by: nil,
-      params: nil,
-      check: nil,
-      chain: []
-    @chain_cache << chain if chain
-    @trigger_cache << trigger if trigger
-    @triggered_by_cache << triggered_by if triggered_by
-    @check_cache << check if check
+  def cache trigger: nil, triggered_by: nil, params: nil, check: nil, chain: []
+    @cache[:chain]        << chain        if chain
+    @cache[:trigger]      << trigger      if trigger
+    @cache[:triggered_by] << triggered_by if triggered_by
+    @cache[:check]        << check        if check
     yield
-    @chain_cache.pop if chain
-    @trigger_cache.pop if trigger
-    @triggered_by_cache.pop if triggered_by
-    @check_cache.pop if check
+    @cache[:chain].pop        if chain
+    @cache[:trigger].pop      if trigger
+    @cache[:triggered_by].pop if triggered_by
+    @cache[:check].pop        if check
   end
 end
