@@ -26,7 +26,7 @@ class FileAction < Action
         @node.rbcm.project_path, @chain[-2], params[:template], context: @params[:context]
       ).render
     end
-    @obsolete = @node.remote.files[path].chomp == @node.files[path].chomp
+    @obsolete = @node.remote.files[path].chomp.chomp == @node.files[path].chomp.chomp
   end
 
   def diff
