@@ -4,9 +4,6 @@ require "net/ssh"
 require "net/scp"
 require "fileutils"
 require "shellwords"
-require "mustache"
-require "erb"
-require "ostruct"
 require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)

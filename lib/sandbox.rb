@@ -161,7 +161,7 @@ class Sandbox
         @trigger_cache << params[:trigger] if params[:trigger]
         @triggered_by_cache << params[:triggered_by] if params[:triggered_by]
         @node.jobs << Job.new(capability_name, params)
-        @node.triggered << capability_name 
+        @node.triggered << capability_name
         @params_cache = params
         @chain_cache << capability_name
         clean_params = params.dup; clean_params.named.delete(:trigger); clean_params.named.delete(:triggered_by)
@@ -179,10 +179,9 @@ class Sandbox
         instance_method("#{capability_name}!")
       )
       # define wrapper method
-      define_method("#{capability_name}!".to_sym) do |*params|
-        @params_cache = params
+      define_method("#{capability_name}!".to_sym) do
         @chain_cache << "#{__method__}"
-        r = send "__#{__method__}", *params
+        r = send "__#{__method__}"
         @chain_cache.pop
         @dependency_cache = [:file]
         return r
