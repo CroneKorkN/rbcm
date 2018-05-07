@@ -20,11 +20,11 @@ class FileAction < Action
   def check
     log "CHECKING $>_ #{@check}"
     # get file content
-    @node.files[path] = if params[:content]
-      params[:content]
-    elsif params[:template]
+    @node.files[path] = if @params[:content]
+      @params[:content]
+    elsif @params[:template]
       Template.new(
-        name: params[:template],
+        name: @params[:template],
         capability: @chain[-2],
         context: @params[:context]
       ).render
