@@ -3,12 +3,6 @@ class Action
                 :capability, :obsolete
   attr_accessor :approved
 
-  def siblings
-    @node.rbcm.actions.select{ |action|
-      action.chain[1..-1] == @chain[1..-1] and action.params == @params
-    } - [self]
-  end
-
   def not_triggered
     return false if triggered_by.empty?
     return false if triggered_by.one?{|triggered_by| @node.triggered.flatten.include? triggered_by}

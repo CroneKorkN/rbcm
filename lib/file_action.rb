@@ -18,14 +18,14 @@ class FileAction < Action
 
   def check
     log "CHECKING $>_ #{@check}"
-    if params[:template]
-      content = Template.new(
-        @node.rbcm.project_path, params[:template]
+    # get file content
+    @node.files[path] = if params[:content]
+      params[:content]
+    elsif params[:template]
+      Template.new(
+        @node.rbcm.project_path, @chain[-2], params[:template]
       ).render
-    else
-      content = params[:content]
     end
-    @node.files[path] = content
     @obsolete = @node.remote.files[path].chomp == @node.files[path].chomp
   end
 
@@ -35,5 +35,9 @@ class FileAction < Action
       @node.remote.files[path],
       @node.files[path]
     ).to_s(:color)
+  end
+
+  def siblings
+    [] # tbd
   end
 end
