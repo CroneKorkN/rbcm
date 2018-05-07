@@ -8,7 +8,7 @@ class Sandbox
     @node = node
     @name = node.name
     @dependency_cache = []
-    @cache = {chain: [], trigger: [], triggered_by: [], check: []}
+    @cache = {chain: [@node.name], trigger: [], triggered_by: [], check: []}
   end
 
   def evaluate definitions
@@ -155,7 +155,6 @@ class Sandbox
         cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
               chain: capability_name do
-          p *params.delete(:trigger, :triggered_by).sendable
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
         end
         @dependency_cache = [:file]
