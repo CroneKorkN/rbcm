@@ -11,8 +11,8 @@ class FileAction < Action
     @params = params
     @obsolete = nil
     @approved = nil
-    @trigger = trigger + [chain.last]
-    @triggered_by = triggered_by
+    @trigger = [trigger, chain.last].flatten.compact
+    @triggered_by = [triggered_by].flatten.compact
     @dependencies = []
   end
 
@@ -23,7 +23,7 @@ class FileAction < Action
       params[:content]
     elsif params[:template]
       Template.new(
-        @node.rbcm.project_path, @chain[-2], params[:template]
+        @node.rbcm.project_path, @chain[-2], params[:template], context: @params[:context]
       ).render
     end
     @obsolete = @node.remote.files[path].chomp == @node.files[path].chomp
@@ -39,5 +39,9 @@ class FileAction < Action
 
   def siblings
     [] # tbd
+  end
+
+  def apply
+    super @node.remote.execute("echo #{Shellwords.escape(@node.files[path])} > #{path}")
   end
 end

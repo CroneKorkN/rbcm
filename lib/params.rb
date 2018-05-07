@@ -13,7 +13,7 @@ class Params
   def to_s
     [ *ordered,
       named.collect{ |k, v|
-        "#{k}: #{v[0..40].gsub("\n","\ ⏎\ ")}#{"…" if v.length > 40}"
+        "#{k}: #{v[0..40].to_s.gsub("\n","\ ⏎\ ")}#{"…" if v.length > 40}"
       }
     ].join(', ')
   end

@@ -12,11 +12,16 @@ class Command < Action
     @check = check
     @obsolete = nil
     @approved = nil
-    @trigger = trigger + [chain.last]
-    @triggered_by = triggered_by
+    @trigger = [trigger, chain.last].flatten.compact
+    @triggered_by = [triggered_by].flatten.compact
   end
 
   def check
+    puts "============="
+    p @trigger
+    p @triggered_by
+    puts "----------"
+
     if @check
       log "CHECKING $>_ #{@check}"
       @obsolete = @node.remote.execute(@check).exitstatus == 0
@@ -33,5 +38,9 @@ class Command < Action
     @node.rbcm.actions.select{ |action|
       action.chain[1..-1] == @chain[1..-1] and action.line == @line
     } - [self]
+  end
+
+  def apply
+    super @node.remote.execute(@line)
   end
 end

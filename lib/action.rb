@@ -26,14 +26,9 @@ class Action
     @approved = [:g, :y].include? input
     siblings.each.approved = true if input == :g
     @node.triggered << @trigger
-    puts @trigger.any? ? " triggered: \e[30;46m\e[1m #{@trigger.compact.join(", ")} \e[0m" : ""
-  end
-
-  def apply
-    response = @node.remote.execute(@line)
-    puts self.to_s(response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m")
-    puts @line if response.exitstatus != 0
-    puts response.to_s.chomp
+    if (triggered = @trigger.compact - @node.triggered).any?
+      puts " triggered: \e[30;46m\e[1m #{triggered.join(", ")} \e[0m"
+    end
   end
 
   def to_s set_color=nil
@@ -45,5 +40,11 @@ class Action
       color = "\e[30;43m"
     end
     "\e[1m#{color}  #{@chain.join(" > ")}  \e[0m  #{@params}"
+  end
+
+  def apply response
+    puts self.to_s(response.exitstatus == 0 ? "\e[30;42m" : "\e[30;101m")
+    puts "  $>_ #{@line}" if response.exitstatus != 0
+    puts response.to_s.chomp
   end
 end

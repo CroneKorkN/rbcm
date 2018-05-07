@@ -66,7 +66,7 @@ class Sandbox
     @check_cache.pop
   end
 
-  def run action, check: nil, trigger: nil
+  def run action, check: nil, trigger: nil, triggered_by: nil
     @node.actions << Command.new(
       node: @node,
       line: action,
@@ -75,13 +75,13 @@ class Sandbox
       params: @params_cache.dup,
       dependencies: @dependency_cache.dup,
       trigger: [@trigger_cache.dup, trigger].flatten(1),
-      triggered_by: @triggered_by_cache.dup
+      triggered_by: [triggered_by, @triggered_by_cache.dup].flatten(1)
     )
   end
 
   def file path, trigger: nil, **named
-     raise "invalid file paramteres '#{named}'" if (
-       named.keys - [:exists, :includes_line, :after, :mode, :content, :template]
+     raise "RBCM: invalid file paramteres '#{named}'" if (
+       named.keys - [:exists, :includes_line, :after, :mode, :content, :template, :context]
      ).any?
      @node.actions << FileAction.new(
        node: @node,
@@ -158,12 +158,17 @@ class Sandbox
       # define wrapper method
       define_method(capability_name.to_sym) do |*ordered, **named|
         params = Params.new ordered, named
+        @trigger_cache << params[:trigger] if params[:trigger]
+        @triggered_by_cache << params[:triggered_by] if params[:triggered_by]
         @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
         @params_cache = params
         @chain_cache << capability_name
-        r = send "__#{__method__}", *params.sendable
+        clean_params = params.dup; clean_params.named.delete(:trigger); clean_params.named.delete(:triggered_by)
+        r = send "__#{__method__}", *clean_params.sendable
         @chain_cache.pop
+        @trigger_cache.pop if params[:trigger]
+        @triggered_by_cache.pop if params[:triggered_by]
         @dependency_cache = [:file]
         return r
       end
