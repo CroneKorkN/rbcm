@@ -11,11 +11,13 @@ class Params
   end
 
   def to_s
-    [ *ordered,
+    [ ordered.collect{ |param|
+        "#{param}"
+      },
       named.collect{ |k, v|
-        "#{k}: #{v[0..40].to_s.gsub("\n","\ ⏎\ ")}#{"…" if v.length > 40}"
+        "\e[2m\e[1m#{k}:\e[21m\e[22m #{v[0..40].to_s.gsub("\n"," \\ ")}#{"\e[2m\e[1m…\e[21m\e[22m" if v.length > 40}"
       }
-    ].join(', ')
+    ].flatten(1).join("\e[2m\e[1m, \e[21m\e[22m")
   end
 
   def sendable

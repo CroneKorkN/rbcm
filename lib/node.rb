@@ -13,7 +13,7 @@ class Node
     @memberships = []
     @jobs = []
     @blocked_jobs = []
-    @triggered = []
+    @triggered = [:file]
   end
 
   def << definition

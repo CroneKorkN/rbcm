@@ -12,7 +12,6 @@ class FileAction < Action
     @obsolete = nil
     @approved = nil
     @trigger = [trigger, chain.last].flatten.compact
-    p @trigger
     @triggered_by = [triggered_by].flatten.compact
     @dependencies = []
   end
