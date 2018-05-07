@@ -1,3 +1,5 @@
+puts "\n================ RBCM starting ================\n\n"
+
 require "net/ssh"
 require "net/scp"
 require "fileutils"
@@ -6,7 +8,7 @@ require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :action, :definition_file, :file_system, :file_action, :node,
-  :command_list, :command, :job, :remote, :sandbox, :array_hash, :params,
+  :action_list, :command, :job, :remote, :sandbox, :array_hash, :params,
   :template
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
@@ -65,16 +67,18 @@ class RBCM
   end
 
   def approve
-    commands.each.check
-    commands.extend(CommandList).resolve_triggers.each.approve
+    puts "\n================ CHECKING #{nodes.count} nodes ================\n\n"
+    actions.each.check
+    puts "\n================ APPROVING #{actions.select.approved.count} actions ================\n\n"
+    actions.extend(ActionList).resolve_triggers.each.approve
   end
 
-  def commands
-    nodes.values.each.commands.flatten(1)
+  def actions
+    nodes.values.each.actions.flatten(1)
   end
 
   def apply
-    puts "\n======== APPLYING #{commands.select.approved.count} ========\n\n"
-    commands.select.approved.extend(CommandList).resolve_dependencies.each.apply
+    puts "\n================ APPLYING #{actions.select.approved.count} actions ================\n\n"
+    actions.select.approved.extend(ActionList).resolve_dependencies.each.apply
   end
 end

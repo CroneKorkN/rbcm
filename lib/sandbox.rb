@@ -60,16 +60,16 @@ class Sandbox
     @dependency_cache += [capabilities].flatten(1)
   end
 
-  def check command, &block
-    @check_cache << command
+  def check action, &block
+    @check_cache << action
     instance_eval &block
     @check_cache.pop
   end
 
-  def run command, check: nil, trigger: nil
-    @node.commands << Command.new(
+  def run action, check: nil, trigger: nil
+    @node.actions << Command.new(
       node: @node,
-      line: command,
+      line: action,
       check: check,
       chain: [@chain_cache].flatten(1).dup,
       params: @params_cache.dup,
@@ -83,7 +83,7 @@ class Sandbox
      raise "invalid file paramteres '#{named}'" if (
        named.keys - [:exists, :includes_line, :after, :mode, :content, :template]
      ).any?
-     @node.commands << FileAction.new(
+     @node.actions << FileAction.new(
        node: @node,
        path: path,
        params: Params.new([path], named),
@@ -125,7 +125,6 @@ class Sandbox
       if params[:nodes] == :all
         jobs = @node.rbcm.nodes.values.each.jobs.flatten(1).find_all{|job| job.capability == capability_name}
       end
-      p "=============---------------================"
       if params[:with]
         # return values of a named param
         jobs.find_all{ |job|

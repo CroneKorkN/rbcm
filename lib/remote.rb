@@ -6,9 +6,9 @@ class Remote
     @files = FileSystem.new node
   end
 
-  def execute command
+  def execute action
     @session ||= Net::SSH.start @host, 'root'
-    @session.exec! command
+    @session.exec! action
   end
 end
 

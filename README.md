@@ -11,8 +11,8 @@ Applying actually passes three steps: checking, approving and execution.
 
 ### 1/3 check
 
-Rbcm compares the affected files and executes the command-checks. Unneccessary
-commands are marked and will be skipped in the approvemnt process.
+Rbcm compares the affected files and executes the action-checks. Unneccessary
+actions are marked and will be skipped in the approvemnt process.
 
 ### 2/3 approve
 

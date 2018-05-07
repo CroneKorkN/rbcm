@@ -4,8 +4,8 @@ class Action
   attr_accessor :approved
 
   def siblings
-    @node.rbcm.commands.select{ |command|
-      command.chain[1..-1] == @chain[1..-1] and command.params == @params
+    @node.rbcm.actions.select{ |action|
+      action.chain[1..-1] == @chain[1..-1] and action.params == @params
     } - [self]
   end
 
@@ -50,6 +50,6 @@ class Action
     else
       color = "\e[30;43m"
     end
-    "\e[1m#{color}  #{@chain.join(" > ")}  \e[0m#{@params}\e[0m"
+    "\e[1m#{color}  #{@chain.join(" > ")}  \e[0m  #{@params}"
   end
 end

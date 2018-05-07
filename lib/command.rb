@@ -1,5 +1,3 @@
-
-
 class Command < Action
   attr_reader :line
 

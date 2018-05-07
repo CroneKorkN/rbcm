@@ -11,9 +11,9 @@ Gem::Specification.new do |spec|
   spec.license     = 'MIT'
   spec.files       = [
     "lib/action.rb",
+    "lib/action_list.rb",
     "lib/array_hash.rb",
     "lib/command.rb",
-    "lib/command_list.rb",
     "lib/definition_file.rb",
     "lib/file_system.rb",
     "lib/file_action.rb",
