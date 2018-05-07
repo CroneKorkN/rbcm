@@ -79,31 +79,18 @@ class Sandbox
     )
   end
 
-  def manipulate command
-    needs :file
-    run command
-  end
-
-  def file(
-      path,
-      exists: nil,
-      includes_line: nil,
-      after: nil,
-      mode: nil,
-      content: nil,
-      template: nil
-    )
-    # @files[path] = content if content or exists
-    content = Template.new(
-      @node.rbcm.project_path, template
-    ).render if template
-    run %[mkdir -p "$(dirname "#{path}")" && echo #{Shellwords.escape(content)} > "#{path}"] if content
-    manipulate "chmod #{mode} #{path}" if mode
-    manipulate %^
-      if  grep -q #{includes_line} #{path}; then
-        echo #{includes_line} >> #{path}
-      fi
-    ^ if includes_line
+  def file path, trigger: nil, **named
+     raise "invalid file paramteres '#{named}'" if (
+       named.keys - [:exists, :includes_line, :after, :mode, :content, :template]
+     ).any?
+     @node.commands << FileAction.new(
+       node: @node,
+       path: path,
+       params: named,
+       chain: [@chain_cache.dup].flatten(1),
+       trigger: [@trigger_cache.dup, trigger].flatten(1),
+       triggered_by: @triggered_by_cache.dup
+     )
   end
 
   # handle getter method calls
@@ -160,7 +147,7 @@ class Sandbox
     ).-(
       instance_methods_cache
     ).+(
-      [:file, :manipulate]
+      [:file]
     )
     log "CAPABILITIES #{@@capabilities}"
     @@capabilities.each do |capability_name|
