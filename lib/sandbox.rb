@@ -63,10 +63,10 @@ class Sandbox
       line: action,
       check: check,
       chain: @cache[:chain].dup.flatten(1),
-      params: @params_cache.dup,
       dependencies: @dependency_cache.dup,
       trigger: [@cache[:trigger].dup, trigger].flatten(1),
-      triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1)
+      triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
+      job: @node.jobs.last
     )
   end
 
@@ -80,7 +80,8 @@ class Sandbox
        params: Params.new([path], named),
        chain: [@cache[:chain].dup].flatten(1),
        trigger: [@cache[:trigger].dup, trigger].flatten(1),
-       triggered_by: @cache[:triggered_by].dup
+       triggered_by: @cache[:triggered_by].dup,
+       job: @node.jobs.last
      )
   end
 
@@ -151,7 +152,6 @@ class Sandbox
         params = Params.new ordered, named
         @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
-        @params_cache = params
         cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
               chain: capability_name do

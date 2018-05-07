@@ -3,7 +3,7 @@
 class FileAction < Action
   attr_reader :path
 
-  def initialize node:, path:, params:, trigger: nil, triggered_by: nil, chain:
+  def initialize node:, path:, params:, trigger: nil, triggered_by: nil, chain:, job:
     @node = node
     @path = path
     @chain = chain
@@ -14,6 +14,7 @@ class FileAction < Action
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
     @dependencies = []
+    @job = job
   end
 
   def check

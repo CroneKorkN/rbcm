@@ -1,6 +1,6 @@
 class Action
-  attr_reader   :node, :params, :triggered_by, :trigger, :chain, :dependencies,
-                :capability, :obsolete
+  attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
+                :capability, :obsolete, :job
   attr_accessor :approved
 
   def not_triggered
@@ -40,7 +40,7 @@ class Action
       color = "\e[30;43m"
     end
     [ "#{"\e[30;46m\e[1m  #{triggered_by.join(", ")}  \e[0m" if triggered_by.any?}",
-      "\e[1m#{color}  #{@chain.join(" > ")} \e[0m\e[96m #{@params}  \e[0m"
+      "\e[1m#{color}  #{@chain.join(" > ")} \e[0m\e[96m #{@job.params}  \e[0m"
     ].join
   end
 

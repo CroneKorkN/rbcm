@@ -1,19 +1,19 @@
 class Command < Action
   attr_reader :line
 
-  def initialize node:, line:, params:, dependencies:,
-      check: nil, chain:, trigger: nil, triggered_by: nil
+  def initialize node:, line:, dependencies:,
+      check: nil, chain:, trigger: nil, triggered_by: nil, job:
     @chain = chain
     @capability = chain.last
     @node = node
     @line = line
-    @params = params
     @dependencies = [:file] + [dependencies].flatten - [chain.last]
     @check = check
     @obsolete = nil
     @approved = nil
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
+    @job = job
   end
 
   def check
