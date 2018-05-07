@@ -3,7 +3,7 @@ class Template
 
   def initialize project_path, capability, template_name, context: {}
     @context = context
-    Dir["#{project_path}/capabilities/#{capability.gsub("!","")}/**/*"].each do |path|
+    Dir["#{project_path}/capabilities/#{capability.to_s.gsub("!","")}/**/*"].each do |path|
       @content = File.read(path) if File.basename(path).gsub(".mustache", "") == template_name
     end
     raise "no file found for template '#{template_name}'" unless @content
