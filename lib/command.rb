@@ -1,6 +1,5 @@
 class Command < Action
-  attr_reader :line, :params, :dependencies, :obsolete,
-              :approved, :triggered_by, :chain, :capability, :node, :trigger
+  attr_reader :line
 
   def initialize node:, line:, params:, dependencies:,
       check: nil, chain:, trigger: nil, triggered_by: nil
