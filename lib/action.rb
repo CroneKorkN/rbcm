@@ -1,6 +1,6 @@
 class Action
   attr_reader   :node, :params, :triggered_by, :trigger, :chain, :dependencies,
-                :capability
+                :capability, :obsolete
   attr_accessor :approved
 
   def siblings

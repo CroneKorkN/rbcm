@@ -4,6 +4,7 @@ require "net/ssh"
 require "net/scp"
 require "fileutils"
 require "shellwords"
+require "mustache"
 require "diffy"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
@@ -69,7 +70,7 @@ class RBCM
   def approve
     puts "\n================ CHECKING #{nodes.count} nodes ================\n\n"
     actions.each.check
-    puts "\n================ APPROVING #{actions.select.approved.count} actions ================\n\n"
+    puts "\n================ APPROVING #{actions.select{|a| a.obsolete == false}.count} actions ================\n\n"
     actions.extend(ActionList).resolve_triggers.each.approve
   end
 

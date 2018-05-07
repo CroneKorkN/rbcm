@@ -1,5 +1,8 @@
 class Template
-  def initialize project_path, template_name
+  @@engines = [:mustache]
+
+  def initialize project_path, template_name, context: {}
+    @context = context
     Dir["#{project_path}/capabilities/**/*"].each do |path|
       @content = File.read(path) if File.basename(path).gsub(".mustache", "") == template_name
     end
@@ -7,6 +10,6 @@ class Template
   end
 
   def render
-    @content
+    Mustache.render(@content, **@context)
   end
 end
