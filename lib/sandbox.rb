@@ -86,7 +86,7 @@ class Sandbox
      @node.commands << FileAction.new(
        node: @node,
        path: path,
-       params: named,
+       params: Params.new([path], named),
        chain: [@chain_cache.dup].flatten(1),
        trigger: [@trigger_cache.dup, trigger].flatten(1),
        triggered_by: @triggered_by_cache.dup
