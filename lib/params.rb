@@ -35,4 +35,12 @@ class Params
   def second
     ordered[1]
   end
+
+  def delete *ids
+    [ids].flatten.each do |id|
+      ordered.delete id if id.class == Integer
+      named.delete id if id.class == Symbol
+    end
+    return self
+  end
 end

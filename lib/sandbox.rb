@@ -12,6 +12,7 @@ class Sandbox
     @trigger_cache = []
     @triggered_by_cache = []
     @check_cache = []
+    @cache = {chain: [], trigger: [], triggered_by: [], check: []}
   end
 
   def evaluate definitions
@@ -21,34 +22,28 @@ class Sandbox
   end
 
   def trigger name, &block
-    @trigger_cache << name
-    @chain_cache << "trigger:#{name}"
-    instance_eval &block
-    @trigger_cache.pop
-    @chain_cache.pop
+    caching trigger: name, chain: "trigger:#{name}" do
+      instance_eval &block
+    end
   end
 
   def triggered_by name, &block
-    @triggered_by_cache << name
-    @chain_cache << "triggered_by:#{name}"
-    instance_eval &block
-    @triggered_by_cache.pop
-    @chain_cache.pop
+    caching triggered_by: name, chain: "triggered_by:#{name}" do
+      instance_eval &block
+    end
   end
 
   def group name, &block
-    if block_given?
-      # send to group
+    if block_given? # expand group
       @node.rbcm.group_additions[name] << block
-    else
-      # include group
+    else # include group
       raise "undefined group #{name}" unless @node.rbcm.groups[name]
       @node.memberships << name
-      @chain_cache << "group:#{name}"
-      @node.rbcm.groups[name].each do |definition|
-        instance_eval &definition
+      caching chain: "group:#{name}" do
+        @node.rbcm.groups[name].each do |definition|
+          instance_eval &definition
+        end
       end
-      @chain_cache.pop
     end
   end
 
@@ -61,9 +56,9 @@ class Sandbox
   end
 
   def check action, &block
-    @check_cache << action
-    instance_eval &block
-    @check_cache.pop
+    caching check: action do
+      instance_eval &block
+    end
   end
 
   def run action, check: nil, trigger: nil, triggered_by: nil
@@ -158,19 +153,15 @@ class Sandbox
       # define wrapper method
       define_method(capability_name.to_sym) do |*ordered, **named|
         params = Params.new ordered, named
-        @trigger_cache << params[:trigger] if params[:trigger]
-        @triggered_by_cache << params[:triggered_by] if params[:triggered_by]
         @node.jobs << Job.new(capability_name, params)
         @node.triggered << capability_name
         @params_cache = params
-        @chain_cache << capability_name
-        clean_params = params.dup; clean_params.named.delete(:trigger); clean_params.named.delete(:triggered_by)
-        r = send "__#{__method__}", *clean_params.sendable
-        @chain_cache.pop
-        @trigger_cache.pop if params[:trigger]
-        @triggered_by_cache.pop if params[:triggered_by]
+        caching trigger: params[:trigger],
+              triggered_by: params[:triggered_by],
+              chain: capability_name do
+          send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
+        end
         @dependency_cache = [:file]
-        return r
       end
       next unless instance_methods(false).include? "#{capability_name}!".to_sym
       # copy method
@@ -180,12 +171,27 @@ class Sandbox
       )
       # define wrapper method
       define_method("#{capability_name}!".to_sym) do
-        @chain_cache << "#{__method__}"
-        r = send "__#{__method__}"
-        @chain_cache.pop
+        caching chain: __method__ do
+          send "__#{__method__}"
+        end
         @dependency_cache = [:file]
-        return r
       end
     end
+  end
+
+  def caching trigger: nil,
+      triggered_by: nil,
+      params: nil,
+      check: nil,
+      chain: []
+    @chain_cache << chain if chain
+    @trigger_cache << trigger if trigger
+    @triggered_by_cache << triggered_by if triggered_by
+    @check_cache << check if check
+    yield
+    @chain_cache.pop if chain
+    @trigger_cache.pop if trigger
+    @triggered_by_cache.pop if triggered_by
+    @check_cache.pop if check
   end
 end
