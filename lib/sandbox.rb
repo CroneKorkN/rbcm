@@ -155,6 +155,7 @@ class Sandbox
         cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
               chain: capability_name do
+          p *params.delete(:trigger, :triggered_by).sendable
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
         end
         @dependency_cache = [:file]

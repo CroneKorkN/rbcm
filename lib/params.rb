@@ -21,7 +21,7 @@ class Params
   end
 
   def sendable
-    [*ordered, named]
+    [*ordered, named.any? ? named : nil].compact
   end
 
   def empty?
