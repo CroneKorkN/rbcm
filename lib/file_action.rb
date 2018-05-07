@@ -1,21 +1,6 @@
 # ToDo: approve all changes to a spicific file at once
-
 class FileAction < Action
   attr_reader :path
-
-  def initialize node:, path:, params:, trigger: nil, triggered_by: nil, chain:, job:
-    @node = node
-    @path = path
-    @chain = chain
-    @capability = :file
-    @params = params
-    @obsolete = nil
-    @approved = nil
-    @trigger = [trigger, chain.last].flatten.compact
-    @triggered_by = [triggered_by].flatten.compact
-    @dependencies = []
-    @job = job
-  end
 
   def check
     log "CHECKING $>_ #{@check}"
@@ -29,11 +14,11 @@ class FileAction < Action
         context: @params[:context]
       ).render
     end
+    # compare
     @obsolete = @node.remote.files[path].chomp.chomp == @node.files[path].chomp.chomp
   end
 
   def diff
-    path = @params.first
     return @diff ||= Diffy::Diff.new(
       @node.remote.files[path],
       @node.files[path]

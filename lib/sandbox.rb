@@ -138,7 +138,7 @@ class Sandbox
     ).-(
       instance_methods_cache
     ).+(
-      [:file]
+      [:file, :run]
     )
     log "CAPABILITIES #{@@capabilities}"
     @@capabilities.each do |capability_name|
