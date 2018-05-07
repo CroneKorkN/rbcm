@@ -23,7 +23,9 @@ class FileAction < Action
       params[:content]
     elsif params[:template]
       Template.new(
-        @node.rbcm.project_path, @chain[-2], params[:template], context: @params[:context]
+        name: params[:template],
+        capability: @chain[-2],
+        context: @params[:context]
       ).render
     end
     @obsolete = @node.remote.files[path].chomp.chomp == @node.files[path].chomp.chomp

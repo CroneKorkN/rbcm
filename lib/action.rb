@@ -39,8 +39,8 @@ class Action
     else
       color = "\e[30;43m"
     end
-    [ "#{"\e[30;46m\e[1m #{triggered_by.join(", ")} \e[0m" if triggered_by.any?}",
-      "\e[1m#{color}  #{@chain.join(" > ")} \e[0m\e[96m #{@params} \e[0m"
+    [ "#{"\e[30;46m\e[1m  #{triggered_by.join(", ")}  \e[0m" if triggered_by.any?}",
+      "\e[1m#{color}  #{@chain.join(" > ")} \e[0m\e[96m #{@params}  \e[0m"
     ].join
   end
 

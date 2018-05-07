@@ -24,6 +24,7 @@ class RBCM
     @group_additions = ArrayHash.new
     import_capabilities "#{project_path}/capabilities"
     import_definitions "#{project_path}/definitions"
+    Template.project_path = project_path
   end
 
   def import_capabilities capabilities_path

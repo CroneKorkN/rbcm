@@ -1,10 +1,9 @@
 class Template
   @@engines = [:erb, :mustache]
 
-  def initialize project_path, capability, template_name, context: {}
-    @project_path = project_path
+  def initialize name:, capability:, context: {}
+    @name = name
     @capability = capability
-    @template_name = template_name
     @context = context
   end
 
@@ -18,15 +17,15 @@ class Template
         # https://zaiste.net/rendering_erb_template_with_bindings_from_hash/
         require "ostruct"; require "erb"
         content = ERB.new(content).result(OpenStruct.new(@context).instance_eval{binding})
-      else
-        raise "RBCM: unknown template engine '#{layer}'"
       end
     end
     return content
   end
 
+  private
+
   def path
-    @path ||= Dir["#{@project_path}/capabilities/#{@capability.to_s.gsub("!","")}/#{@template_name}*"].first
+    @path ||= Dir["#{@@project_path}/capabilities/#{@capability.to_s.gsub("!","")}/#{@name}*"].first
   end
 
   def filename
@@ -43,5 +42,9 @@ class Template
       end
     end
     return @layers
+  end
+
+  def self.project_path= path
+    @@project_path = path
   end
 end
