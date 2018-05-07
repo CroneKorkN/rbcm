@@ -17,11 +17,6 @@ class Command < Action
   end
 
   def check
-    puts "============="
-    p @trigger
-    p @triggered_by
-    puts "----------"
-
     if @check
       log "CHECKING $>_ #{@check}"
       @obsolete = @node.remote.execute(@check).exitstatus == 0
