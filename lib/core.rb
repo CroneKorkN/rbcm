@@ -1,4 +1,4 @@
-class RBCM
+class Core
   attr_reader :nodes, :groups, :project_path
   attr_accessor :group_additions
 
