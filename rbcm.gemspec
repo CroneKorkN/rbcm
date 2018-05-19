@@ -13,6 +13,7 @@ Gem::Specification.new do |spec|
     "lib/action.rb",
     "lib/action_list.rb",
     "lib/array_hash.rb",
+    "lib/core.rb",
     "lib/command.rb",
     "lib/definition_file.rb",
     "lib/file_system.rb",

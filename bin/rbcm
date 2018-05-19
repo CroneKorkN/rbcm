@@ -2,7 +2,4 @@
 
 require 'rbcm'
 
-rbcm = RBCM.new(ARGV[0] || `pwd`.chomp)
-rbcm.parse
-rbcm.approve
-rbcm.apply
+CLI.new RBCM.new(ARGV[0] || `pwd`.chomp)
