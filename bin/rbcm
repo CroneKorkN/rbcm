@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'rbcm'
-rbcm = RBCM.new ARGV[1] || ARGV[0]
+
+rbcm = RBCM.new(ARGV[0] || `pwd`.chomp)
 rbcm.parse
 rbcm.approve
 rbcm.apply
