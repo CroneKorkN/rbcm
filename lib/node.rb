@@ -9,7 +9,7 @@ class Node
     @sandbox = Sandbox.new self
     @remote = Remote.new self
     @files = FileSystem.new self, mirror: @remote.files
-    @actions = []
+    @actions = ActionList.new
     @memberships = []
     @jobs = []
     @blocked_jobs = []

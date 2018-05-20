@@ -54,11 +54,10 @@ class Core
   end
 
   def actions
-    nodes.values.each.actions.flatten(1)
-  end
-
-  def apply
-    puts "\n================ APPLYING #{actions.select.approved.count} actions ================\n\n"
-    actions.select.approved.extend(ActionList).resolve_dependencies.each.apply
+    actions = ActionList.new
+    nodes.values.each.actions.flatten(1).each do |action|
+      actions << action
+    end
+    actions
   end
 end

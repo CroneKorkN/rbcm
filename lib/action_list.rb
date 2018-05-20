@@ -1,6 +1,6 @@
-module ActionList
+class ActionList < Array
   def resolve_dependencies
-    @actions = []
+    @actions = ActionList.new
     self.each do |action|
       resolve_action_dependencies action
     end
@@ -8,11 +8,19 @@ module ActionList
   end
 
   def resolve_triggers
-    @actions = []
+    @actions = ActionList.new
     self.each do |action|
       resolve_action_triggers action
     end
     @actions.reverse.uniq.reverse
+  end
+
+  def approved
+    @actions = ActionList.new
+    self.each do |action|
+      @actions << action if action.approved
+    end
+    @actions
   end
 
   private
