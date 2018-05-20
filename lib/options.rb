@@ -2,6 +2,5 @@
 
 class Options
   def initialize params
-    params
   end
 end

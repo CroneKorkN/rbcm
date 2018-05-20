@@ -87,7 +87,7 @@ class Sandbox
 
   # handle getter method calls
   def method_missing name, *named, **ordered, &block
-    log "method #{name} missing on #{@name}"
+    #log "method #{name} missing on #{@name}"
     capability_name = name[0..-2].to_sym
     params = Params.new named, ordered
     if not @@capabilities.include? capability_name

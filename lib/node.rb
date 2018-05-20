@@ -34,10 +34,7 @@ class Node
     }.values.flatten(1)
   end
 
-  def to_s
-    [ "\e[30;106m\e[1m\ \ #{@name}\ \ \e[0m",
-      "\ \ MEMBERSHIPS #{@memberships}",
-      "\ \ TRIGGERED #{@triggered}"
-    ].join "\n"
+  def check
+
   end
 end

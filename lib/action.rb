@@ -14,13 +14,13 @@ class Action
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
     @job = job
+    @triggered = []
     # command specific
     @line = line
     @check = check
     # file specific
     @path = path
     @params = params
-    @triggered = []
   end
 
   def not_triggered
@@ -35,13 +35,5 @@ class Action
     siblings.each.approve! if input == :a
     @node.triggered << @trigger
     @triggered = @trigger.compact - @node.triggered
-  end
-
-  def title
-    chain.join(" > ")
-  end
-
-  def params
-    job.params
   end
 end

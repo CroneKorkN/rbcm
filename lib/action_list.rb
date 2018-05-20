@@ -1,8 +1,8 @@
 class ActionList < Array
-  def initialize array=nil
+  def initialize array=[]
     array.each do |element|
       insert -1, element
-    end if array
+    end
   end
 
   def resolve_dependencies

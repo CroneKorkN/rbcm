@@ -34,4 +34,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'net-ssh',   "= 4.2.0"
   spec.add_runtime_dependency 'net-scp',   "= 1.2.1"
   spec.add_runtime_dependency 'quickeach', "= 0.1.0"
+  spec.add_runtime_dependency 'parallel',  "= 1.12.1"
 end

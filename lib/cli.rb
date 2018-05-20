@@ -1,11 +1,13 @@
 class CLI
   def initialize params
     options = Options.new params
-    # parse
     render section: "RBCM starting", first: true
-    core = Core.new params[0] || `pwd`.chomp
+    # bootstrap
+    @core = core = Core.new params[0] || `pwd`.chomp
     render :capabilities
+    # parse
     core.parse
+    render :nodes
     # check
     render section: "CHECKING #{core.nodes.count} nodes"
     core.actions.each do |action|
@@ -20,9 +22,7 @@ class CLI
     end
     # apply
     render section: "APPLYING #{core.actions.approved.count} actions"
-    core.actions.approved.resolve_dependencies.each do |action|
-      apply action
-    end
+    apply core.actions.approved.resolve_dependencies
     puts "┗━━──"
     # finish
   end
@@ -48,12 +48,14 @@ class CLI
     end
   end
 
-  def apply action
-    @action = action
-    response = action.apply!
-    render :title, color: response.exitstatus == 0 ? :green : :red
-    render :command if response.exitstatus != 0
-    render response: response if response.length > 0
+  def apply actions
+    [actions].flatten(1).each do |action|
+      @action = action
+      response = action.apply!
+      render :title, color: response.exitstatus == 0 ? :green : :red
+      render :command if response.exitstatus != 0
+      render response: response if response.length > 0
+    end
   end
 
   def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil
@@ -62,17 +64,27 @@ class CLI
       puts "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-      puts "┣━\ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
+      puts "┣━\ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
+        "#{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
     elsif element == :capabilities
       puts prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
+    elsif element == :nodes
+      puts prefix + @core.nodes.values.collect{ |node|
+        "#{node.name}: #{node.jobs.count} jobs, #{node.actions.count} commands"
+      }.flatten(1).join("\n#{prefix}")
     elsif element == :command
-      puts prefix + "$> #{@action.line}\e[2m#{" UNLESS " if @action.check}#{@action.check}\e[0m"
+      check_string = " UNLESS #{@action.check}" if @action.check
+      puts prefix + "$> #{@action.line}\e[2m#{check_string}\e[0m"
     elsif element == :siblings
-      puts prefix + "siblings: #{format :magenta}#{@action.siblings.each.node.each.name.join(", ")}#{format}"
+      siblings_string = @action.siblings.each.node.each.name.join(", ")
+      puts prefix + "siblings: #{format :magenta}#{siblings_string}#{format}"
     elsif element == :prompt
-      print prefix + "APPROVE? #{"(" if @action.siblings.empty?}[a]ll#{")" if @action.siblings.empty?}, [y]es, [N]o > "
+      all = @action.siblings.any? ? "[a]ll" : "([a]ll)"
+      print prefix + "APPROVE? #{all}, [y]es, [N]o > "
     elsif element == :triggered
-      puts prefix + "triggered: \e[30;46m\e[1m #{@action.triggered.join(", ")} \e[0m; again: #{@action.trigger.-(@action.triggered).join(", ")}"
+      puts prefix +
+        "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +
+        " again: #{@action.trigger.-(@action.triggered).join(", ")}"
     elsif element == :diff
       puts prefix + Diffy::Diff.new(
         @action.node.remote.files[@action.path],
