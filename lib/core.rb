@@ -1,6 +1,6 @@
 class Core
   attr_reader :nodes, :groups, :project_path
-  attr_accessor :group_additions
+  attr_accessor :group_additions, :actions
 
   def initialize project_path
     @project_path = project_path
@@ -51,13 +51,6 @@ class Core
     nodes.values.each do |node|
       node.capabilities.each {|capability| node.sandbox.send "#{capability}!"}
     end
-  end
-
-  def approve
-    puts "\n================ CHECKING #{nodes.count} nodes ================\n\n"
-    actions.each.check
-    puts "\n================ APPROVING #{actions.select{|a| a.obsolete == false}.count} actions ================\n\n"
-    actions.extend(ActionList).resolve_triggers.each.approve
   end
 
   def actions
