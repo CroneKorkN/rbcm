@@ -1,26 +1,48 @@
 class ActionList < Array
+  def initialize array=nil
+    array.each do |element|
+      insert -1, element
+    end if array
+  end
+
   def resolve_dependencies
-    @actions = ActionList.new
+    @actions = []
     self.each do |action|
       resolve_action_dependencies action
     end
-    @actions.uniq
+    ActionList.new @actions.uniq
   end
 
   def resolve_triggers
-    @actions = ActionList.new
+    @actions = []
     self.each do |action|
       resolve_action_triggers action
     end
-    @actions.reverse.uniq.reverse
+    ActionList.new @actions.reverse.uniq.reverse
+  end
+
+  def approvable
+    actions = []
+    self.each do |action|
+      actions << action if action.obsolete == false
+    end
+    ActionList.new actions
+  end
+
+  def unapprovable
+    actions = []
+    self.each do |action|
+      actions << action if action.obsolete == true
+    end
+    ActionList.new actions
   end
 
   def approved
-    @actions = ActionList.new
+    actions = []
     self.each do |action|
-      @actions << action if action.approved
+      actions << action if action.approved
     end
-    @actions
+    ActionList.new actions
   end
 
   private

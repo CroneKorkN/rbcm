@@ -1,6 +1,5 @@
 class CLI
   def initialize core, params
-    @core = core
     options = Options.new params
 
     # parse
@@ -13,7 +12,8 @@ class CLI
 
     # approve
     puts title "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
-    core.actions.resolve_triggers.each.approve
+    core.actions.resolve_triggers.unapprovable.each.approve
+    core.actions.resolve_triggers.approvable.each.approve
 
     # apply
     puts title "APPLYING #{core.actions.approved.count} actions"
