@@ -51,6 +51,7 @@ class CLI
   end
 
   def apply action
+    @action = action
     response = action.apply!
     render :title, color: response.exitstatus == 0 ? :green : :red
     render :command if response.exitstatus != 0
