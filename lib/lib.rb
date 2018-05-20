@@ -1,5 +1,5 @@
 def log notice, warning: nil, error: nil
-  puts "│ " + notice or warning or error
+  puts "\e[2m#{notice or warning or error}\e[0m"
 end
 
 # https://mrbrdo.wordpress.com/2013/02/27/ruby-with-statement/

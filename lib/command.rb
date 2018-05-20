@@ -10,7 +10,7 @@ class Command < Action
   end
 
   def diff
-    "  $>_ \e[1m#{@line}\e[0m\e[2m#{" CHECK " if @check}#{@check}\e[0m"
+    "$>_ \e[1m#{@line}\e[0m\e[2m#{" CHECK " if @check}#{@check}\e[0m"
   end
 
   def siblings

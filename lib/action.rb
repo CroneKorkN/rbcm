@@ -33,8 +33,8 @@ class Action
     # check if neccessary
     check unless [true, false].include? @obsolete
     # print info
-    puts self.to_s
-    puts diff unless @capability == :file
+    #######puts self.to_s
+    #######puts diff unless @capability == :file
     # finish if obsolete
     return if @obsolete or @approved or not_triggered
     puts diff if @capability == :file
