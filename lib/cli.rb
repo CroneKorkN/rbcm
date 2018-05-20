@@ -38,6 +38,8 @@ class CLI
   end
 
   def apply action
+    action.apply
+  end
 
   def title text, first: false
     "\n\e[7m\e[1m#{" "*16}#{text}#{" "*16}\e[0m"
