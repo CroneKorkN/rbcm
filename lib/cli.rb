@@ -39,7 +39,7 @@ class CLI
   private
 
   def check action
-    render subtitle: "CHECKING $>_ #{action.check}"
+    render "CHECKING $>_ #{action.check}"
     action.check!
   end
 
@@ -49,18 +49,21 @@ class CLI
     puts "┃\ \ \ #{action.line}\e[2m#{" UNLESS " if action.check}#{action.check}\e[0m" if action.class == Command
     puts "┃\ \ \ siblings: #{format :magenta}#{action.siblings.each.node.each.name.join(", ")}#{format}" if action.siblings.any?
     return if action.obsolete or action.approved or action.not_triggered
-    puts action.diff if action.class == FileAction
+    puts diff action if action.class == FileAction
     print "┃\ \ \ APROVE #{"[a]ll, " if action.siblings.any?}[y]es, [N]o: " # o: apply to ahole group
     action.approve
+    if (triggered = action.trigger.compact - action.node.triggered).any?
+      puts "┃\ \ \ triggered: \e[30;46m\e[1m #{triggered.join(", ")} \e[0m; again: #{action.trigger.-(triggered).join(", ")}"
+    end
   end
 
   def apply action
     action.apply
   end
 
-  def render text=nil, title: nil, subtitle: nil, first: false
-    puts "\n┏━#{format :invert, :bold}#{" "*16}#{title}#{" "*16}#{format}\n┃" if title
-    puts "┃ #{text}" if text
+  def render text=nil, title: nil, first: false
+    puts "#{first ? nil : "┗━━━━━"}\n\n┏━#{format :invert, :bold}#{" "*16}#{title}#{" "*16}#{format}\n┃" if title
+    puts "┃\ \ \ #{text}" if text
   end
 
   def format *params, **_
@@ -86,5 +89,12 @@ class CLI
       end
     end
     return output
+  end
+
+  def diff action
+    "┃\ \ \ " + Diffy::Diff.new(
+      action.node.remote.files[action.path],
+      action.node.files[action.path]
+    ).to_s(:color).split("\n").join("\n┃\ \ \ ")
   end
 end

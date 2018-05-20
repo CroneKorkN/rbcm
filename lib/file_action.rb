@@ -17,13 +17,6 @@ class FileAction < Action
     @obsolete = @node.remote.files[path].chomp.chomp == @node.files[path].chomp.chomp
   end
 
-  def diff
-    return @diff ||= Diffy::Diff.new(
-      @node.remote.files[path],
-      @node.files[path]
-    ).to_s(:color)
-  end
-
   def siblings
     [] # tbd
   end
