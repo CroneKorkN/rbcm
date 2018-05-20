@@ -32,4 +32,12 @@ class Action
   def approve!
     @approved = true
   end
+
+  def title
+    chain.join(" > ")
+  end
+
+  def params
+    job.params
+  end
 end

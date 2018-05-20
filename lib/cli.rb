@@ -3,17 +3,17 @@ class CLI
     options = Options.new params
 
     # parse
-    render title: "RBCM starting", first: true
+    render section: "RBCM starting", first: true
     core.parse
 
     # check
-    render title: "CHECKING #{core.nodes.count} nodes"
+    render section: "CHECKING #{core.nodes.count} nodes"
     core.actions.each do |action|
       check action
     end
 
     # approve
-    render title: "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
+    render section: "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
     core.actions.resolve_triggers.unapprovable.each do |action|
       approve action
     end
@@ -22,7 +22,7 @@ class CLI
     end
 
     # apply
-    render title: "APPLYING #{core.actions.approved.count} actions"
+    render section: "APPLYING #{core.actions.approved.count} actions"
     core.actions.approved.resolve_dependencies.each do |action|
       apply action
     end
@@ -34,23 +34,22 @@ class CLI
   private
 
   def check action
-    render "CHECKING $>_ #{action.check}"
+    render checking: action.check
     action.check!
   end
 
   def approve action
-    color = action.obsolete ? :green : :yellow
-    puts "┣━\ #{format color, :bold} #{action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{action.job.params}#{format}"
-    puts "┃\ \ \ #{action.line}\e[2m#{" UNLESS " if action.check}#{action.check}\e[0m" if action.class == Command
-    puts "┃\ \ \ siblings: #{format :magenta}#{action.siblings.each.node.each.name.join(", ")}#{format}" if action.siblings.any?
+    @action = action
+    render :title, color: action.obsolete ? :green : :yellow
+    render :command if action.class == Command
+    render :siblings if action.siblings.any?
     return if action.obsolete or action.approved or action.not_triggered
-    puts diff action if action.class == FileAction
-    print "┃\ \ \ APROVE #{"[a]ll, " if action.siblings.any?}[y]es, [N]o: " # o: apply to ahole group
-    #
+    render :diff if action.class == FileAction
+    render :prompt
     input = STDIN.gets.chomp.to_sym
     action.approve! if [:a, :y].include? input
     siblings.each.approve! if input == :a
-    action.node.triggered << action.trigger
+    action.node.triggered << action.trigger # move to action < v
     if (triggered = action.trigger.compact - action.node.triggered).any?
       puts "┃\ \ \ triggered: \e[30;46m\e[1m #{triggered.join(", ")} \e[0m; again: #{action.trigger.-(triggered).join(", ")}"
     end
@@ -58,15 +57,31 @@ class CLI
 
   def apply action
     response = action.apply!
-    color = response.exitstatus == 0 ? :green : :red
-    puts "┣━\ #{format color, :bold} #{action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{action.job.params}#{format}"
-    puts "┃\ \ \ #{action.line}" if response.exitstatus != 0
+    render :title, color: response.exitstatus == 0 ? :green : :red
+    render :command if response.exitstatus != 0
     puts response.to_s.chomp if response.length > 0
   end
 
-  def render text=nil, title: nil, first: false
-    puts "#{first ? nil : "┗━━━━"}\n\n┏━#{format :invert, :bold}#{" "*16}#{title}#{" "*16}#{format}\n┃" if title
-    puts "┃\ \ \ #{text}" if text
+  def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil
+    if section
+      puts "#{first ? nil : "┗━━━━"}\n\n┏━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}\n┃"
+    elsif element == :title
+      puts "┣━\ #{format color, :bold} #{@action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
+    elsif element == :command
+      puts "┃\ \ \ #{@action.line}\e[2m#{" UNLESS " if @action.check}#{@action.check}\e[0m"
+    elsif element == :siblings
+      puts "┃\ \ \ siblings: #{format :magenta}#{@action.siblings.each.node.each.name.join(", ")}#{format}"
+    elsif element == :prompt
+      puts "┃\ \ \ siblings: #{format :magenta}#{@action.siblings.each.node.each.name.join(", ")}#{format}"
+    elsif element == :diff
+      puts "┃\ \ \ " + Diffy::Diff.new(
+        @action.node.remote.files[@action.path],
+        @action.node.files[@action.path]
+      ).to_s(:color).split("\n").join("\n┃\ \ \ ")
+    elsif checking
+      puts "┃\ \ \ CHECKING #{checking}"
+    else
+    end
   end
 
   def format *params, **_
@@ -92,12 +107,5 @@ class CLI
       end
     end
     return output
-  end
-
-  def diff action
-    "┃\ \ \ " + Diffy::Diff.new(
-      action.node.remote.files[action.path],
-      action.node.files[action.path]
-    ).to_s(:color).split("\n").join("\n┃\ \ \ ")
   end
 end
