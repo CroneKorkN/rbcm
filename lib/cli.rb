@@ -14,12 +14,18 @@ class CLI
 
     # approve
     puts title "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
-    core.actions.resolve_triggers.unapprovable.each.approve
-    core.actions.resolve_triggers.approvable.each.approve
+    core.actions.resolve_triggers.unapprovable.each do |action|
+      approve action
+    end
+    core.actions.resolve_triggers.approvable.each do |action|
+      approve action
+    end
 
     # apply
     puts title "APPLYING #{core.actions.approved.count} actions"
-    core.actions.approved.resolve_dependencies.each.apply
+    core.actions.approved.resolve_dependencies.each do |action|
+      apply action
+    end
   end
 
   def check action
@@ -28,14 +34,12 @@ class CLI
   end
 
   def approve action
-
+    action.approve
   end
 
+  def apply action
+
   def title text, first: false
-    [ first ? nil : "└────────#{"─"*text.length}────────\n",
-      "\n┌────────#{"─"*text.length}────────┐",
-      "\n│         \e[1m#{text}\e[0m       │",
-      "\n├────────#{"─"*text.length}────────┘",
-    ].join
+    "\n\e[7m\e[1m#{" "*16}#{text}#{" "*16}\e[0m"
   end
 end
