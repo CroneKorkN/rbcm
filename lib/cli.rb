@@ -3,7 +3,7 @@ class CLI
     options = Options.new params
 
     # parse
-    puts title "RBCM starting"
+    puts title "RBCM starting", first: true
     core.parse
 
     # check
@@ -23,7 +23,7 @@ class CLI
   end
 
   def check action
-    log "CHECKING $>_ #{action.check}"
+    puts "│ CHECKING $>_ #{action.check}"
     action.check!
   end
 
@@ -31,9 +31,10 @@ class CLI
 
   end
 
-  def title text
-    [ "\n┌────────#{"─"*text.length}────────┐",
-      "\n│         #{text}       │",
+  def title text, first: false
+    [ first ? nil : "└────────#{"─"*text.length}────────\n",
+      "\n┌────────#{"─"*text.length}────────┐",
+      "\n│         \e[1m#{text}\e[0m       │",
       "\n├────────#{"─"*text.length}────────┘",
     ].join
   end

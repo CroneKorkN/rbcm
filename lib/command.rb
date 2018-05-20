@@ -3,7 +3,6 @@ class Command < Action
 
   def check!
     if @check
-      log "CHECKING $>_ #{@check}"
       @obsolete = @node.remote.execute(@check).exitstatus == 0
     else
       @obsolete = false
