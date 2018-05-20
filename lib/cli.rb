@@ -60,7 +60,7 @@ class CLI
 
   def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil
     if section
-      puts "#{first ? nil : "┗━━━━"}\n\n┏━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}\n┃"
+      puts "#{first ? nil : "┗━━━━"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}\n┃"
     elsif element == :title
       puts "┣━\ #{format color, :bold} #{@action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
     elsif element == :command
