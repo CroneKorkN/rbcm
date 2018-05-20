@@ -46,13 +46,8 @@ class CLI
     return if action.obsolete or action.approved or action.not_triggered
     render :diff if action.class == FileAction
     render :prompt
-    input = STDIN.gets.chomp.to_sym
-    action.approve! if [:a, :y].include? input
-    siblings.each.approve! if input == :a
-    action.node.triggered << action.trigger # move to action < v
-    if (triggered = action.trigger.compact - action.node.triggered).any?
-      puts "┃\ \ \ triggered: \e[30;46m\e[1m #{triggered.join(", ")} \e[0m; again: #{action.trigger.-(triggered).join(", ")}"
-    end
+    action.approve! STDIN.gets.chomp.to_sym
+    render :triggered if action.triggered.any?
   end
 
   def apply action
@@ -72,7 +67,7 @@ class CLI
     elsif element == :siblings
       puts "┃\ \ \ siblings: #{format :magenta}#{@action.siblings.each.node.each.name.join(", ")}#{format}"
     elsif element == :prompt
-      puts "┃\ \ \ siblings: #{format :magenta}#{@action.siblings.each.node.each.name.join(", ")}#{format}"
+      puts "┃\ \ \ APPROVE? #{"[a]ll, " if @action.siblings.any?}[y]es, [N]o"
     elsif element == :diff
       puts "┃\ \ \ " + Diffy::Diff.new(
         @action.node.remote.files[@action.path],
@@ -80,32 +75,24 @@ class CLI
       ).to_s(:color).split("\n").join("\n┃\ \ \ ")
     elsif checking
       puts "┃\ \ \ CHECKING #{checking}"
+    elsif element == :triggered
+      puts "┃\ \ \ triggered: \e[30;46m\e[1m #{@action.triggered.join(", ")} \e[0m; again: #{@action.trigger.-(@action.triggered).join(", ")}"
     else
     end
   end
 
   def format *params, **_
-    output = "\e[0m"
-    params.each do |param|
-      case param
-      when :reset
-        output += "\e[0m"
-      when :bold
-        output +=  "\e[1m"
-      when :invert
-        output +=  "\e[7m"
-      when :red
-        output +=  "\e[30;41m"
-      when :green
-        output +=  "\e[30;42m"
-      when :yellow
-        output +=  "\e[30;43m"
-      when :cyan
-        output +=  "\e[36m"
-      when :magenta
-        output +=  "\e[35m"
-      end
-    end
-    return output
+    "\e[0m" + {
+      reset:   "\e[0m",
+      bold:    "\e[1m",
+      invert:  "\e[7m",
+      red:     "\e[30;41m",
+      green:   "\e[30;42m",
+      yellow:  "\e[30;43m",
+      cyan:    "\e[36m",
+      magenta: "\e[35m",
+    }.select{ |key, _|
+      params.include? key
+    }.values.join
   end
 end

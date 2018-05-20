@@ -1,7 +1,7 @@
 class Action
   attr_accessor :approved
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
-                :capability, :obsolete, :job, :check
+                :capability, :obsolete, :job, :check, :triggered
 
   def initialize node:, path: nil, params: nil, line: nil, dependencies: nil,
       check: nil, chain:, trigger: nil, triggered_by: nil, job:
@@ -20,6 +20,7 @@ class Action
     # file specific
     @path = path
     @params = params
+    @triggered = []
   end
 
   def not_triggered
@@ -29,8 +30,11 @@ class Action
     return true
   end
 
-  def approve!
-    @approved = true
+  def approve! input=:y
+    @approved = true if [:a, :y].include? input
+    siblings.each.approve! if input == :a
+    @node.triggered << @trigger
+    @triggered = @trigger.compact - @node.triggered
   end
 
   def title
