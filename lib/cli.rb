@@ -1,20 +1,22 @@
 class CLI
   def initialize core, params
-    # parse
+    @core = core
     options = Options.new params
-    puts "\n================ RBCM starting ================\n\n"
+
+    # parse
+    puts title "RBCM starting"
     core.parse
 
     # check
-    puts "\n================ CHECKING #{core.nodes.count} nodes ================\n\n"
+    puts title "CHECKING #{core.nodes.count} nodes"
     core.actions.each.check
 
     # approve
-    puts "\n================ APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions ================\n\n"
+    puts title "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
     core.actions.resolve_triggers.each.approve
 
     # apply
-    puts "\n================ APPLYING #{core.actions.approved.count} actions ================\n\n"
+    puts title "APPLYING #{core.actions.approved.count} actions"
     core.actions.approved.resolve_dependencies.each.apply
   end
 
@@ -24,5 +26,9 @@ class CLI
 
   def approve action
 
+  end
+
+  def title text
+    "\n================ #{text} ================\n\n"
   end
 end
