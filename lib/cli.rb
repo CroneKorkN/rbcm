@@ -47,6 +47,10 @@ class CLI
     color = action.obsolete ? :green: :yellow
     puts "┣━\ #{format color, :bold} #{action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{action.job.params}#{format}"
     puts "┃\ \ \ #{action.line}\e[2m#{" UNLESS " if action.check}#{action.check}\e[0m" if action.class == Command
+    puts "┃\ \ \ siblings: #{format :magenta}#{action.siblings.each.node.each.name.join(", ")}#{format}" if action.siblings.any?
+    return if action.obsolete or action.approved or action.not_triggered
+    puts action.diff if action.class == FileAction
+    print "┃\ \ \ APROVE #{"[a]ll, " if action.siblings.any?}[y]es, [N]o: " # o: apply to ahole group
     action.approve
   end
 
@@ -77,6 +81,8 @@ class CLI
         output +=  "\e[30;43m"
       when :cyan
         output +=  "\e[36m"
+      when :magenta
+        output +=  "\e[35m"
       end
     end
     return output
