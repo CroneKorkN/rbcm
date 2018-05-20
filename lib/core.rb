@@ -54,10 +54,6 @@ class Core
   end
 
   def actions
-    actions = ActionList.new
-    nodes.values.each.actions.flatten(1).each do |action|
-      actions << action
-    end
-    actions
+    ActionList.new nodes.values.each.actions.flatten(1)
   end
 end

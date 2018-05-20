@@ -26,9 +26,9 @@ class CLI
     core.actions.approved.resolve_dependencies.each do |action|
       apply action
     end
+    puts "┗━━──"
 
     # finish
-    puts "┗━━━━"
   end
 
   private
@@ -55,20 +55,21 @@ class CLI
     response = action.apply!
     render :title, color: response.exitstatus == 0 ? :green : :red
     render :command if response.exitstatus != 0
-    puts response.to_s.chomp if response.length > 0
+    render response: response if response.length > 0
   end
 
   def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil
     if section
-      puts "#{first ? nil : "┗━━━━"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}\n┃"
+      puts "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
-      puts "┣━\ #{format color, :bold} #{@action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
+      triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
+      puts "┣━\ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
     elsif element == :command
       puts "┃\ \ \ #{@action.line}\e[2m#{" UNLESS " if @action.check}#{@action.check}\e[0m"
     elsif element == :siblings
       puts "┃\ \ \ siblings: #{format :magenta}#{@action.siblings.each.node.each.name.join(", ")}#{format}"
     elsif element == :prompt
-      puts "┃\ \ \ APPROVE? #{"[a]ll, " if @action.siblings.any?}[y]es, [N]o"
+      print "┃\ \ \ APPROVE? #{"(" if @action.siblings.empty?}[a]ll#{")" if @action.siblings.empty?}, [y]es, [N]o > "
     elsif element == :diff
       puts "┃\ \ \ " + Diffy::Diff.new(
         @action.node.remote.files[@action.path],
@@ -76,6 +77,8 @@ class CLI
       ).to_s(:color).split("\n").join("\n┃\ \ \ ")
     elsif checking
       puts "┃\ \ \ CHECKING #{checking}"
+    elsif response
+      puts "┃\ \ \ " + response.to_s.chomp.split("\n").join("\n┃\ \ \ ")
     elsif element == :triggered
       puts "┃\ \ \ triggered: \e[30;46m\e[1m #{@action.triggered.join(", ")} \e[0m; again: #{@action.trigger.-(@action.triggered).join(", ")}"
     else
@@ -87,6 +90,7 @@ class CLI
       reset:   "\e[0m",
       bold:    "\e[1m",
       invert:  "\e[7m",
+      trigger: "\e[30;46m",
       red:     "\e[30;41m",
       green:   "\e[30;42m",
       yellow:  "\e[30;43m",
