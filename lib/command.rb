@@ -9,10 +9,6 @@ class Command < Action
     end
   end
 
-  def diff
-    "$>_ \e[1m#{@line}\e[0m\e[2m#{" CHECK " if @check}#{@check}\e[0m"
-  end
-
   def siblings
     @node.rbcm.actions.select{ |action|
       action.chain[1..-1] == @chain[1..-1] and action.line == @line
