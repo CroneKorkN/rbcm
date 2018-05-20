@@ -15,7 +15,7 @@ class Command < Action
     } - [self]
   end
 
-  def apply
-    super @node.remote.execute(@line)
+  def apply!
+    @node.remote.execute(@line)
   end
 end

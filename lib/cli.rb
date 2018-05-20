@@ -2,23 +2,17 @@ class CLI
   def initialize core, params
     options = Options.new params
 
-    #
     # parse
-    #
     render title: "RBCM starting", first: true
     core.parse
 
-    #
     # check
-    #
     render title: "CHECKING #{core.nodes.count} nodes"
     core.actions.each do |action|
       check action
     end
 
-    #
     # approve
-    #
     render title: "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
     core.actions.resolve_triggers.unapprovable.each do |action|
       approve action
@@ -27,13 +21,14 @@ class CLI
       approve action
     end
 
-    #
     # apply
-    #
     render title: "APPLYING #{core.actions.approved.count} actions"
     core.actions.approved.resolve_dependencies.each do |action|
       apply action
     end
+
+    # finish
+    puts "┗━━━━"
   end
 
   private
@@ -44,25 +39,33 @@ class CLI
   end
 
   def approve action
-    color = action.obsolete ? :green: :yellow
+    color = action.obsolete ? :green : :yellow
     puts "┣━\ #{format color, :bold} #{action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{action.job.params}#{format}"
     puts "┃\ \ \ #{action.line}\e[2m#{" UNLESS " if action.check}#{action.check}\e[0m" if action.class == Command
     puts "┃\ \ \ siblings: #{format :magenta}#{action.siblings.each.node.each.name.join(", ")}#{format}" if action.siblings.any?
     return if action.obsolete or action.approved or action.not_triggered
     puts diff action if action.class == FileAction
     print "┃\ \ \ APROVE #{"[a]ll, " if action.siblings.any?}[y]es, [N]o: " # o: apply to ahole group
-    action.approve
+    #
+    input = STDIN.gets.chomp.to_sym
+    action.approve! if [:a, :y].include? input
+    siblings.each.approve! if input == :a
+    action.node.triggered << action.trigger
     if (triggered = action.trigger.compact - action.node.triggered).any?
       puts "┃\ \ \ triggered: \e[30;46m\e[1m #{triggered.join(", ")} \e[0m; again: #{action.trigger.-(triggered).join(", ")}"
     end
   end
 
   def apply action
-    action.apply
+    response = action.apply!
+    color = response.exitstatus == 0 ? :green : :red
+    puts "┣━\ #{format color, :bold} #{action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{action.job.params}#{format}"
+    puts "┃\ \ \ #{action.line}" if response.exitstatus != 0
+    puts response.to_s.chomp if response.length > 0
   end
 
   def render text=nil, title: nil, first: false
-    puts "#{first ? nil : "┗━━━━━"}\n\n┏━#{format :invert, :bold}#{" "*16}#{title}#{" "*16}#{format}\n┃" if title
+    puts "#{first ? nil : "┗━━━━"}\n\n┏━#{format :invert, :bold}#{" "*16}#{title}#{" "*16}#{format}\n┃" if title
     puts "┃\ \ \ #{text}" if text
   end
 
