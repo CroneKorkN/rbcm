@@ -45,7 +45,7 @@ class CLI
 
   def approve action
     color = action.obsolete ? :green: :yellow
-    puts "┣━\ #{format color, :bold} #{action.chain.join(" > ")} #{format} #{format :cyan}#{action.job.params}#{format}"
+    puts "┣━\ #{format color, :bold} #{action.chain.join(" > ")} #{format}\ \ #{format :cyan}#{action.job.params}#{format}"
     puts "┃\ \ \ #{action.line}\e[2m#{" UNLESS " if action.check}#{action.check}\e[0m" if action.class == Command
     action.approve
   end
