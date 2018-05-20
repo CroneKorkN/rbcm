@@ -30,11 +30,7 @@ class ActionList < Array
   end
 
   def unapprovable
-    actions = []
-    self.each do |action|
-      actions << action if action.obsolete == true
-    end
-    ActionList.new actions
+    ActionList.new self - approvable
   end
 
   def approved
