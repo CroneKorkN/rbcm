@@ -24,7 +24,7 @@ class ActionList < Array
   def approvable
     actions = []
     self.each do |action|
-      actions << action if action.obsolete == false
+      actions << action unless action.obsolete or action.approved
     end
     ActionList.new actions
   end

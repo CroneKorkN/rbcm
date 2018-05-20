@@ -22,6 +22,6 @@ class FileAction < Action
   end
 
   def apply!
-    @node.remote.execute("echo #{Shellwords.escape(@node.files[path])} > #{path}")
+    @result = @node.remote.execute("echo #{Shellwords.escape(@node.files[path])} > #{path}")
   end
 end

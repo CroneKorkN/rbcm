@@ -1,10 +1,10 @@
 class Action
   attr_accessor :approved
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
-                :capability, :obsolete, :job, :check, :triggered
+                :capability, :obsolete, :job, :check, :triggered, :result
 
   def initialize node:, path: nil, params: nil, line: nil, dependencies: nil,
-      check: nil, chain:, trigger: nil, triggered_by: nil, job:
+                 check: nil, chain:, trigger: nil, triggered_by: nil, job:
     @chain = chain
     @capability = chain.last
     @node = node

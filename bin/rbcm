@@ -2,4 +2,4 @@
 
 require 'rbcm'
 
-CLI.new Core.new(ARGV[0] || `pwd`.chomp), ARGV
+CLI.new ARGV

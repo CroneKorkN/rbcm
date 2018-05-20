@@ -16,6 +16,6 @@ class Command < Action
   end
 
   def apply!
-    @node.remote.execute(@line)
+    @result = @node.remote.execute(@line)
   end
 end

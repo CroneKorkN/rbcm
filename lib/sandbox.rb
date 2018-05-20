@@ -140,7 +140,6 @@ class Sandbox
     ).+(
       [:file, :run]
     )
-    log "CAPABILITIES #{@@capabilities}"
     @@capabilities.each do |capability_name|
       # copy method
       define_method(
@@ -185,5 +184,9 @@ class Sandbox
     @cache[:trigger].pop      if trigger
     @cache[:triggered_by].pop if triggered_by
     @cache[:check].pop        if check
+  end
+
+  def self.capabilities
+    @@capabilities
   end
 end
