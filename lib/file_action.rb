@@ -2,8 +2,7 @@
 class FileAction < Action
   attr_reader :path
 
-  def check
-    log "CHECKING $>_ #{@check}"
+  def check!
     # get file content
     @node.files[path] = if @params[:content]
       @params[:content]

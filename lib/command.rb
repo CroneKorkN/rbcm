@@ -1,7 +1,7 @@
 class Command < Action
   attr_reader :line
 
-  def check
+  def check!
     if @check
       log "CHECKING $>_ #{@check}"
       @obsolete = @node.remote.execute(@check).exitstatus == 0

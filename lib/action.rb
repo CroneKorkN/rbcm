@@ -1,7 +1,7 @@
 class Action
   attr_accessor :approved
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
-                :capability, :obsolete, :job
+                :capability, :obsolete, :job, :check
 
   def initialize node:, path: nil, params: nil, line: nil, dependencies: nil,
       check: nil, chain:, trigger: nil, triggered_by: nil, job:

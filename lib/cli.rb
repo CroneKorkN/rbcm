@@ -8,7 +8,9 @@ class CLI
 
     # check
     puts title "CHECKING #{core.nodes.count} nodes"
-    core.actions.each.check
+    core.actions.each do |action|
+      check action
+    end
 
     # approve
     puts title "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
@@ -21,7 +23,8 @@ class CLI
   end
 
   def check action
-
+    log "CHECKING $>_ #{action.check}"
+    action.check!
   end
 
   def approve action
@@ -29,6 +32,9 @@ class CLI
   end
 
   def title text
-    "\n================ #{text} ================\n\n"
+    [ "\n┌────────#{"─"*text.length}────────┐",
+      "\n│         #{text}       │",
+      "\n├────────#{"─"*text.length}────────┘",
+    ].join
   end
 end
