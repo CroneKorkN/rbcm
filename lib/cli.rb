@@ -79,8 +79,8 @@ class CLI
       siblings_string = @action.siblings.each.node.each.name.join(", ")
       puts prefix + "siblings: #{format :magenta}#{siblings_string}#{format}"
     elsif element == :prompt
-      all = @action.siblings.any? ? "[a]ll" : "([a]ll)"
-      print prefix + "APPROVE? #{format :magenta}#{all}#{format}, [y]es, [N]o > "
+      color = @action.siblings.any? ? :magenta : :light
+      print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o > "
     elsif element == :triggered
       puts prefix +
         "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +
@@ -104,6 +104,7 @@ class CLI
     "\e[0m" + {
       reset:   "\e[0m",
       bold:    "\e[1m",
+      light:   "\e[2m",
       invert:  "\e[7m",
       trigger: "\e[30;46m",
       red:     "\e[30;101m",

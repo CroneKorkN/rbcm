@@ -30,7 +30,7 @@ class ActionList < Array
   end
 
   def unapprovable
-    ActionList.new self - approvable
+    ActionList.new (self - approvable)
   end
 
   def approved

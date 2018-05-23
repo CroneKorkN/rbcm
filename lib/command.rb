@@ -1,6 +1,7 @@
 class Command < Action
   attr_reader :line
 
+  # determine wether the command is neccessary
   def check!
     if @check
       @obsolete = @node.remote.execute(@check).exitstatus == 0
@@ -9,12 +10,14 @@ class Command < Action
     end
   end
 
+  # matching commands on  other nodes to be approved at once
   def siblings
     @node.rbcm.actions.select{ |action|
       action.chain[1..-1] == @chain[1..-1] and action.line == @line
     } - [self]
   end
 
+  # execute the command remote
   def apply!
     @result = @node.remote.execute(@line)
   end
