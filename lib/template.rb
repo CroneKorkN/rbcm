@@ -1,7 +1,7 @@
 class Template
   @@engines = [:erb, :mustache]
 
-  def initialize name:, capability:, context: {}
+  def initialize name:, capability: nil, context: {}
     @name = name
     @capability = capability
     @context = context
@@ -27,7 +27,7 @@ class Template
   private
 
   def path
-    @path ||= Dir["#{@@project_path}/capabilities/#{@capability.to_s.gsub("!","")}/#{@name}*"].first
+    @path ||= Dir["#{@@project_path}/#{"capabilities/#{@capability.to_s.gsub("!","")}" if @capability}/#{@name}*"].first
   end
 
   def filename
@@ -37,11 +37,8 @@ class Template
   def layers
     @layers = []
     filename.split(".").reverse.each.to_sym.each do |layer|
-      if @@engines.include? layer
-        @layers << layer
-      else
-        break
-      end
+      break unless @@engines.include? layer
+      @layers << layer
     end
     return @layers
   end

@@ -75,7 +75,7 @@ Jobs following a call of `needs :capability` will get a dependency on
 
 ### trigger
 
-Actions can trigger or can be triggered by other actions. Actions with
+Actions may trigger or may be triggered by other actions. Actions with
 `triggered_by`-attributes will only be approved and applied, if the
 corresponding trigger has been activated.
 
