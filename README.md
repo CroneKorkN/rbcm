@@ -88,8 +88,8 @@ triggered_by :reload_dhcp do
 end
 ```
 
-Every job automatically activiated a trigger with the name of the actions
-capability.
+Every job automatically activiates a trigger with the name of the actions
+capability, if present.
 
 ```ruby
 dhcp_server conf: "dns-servers: 8.8.8.8;"
@@ -100,7 +100,7 @@ end
 
 ### reading state
 
-Every capability has a questionmark suffix version to access jobs called so far.
+Every capability has an automatically generated questionmark suffix version to access jobs called so far.
 
 ```ruby
 node "example.com" do
@@ -236,5 +236,6 @@ end
 # TODO
 
 - auto apply via git integration
+- display "used infos from" when approving
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`

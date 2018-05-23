@@ -37,7 +37,7 @@ class CLI
   def approve actions
     [actions].flatten(1).each do |action|
       @action = action
-      render :title, color: action.obsolete ? :green : :yellow
+      render :title, color: (action.obsolete ? :green : :yellow)
       render :command if action.class == Command
       render :siblings if action.siblings.any?
       return if action.obsolete or action.approved or action.not_triggered
