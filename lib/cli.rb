@@ -95,7 +95,7 @@ class CLI
     elsif checking
       puts prefix + "CHECKING #{checking}"
     elsif response
-      puts prefix + response.to_s.chomp.split("\n").join("\n┃\ \ \ ")
+      puts prefix + response.to_s.chomp.split("\n").join("\n#{prefix}")
     else
     end
   end

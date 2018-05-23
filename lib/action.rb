@@ -26,7 +26,6 @@ class Action
   def not_triggered
     return false if triggered_by.empty?
     return false if triggered_by.one?{|triggered_by| @node.triggered.flatten.include? triggered_by}
-    log "NOT TRIGGERED"
     return true
   end
 
