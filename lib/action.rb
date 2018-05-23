@@ -30,7 +30,7 @@ class Action
   end
 
   def approve! input=:y
-    @approved = [:a, :y].include? input ? true : false
+    @approved = [:a, :y].include? input.to_sym ? true : false
     siblings.each.approve! if input == :a
     @node.triggered << @trigger
     @triggered = @trigger.compact - @node.triggered
