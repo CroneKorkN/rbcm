@@ -80,7 +80,7 @@ class CLI
       puts prefix + "siblings: #{format :magenta}#{siblings_string}#{format}"
     elsif element == :prompt
       all = @action.siblings.any? ? "[a]ll" : "([a]ll)"
-      print prefix + "APPROVE? #{all}, [y]es, [N]o > "
+      print prefix + "APPROVE? #{format :magenta}#{all}#{format}, [y]es, [N]o > "
     elsif element == :triggered
       puts prefix +
         "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +
