@@ -59,7 +59,7 @@ class CLI
   end
 
   def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil
-    prefix = "┃\ \ \ "
+    prefix = "┃   "
     if section
       puts "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
@@ -86,10 +86,10 @@ class CLI
         "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +
         " again: #{@action.trigger.-(@action.triggered).join(", ")}"
     elsif element == :diff
-      puts prefix + Diffy::Diff.new(
+      puts prefix[0..-2] + Diffy::Diff.new(
         @action.node.remote.files[@action.path],
         @action.node.files[@action.path]
-      ).to_s(:color).split("\n").join("\n┃\ \ ")
+      ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
     elsif element.class == String
       puts prefix + "#{element}"
     elsif checking
