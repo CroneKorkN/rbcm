@@ -121,7 +121,7 @@ end
 Nodes represent a real server; they reside in the `definitions/`-directory.
 
 ```ruby
-node :example.com do
+node "example.com" do
   # defintion
 end
 ```
@@ -235,8 +235,6 @@ end
 
 # TODO
 
-- triggers
-- file diff
 - auto apply via git integration
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
