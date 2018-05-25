@@ -41,6 +41,14 @@ class ActionList < Array
     ActionList.new actions
   end
 
+  def succeeded
+    ActionList.new approved.select.succeeded
+  end
+
+  def failed
+    ActionList.new approved.select.failed
+  end
+
   private
 
   def resolve_action_dependencies this

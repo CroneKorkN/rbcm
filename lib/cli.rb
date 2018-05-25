@@ -56,48 +56,57 @@ class CLI
       render :command if response.exitstatus != 0
       render response: response if response.length > 0
     end
+    render :applied
   end
 
   def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil
     prefix = "┃   "
     if section
-      puts "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
+      out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-      puts "┣━\ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
+      out "┣━\ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
         "#{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
     elsif element == :capabilities
-      puts prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
+      out prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
     elsif element == :nodes
-      puts prefix + @core.nodes.values.collect{ |node|
+      out prefix + @core.nodes.values.collect{ |node|
         "#{node.name}: #{node.jobs.count} jobs, #{node.actions.count} commands"
       }.flatten(1).join("\n#{prefix}")
     elsif element == :command
       check_string = " UNLESS #{@action.check}" if @action.check
-      puts prefix + "$> #{@action.line}\e[2m#{check_string}\e[0m"
+      out prefix + "$> #{@action.line}\e[2m#{check_string}\e[0m"
     elsif element == :siblings
       siblings_string = @action.siblings.each.node.each.name.join(", ")
-      puts prefix + "siblings: #{format :magenta}#{siblings_string}#{format}"
+      out prefix + "siblings: #{format :magenta}#{siblings_string}#{format}"
     elsif element == :prompt
       color = @action.siblings.any? ? :magenta : :light
       print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o > "
     elsif element == :triggered
-      puts prefix +
+      out prefix +
         "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +
         " again: #{@action.trigger.-(@action.triggered).join(", ")}"
     elsif element == :diff
-      puts prefix[0..-2] + Diffy::Diff.new(
+      out prefix[0..-2] + Diffy::Diff.new(
         @action.node.remote.files[@action.path],
         @action.node.files[@action.path]
       ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
     elsif element.class == String
-      puts prefix + "#{element}"
+      out prefix + "#{element}"
     elsif checking
-      puts prefix + "CHECKING #{checking}"
+      out prefix + "CHECKING #{checking}"
     elsif response
-      puts prefix + response.to_s.chomp.split("\n").join("\n#{prefix}")
+      out prefix + response.to_s.chomp.split("\n").join("\n#{prefix}")
+    elsif element == :applied
+      out prefix
+      out "┣━\ #{format :green, :bold} #{@core.actions.succeeded.count} secceeded #{format}"
+      out "┣━\ #{format :red, :bold} #{@core.actions.failed.count} failed #{format}"
     else
     end
+  end
+
+  def out line
+    puts "\r#{line}"
   end
 
   def format *params, **_

@@ -3,8 +3,8 @@ class Action
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
                 :capability, :obsolete, :job, :check, :triggered, :result
 
-  def initialize job:, path: nil, params: nil, line: nil, dependencies: nil,
-                 check: nil, chain:, trigger: nil, triggered_by: nil
+  def initialize job:, chain:, path: nil, params: nil, line: nil, check: nil,
+                 dependencies: nil, trigger: nil, triggered_by: nil
     @dependencies = [:file] + [dependencies].flatten - [chain.last]
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
@@ -19,11 +19,10 @@ class Action
   end
 
   def not_triggered
-    return false if triggered_by.empty?
-    return false if triggered_by.one? do |triggered_by|
+    return false if triggered_by.empty? or triggered_by.one? do |triggered_by|
       @node.triggered.flatten.include? triggered_by
     end
-    return true
+    true
   end
 
   def approve! input=:y
@@ -35,5 +34,13 @@ class Action
     else
       @approved = false
     end
+  end
+
+  def succeeded
+    @result.exitstatus == 0
+  end
+
+  def failed
+    @result.exitstatus != 0
   end
 end
