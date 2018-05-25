@@ -99,14 +99,14 @@ class Sandbox
     end
   end
 
-  def __search capability_name, params
+  def __search capability_name, params, &block
     jobs = @node.jobs.find_all{|job| job.capability == capability_name}
     if params.empty?
       # return ordered prarams
-      jobs.collect{|job| job.params.ordered}
+      r = jobs.collect{|job| job.params.ordered}
     elsif params.first.class == Symbol
       # return values of a named param
-      jobs.find_all{ |job|
+      r = jobs.find_all{ |job|
         job.params.named.include? params.first if job.params.named.any?
       }.collect{ |job|
         job.params.named
@@ -119,7 +119,7 @@ class Sandbox
       end
       if params[:with]
         # return values of a named param
-        jobs.find_all{ |job|
+        r = jobs.find_all{ |job|
           job.params.named.keys.include? params[:with] and job.params.named.any?
         }.collect{ |job|
           __cache source: job.node.name
@@ -129,6 +129,8 @@ class Sandbox
         }
       end
     end
+    return r.collect &block if block_given?
+    r
   end
 
   def self.import_capabilities capabilities_path
