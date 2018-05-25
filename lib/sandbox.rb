@@ -8,7 +8,7 @@ class Sandbox
     @node = node
     @name = node.name
     @dependency_cache = []
-    @cache = {chain: [@node.name], trigger: [], triggered_by: [], check: []}
+    @cache = {chain: [@node.name], trigger: [], triggered_by: [], check: [], source: []}
   end
 
   def evaluate definitions
@@ -65,7 +65,8 @@ class Sandbox
       dependencies: @dependency_cache.dup,
       trigger: [@cache[:trigger].dup, trigger].flatten(1),
       triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
-      job: @node.jobs.last
+      job: @node.jobs.last,
+      source: @cache[:source].flatten
     )
   end
 
@@ -79,7 +80,8 @@ class Sandbox
        chain: [@cache[:chain].dup].flatten(1),
        trigger: [@cache[:trigger].dup, trigger].flatten(1),
        triggered_by: @cache[:triggered_by].dup,
-       job: @node.jobs.last
+       job: @node.jobs.last,
+       source: @cache[:source].flatten
      )
   end
 
@@ -117,9 +119,10 @@ class Sandbox
       end
       if params[:with]
         # return values of a named param
-        r = jobs.find_all{ |job|
+        jobs.find_all{ |job|
           job.params.named.keys.include? params[:with] and job.params.named.any?
         }.collect{ |job|
+          __cache source: job.node.name
           params = job.params.named
           params[:source] = job.node.name
           params
@@ -174,16 +177,21 @@ class Sandbox
     end
   end
 
-  def __cache trigger: nil, triggered_by: nil, params: nil, check: nil, chain: []
+  def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
+      chain: [], source: nil, reset: nil
+    @cache[:source].append []             if chain
+    @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
-    yield
-    @cache[:chain].pop        if chain
-    @cache[:trigger].pop      if trigger
-    @cache[:triggered_by].pop if triggered_by
-    @cache[:check].pop        if check
+    yield if block_given?
+    @cache[:source].pop                   if chain
+    @cache[:chain].pop                    if chain
+    @cache[:trigger].pop                  if trigger
+    @cache[:triggered_by].pop             if triggered_by
+    @cache[:check].pop                    if check
+    @cache[reset]         = []            if reset
   end
 
   def self.capabilities

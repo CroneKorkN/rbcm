@@ -1,5 +1,5 @@
 class FileSystem
-  def initialize node, mirror: false
+  def initialize node, mirror: false # mirror -> overlay
     @node = node
     @mirror = mirror
     @files = {}
@@ -7,7 +7,7 @@ class FileSystem
 
   def [] path
     if @mirror
-      @mirror[path]
+      @files[path] || @mirror[path]
     elsif not @files[path]
       log "DOWNLOADING '#{path}'" unless @mirror
       result = @node.remote.execute("cat '#{path}'")

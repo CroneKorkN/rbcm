@@ -40,6 +40,7 @@ class CLI
       render :title, color: (action.obsolete ? :green : :yellow)
       render :command if action.class == Command
       render :siblings if action.siblings.any?
+      render :source if action.source.any?
       return if action.obsolete or action.approved or action.not_triggered
       render :diff if action.class == FileAction
       render :prompt
@@ -79,6 +80,8 @@ class CLI
     elsif element == :siblings
       siblings_string = @action.siblings.each.node.each.name.join(", ")
       out prefix + "siblings: #{format :magenta}#{siblings_string}#{format}"
+    elsif element == :source
+      out prefix + "source: #{format :bold}#{@source.join("#{format}, #{format :bold}")}#{format}"
     elsif element == :prompt
       color = @action.siblings.any? ? :magenta : :light
       print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o > "
