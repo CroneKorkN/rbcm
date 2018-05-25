@@ -1,10 +1,22 @@
 # ToDo: approve all changes to a spicific file at once
 class FileAction < Action
-  attr_reader :path
+  attr_reader :path, :content
 
   def check!
-    # get file content
-    @node.files[path] = if @params[:content]
+    # compare
+    @obsolete = @node.remote.files[path].chomp.chomp == content.chomp.chomp
+  end
+
+  def siblings
+    [] # tbd
+  end
+
+  def apply!
+    @result = @node.remote.execute("echo #{Shellwords.escape content} > #{path}")
+  end
+
+  def content
+    @content ||= if @params[:content]
       @params[:content]
     elsif @params[:template]
       Template.new(
@@ -13,15 +25,5 @@ class FileAction < Action
         context: @params[:context]
       ).render
     end
-    # compare
-    @obsolete = @node.remote.files[path].chomp.chomp == @node.files[path].chomp.chomp
-  end
-
-  def siblings
-    [] # tbd
-  end
-
-  def apply!
-    @result = @node.remote.execute("echo #{Shellwords.escape(@node.files[path])} > #{path}")
   end
 end

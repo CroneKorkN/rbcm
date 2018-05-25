@@ -2,7 +2,7 @@ class Action
   attr_accessor :approved
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
                 :capability, :obsolete, :job, :check, :triggered, :result,
-                :source
+                :source, :path
 
   def initialize job:, chain:, path: nil, params: nil, line: nil, check: nil,
                  dependencies: nil, trigger: nil, triggered_by: nil, source: nil
@@ -28,6 +28,7 @@ class Action
 
   def approve! input=:y
     if [:a, :y].include? input
+      @node.files[@path] = content if self.class == FileAction
       @approved = true
       siblings.each.approve! if input == :a
       @node.triggered << @trigger

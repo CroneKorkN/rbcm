@@ -91,8 +91,8 @@ class CLI
         " again: #{@action.trigger.-(@action.triggered).join(", ")}"
     elsif element == :diff
       out prefix[0..-2] + Diffy::Diff.new(
-        @action.node.remote.files[@action.path],
-        @action.node.files[@action.path]
+        @action.node.files[@action.path],
+        @action.content
       ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
     elsif element.class == String
       out prefix + "#{element}"

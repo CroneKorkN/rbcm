@@ -8,15 +8,20 @@ class FileSystem
   def [] path
     if @mirror
       @files[path] || @mirror[path]
-    elsif not @files[path]
-      log "DOWNLOADING '#{path}'" unless @mirror
-      result = @node.remote.execute("cat '#{path}'")
-      @files[path] = result.exitstatus == 0 ? result : ""
+    else
+      log "DOWNLOADING '#{path}'"
+      @files[path] ||= download path
     end
-    return @files[path]
   end
 
   def []= path, content
+    raise "ERROR: dont change remote fs" unless @mirror
     @files[path] = content
+  end
+
+  def download path
+    response = @node.remote.execute("cat '#{path}'")
+    response = "" if response.exitstatus != 0
+    response
   end
 end
