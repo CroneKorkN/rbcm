@@ -21,6 +21,10 @@ class ActionList < Array
     ActionList.new @actions.reverse.uniq.reverse
   end
 
+  def file path
+    ActionList.new select{|action| action.path == path}
+  end
+
   def approvable
     actions = []
     self.each do |action|

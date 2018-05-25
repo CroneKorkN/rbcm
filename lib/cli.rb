@@ -19,6 +19,7 @@ class CLI
     while action = core.actions.resolve_triggers.approvable.first
       approve action
       approve action.siblings if action.approved
+      approve core.actions.file action.path if action.approved and action.class == FileAction
     end
     # apply
     render section: "APPLYING #{core.actions.approved.count} actions"
