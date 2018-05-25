@@ -3,13 +3,13 @@ class Action
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
                 :capability, :obsolete, :job, :check, :triggered, :result
 
-  def initialize node:, path: nil, params: nil, line: nil, dependencies: nil,
+  def initialize path: nil, params: nil, line: nil, dependencies: nil,
                  check: nil, chain:, trigger: nil, triggered_by: nil, job:
     @dependencies = [:file] + [dependencies].flatten - [chain.last]
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
     @triggered = []
-    @node = node;                 @job = job;
+    @node = job.node;            @job = job;
     @chain = chain;              @capability = chain.last
     @obsolete = nil;             @approved = nil
     # command specific

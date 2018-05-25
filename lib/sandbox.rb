@@ -59,7 +59,6 @@ class Sandbox
 
   def run action, check: nil, trigger: nil, triggered_by: nil
     @node.actions << Command.new(
-      node: @node,
       line: action,
       check: check,
       chain: @cache[:chain].dup.flatten(1),
@@ -75,7 +74,6 @@ class Sandbox
        named.keys - [:exists, :includes_line, :after, :mode, :content, :template, :context]
      ).any?
      @node.actions << FileAction.new(
-       node: @node,
        path: path,
        params: Params.new([path], named),
        chain: [@cache[:chain].dup].flatten(1),
