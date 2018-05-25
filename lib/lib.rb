@@ -9,7 +9,6 @@ module Kernel
   end
 end
 
-
 class Hash
   def << hash
     merge! hash

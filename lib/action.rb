@@ -5,22 +5,17 @@ class Action
 
   def initialize node:, path: nil, params: nil, line: nil, dependencies: nil,
                  check: nil, chain:, trigger: nil, triggered_by: nil, job:
-    @chain = chain
-    @capability = chain.last
-    @node = node
     @dependencies = [:file] + [dependencies].flatten - [chain.last]
-    @obsolete = nil
-    @approved = nil
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
-    @job = job
     @triggered = []
+    @node = node;                 @job = job;
+    @chain = chain;              @capability = chain.last
+    @obsolete = nil;             @approved = nil
     # command specific
-    @line = line
-    @check = check
+    @line = line;                @check = check
     # file specific
-    @path = path
-    @params = params
+    @path = path;                @params = params
   end
 
   def not_triggered

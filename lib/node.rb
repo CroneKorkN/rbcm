@@ -1,5 +1,5 @@
 class Node
-  attr_reader :jobs, :definitions, :files, :name, :remote, :rbcm, :sandbox
+  attr_reader   :jobs, :definitions, :files, :name, :remote, :rbcm, :sandbox
   attr_accessor :actions, :memberships, :triggered
 
   def initialize rbcm, name
@@ -32,9 +32,5 @@ class Node
     @rbcm.group_additions.select{ |group, additions|
       memberships.include? group
     }.values.flatten(1)
-  end
-
-  def check
-
   end
 end

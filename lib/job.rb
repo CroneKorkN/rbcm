@@ -2,9 +2,10 @@
 # used to read configuration via "?"-suffix methods
 
 class Job
-  attr_reader :capability, :params
+  attr_reader :capability, :params, :node
 
-  def initialize capability, params
+  def initialize node, capability, params
+    @node = node
     @capability = capability
     @params = params
   end

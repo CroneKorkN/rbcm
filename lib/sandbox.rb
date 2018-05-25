@@ -119,10 +119,12 @@ class Sandbox
       end
       if params[:with]
         # return values of a named param
-        jobs.find_all{ |job|
-          job.params.named.keys.include? params[:with] if job.params.named.any?
+        r = jobs.find_all{ |job|
+          job.params.named.keys.include? params[:with] and job.params.named.any?
         }.collect{ |job|
-          job.params.named
+          params = job.params.named
+          params[:source] = job.node.name
+          params
         }
       end
     end
@@ -149,7 +151,7 @@ class Sandbox
       # define wrapper method
       define_method(capability_name.to_sym) do |*ordered, **named|
         params = Params.new ordered, named
-        @node.jobs << Job.new(capability_name, params)
+        @node.jobs << Job.new(@node, capability_name, params)
         @node.triggered << capability_name
         __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
