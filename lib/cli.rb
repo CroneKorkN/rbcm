@@ -25,7 +25,9 @@ class CLI
     end
     # apply
     render section: "APPLYING #{core.actions.approved.count} actions"
-    apply core.actions.approved.resolve_dependencies
+    while action = core.actions.applyable.resolve_dependencies.first
+      apply action
+    end
     render :applied
     puts "┗━━──"
     # finish
