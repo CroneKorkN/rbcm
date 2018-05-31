@@ -19,11 +19,40 @@ class Action
     @path = path;                @params = params
   end
 
-  def not_triggered
-    return false if triggered_by.empty? or triggered_by.one? do |triggered_by|
+  def neccessary?
+    check!
+    not @obsolete
+  end
+
+  def approved?
+    @approved
+  end
+
+  def approvable?
+    neccessary? and triggered? and not approved?
+  end
+
+  def applyable?
+    approved? and not applied?
+  end
+
+  def triggered?
+    triggered_by.empty? or triggered_by.one? do |triggered_by|
       @node.triggered.flatten.include? triggered_by
     end
-    true
+  end
+
+  def applied?
+    @applied
+  end
+
+  def succeeded?
+    pp self.chain unless @result
+    @result.exitstatus == 0
+  end
+
+  def failed?
+    @result.exitstatus != 0
   end
 
   def approve! input=:y
@@ -36,13 +65,5 @@ class Action
     else
       @approved = false
     end
-  end
-
-  def succeeded
-    @result.exitstatus == 0
-  end
-
-  def failed
-    @result.exitstatus != 0
   end
 end

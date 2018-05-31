@@ -12,11 +12,11 @@ class FileAction < Action
   end
 
   def siblings
-    []
+    [] # TODO
   end
 
   def apply!
-    @job.node.actions.file(path).each.applied = true
+    @applied = true
     @result = @node.remote.execute("echo #{Shellwords.escape content} > #{path}")
   end
 

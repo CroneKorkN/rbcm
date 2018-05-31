@@ -14,17 +14,19 @@ class CLI
       check action
     end
     # approve
-    render section: "APPROVING #{core.actions.approvable.count}/#{core.actions.unapprovable.count} actions"
-    approve core.actions.resolve_triggers.unapprovable
-    while action = core.actions.resolve_triggers.approvable.first
+    render section: "APPROVING #{core.actions.neccessary.count}/#{core.actions.unneccessary.count} actions"
+    approve core.actions.unneccessary.resolve_triggers
+    while action = core.actions.approvable.resolve_triggers.first
       approve action
-      approve action.siblings if action.approved
-      approve @core.actions.file(action.path) - [action] if action.class == FileAction
-      approve core.actions.file action.path if action.approved and action.class == FileAction
+      if action.approved?
+        approve action.siblings
+        approve action.same_file if action.class == FileAction
+      end
     end
     # apply
     render section: "APPLYING #{core.actions.approved.count} actions"
     apply core.actions.approved.resolve_dependencies
+    render :applied
     puts "┗━━──"
     # finish
   end
@@ -44,7 +46,7 @@ class CLI
       render :command if action.class == Command
       render :siblings if action.siblings.any?
       render :source if action.source.any?
-      return if action.obsolete or action.approved or action.not_triggered
+      return if not action.approvable?
       render :diff if action.class == FileAction
       render :prompt
       action.approve! STDIN.gets.chomp.to_sym
@@ -60,7 +62,6 @@ class CLI
       render :command if response.exitstatus != 0
       render response: response if response.length > 0
     end
-    render :applied
   end
 
   def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil

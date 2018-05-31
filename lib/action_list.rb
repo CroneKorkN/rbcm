@@ -25,36 +25,36 @@ class ActionList < Array
     ActionList.new select{|action| action.path == path}
   end
 
-  def approvable
-    actions = []
-    self.each do |action|
-      actions << action unless action.obsolete or action.approved != nil or action.not_triggered
-    end
-    ActionList.new actions
+  def unneccessary
+    ActionList.new (self - neccessary)
   end
 
-  def unapprovable
-    ActionList.new (self - approvable)
+  def neccessary
+    ActionList.new select.neccessary?
+  end
+
+  def approvable
+    ActionList.new select.approvable?
   end
 
   def approved
-    actions = []
-    self.each do |action|
-      actions << action if action.approved
-    end
-    ActionList.new actions
+    ActionList.new select.approved?
   end
 
   def applyable
-    ActionList.new approved.collect{|action| action.applied == false}
+    ActionList.new select.applyable?
+  end
+
+  def applied
+    ActionList.new select.applied?
   end
 
   def succeeded
-    ActionList.new approved.select.succeeded
+    ActionList.new applied.select.succeeded?
   end
 
   def failed
-    ActionList.new approved.select.failed
+    ActionList.new applied.select.failed?
   end
 
   private

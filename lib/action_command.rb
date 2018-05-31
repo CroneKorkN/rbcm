@@ -3,6 +3,7 @@ class Command < Action
 
   # determine wether the command is neccessary
   def check!
+    return if @obsolete != nil
     if @check
       @obsolete = @node.remote.execute(@check).exitstatus == 0
     else
