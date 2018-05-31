@@ -14,7 +14,7 @@ class CLI
       check action
     end
     # approve
-    render section: "APPROVING #{core.actions.neccessary.count}/#{core.actions.unneccessary.count} actions"
+    render section: "APPROVING #{core.actions.approvable.count}/#{core.actions.unneccessary.count} actions"
     approve core.actions.unneccessary.resolve_triggers
     while action = core.actions.approvable.resolve_triggers.first
       approve action

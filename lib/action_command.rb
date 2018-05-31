@@ -11,6 +11,11 @@ class Command < Action
     end
   end
 
+  def neccessary?
+    check!
+    not @obsolete
+  end
+
   # matching commands on  other nodes to be approved at once
   def siblings
     @node.rbcm.actions.select{ |action|

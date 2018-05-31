@@ -19,11 +19,6 @@ class Action
     @path = path;                @params = params
   end
 
-  def neccessary?
-    check!
-    not @obsolete
-  end
-
   def approved?
     @approved
   end
