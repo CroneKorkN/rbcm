@@ -16,6 +16,7 @@ class FileAction < Action
   end
 
   def apply!
+    @job.node.actions.file(path).each.applied = true
     @result = @node.remote.execute("echo #{Shellwords.escape content} > #{path}")
   end
 

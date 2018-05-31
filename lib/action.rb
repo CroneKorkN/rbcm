@@ -1,5 +1,5 @@
 class Action
-  attr_accessor :approved
+  attr_accessor :approved, :applied
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
                 :capability, :obsolete, :job, :check, :triggered, :result,
                 :source, :path
