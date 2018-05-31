@@ -4,7 +4,11 @@ class FileAction < Action
 
   def check!
     # compare
-    @obsolete = @node.remote.files[path].chomp.chomp == content.chomp.chomp
+    @node.files[path]
+  end
+
+  def obsolete
+    @node.files[path].chomp.chomp == content.chomp.chomp
   end
 
   def siblings
