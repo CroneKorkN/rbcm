@@ -8,7 +8,7 @@ class Node
     @definitions = []
     @sandbox = Sandbox.new self
     @remote = Remote.new self
-    @files = FileSystem.new self, mirror: @remote.files
+    @files = FileSystem.new self, overlays: @remote.files
     @actions = ActionList.new
     @memberships = []
     @jobs = []

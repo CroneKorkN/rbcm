@@ -1,25 +1,25 @@
 class FileSystem
-  def initialize node, mirror: false # mirror -> overlay
+  def initialize node, overlays: false
     @node = node
-    @mirror = mirror
+    @underlying = overlays
     @files = {}
   end
 
   def [] path
-    if @mirror
-      @files[path] || @mirror[path]
+    if @underlying
+      @files[path] || @underlying[path]
     else
-      log "DOWNLOADING '#{path}'"
       @files[path] ||= download path
     end
   end
 
   def []= path, content
-    raise "ERROR: dont change remote fs" unless @mirror
+    raise "ERROR: dont change remote fs" unless @underlying
     @files[path] = content
   end
 
   def download path
+    log "DOWNLOADING '#{path}'"
     response = @node.remote.execute("cat '#{path}'")
     response = "" if response.exitstatus != 0
     response
