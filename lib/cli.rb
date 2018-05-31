@@ -14,7 +14,7 @@ class CLI
       check action
     end
     # approve
-    render section: "APPROVING #{core.actions.select{|a| a.obsolete == false}.count} actions"
+    render section: "APPROVING #{core.actions.approvable.count}/#{core.actions.unapprovable.count} actions"
     approve core.actions.resolve_triggers.unapprovable
     while action = core.actions.resolve_triggers.approvable.first
       approve action
@@ -32,6 +32,7 @@ class CLI
   private
 
   def check action
+    @action = action
     render checking: action.check
     action.check!
   end
@@ -102,7 +103,7 @@ class CLI
     elsif element.class == String
       out prefix + "#{element}"
     elsif checking
-      out prefix + "CHECKING #{checking}"
+      out prefix + "CHECKING #{@action.node.name}: #{checking}"
     elsif response
       out prefix + response.to_s.chomp.split("\n").join("\n#{prefix}")
     elsif element == :applied

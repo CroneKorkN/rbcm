@@ -122,7 +122,7 @@ class Sandbox
         r = jobs.find_all{ |job|
           job.params.named.keys.include? params[:with] and job.params.named.any?
         }.collect{ |job|
-          params = job.params.named
+          params = job.params
           params[:source] = job.node.name
           params
         }

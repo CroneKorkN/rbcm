@@ -5,9 +5,14 @@ class Params
     @ordered, @named = ordered, named
   end
 
-  def [] id
-    return ordered[id] if id.class == Integer
-    return named[id] if id.class == Symbol
+  def [] key
+    return ordered[key] if key.class == Integer
+    return named[key] if key.class == Symbol
+  end
+
+  def []= key, value
+    ordered[key] = value if key.class == Integer
+    named[key] = value if key.class == Symbol
   end
 
   def to_s
@@ -21,7 +26,7 @@ class Params
   end
 
   def sendable
-    [*ordered, named.any? ? named : nil].compact 
+    [*ordered, named.any? ? named : nil].compact
   end
 
   def empty?
