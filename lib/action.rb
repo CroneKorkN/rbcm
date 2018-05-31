@@ -10,7 +10,7 @@ class Action
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
     @triggered = [];             @source = source
-    @node = job.node;            @job = job;
+    @node = job.node;            @job = job
     @chain = chain;              @capability = chain.last
     @obsolete = nil;             @approved = nil
     # command specific

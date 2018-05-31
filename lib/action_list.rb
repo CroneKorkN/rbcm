@@ -10,7 +10,7 @@ class ActionList < Array
     self.each do |action|
       resolve_action_dependencies action
     end
-    ActionList.new @actions.uniq
+    ActionList.new @actions
   end
 
   def resolve_triggers
@@ -18,7 +18,7 @@ class ActionList < Array
     self.each do |action|
       resolve_action_triggers action
     end
-    ActionList.new @actions.reverse.uniq.reverse
+    ActionList.new @actions
   end
 
   def file path
@@ -65,7 +65,7 @@ class ActionList < Array
     }.each{ |action|
       resolve_action_dependencies action
     }
-    @actions << this
+    @actions << this unless @actions.include? this
   end
 
   def resolve_action_triggers this
@@ -74,6 +74,6 @@ class ActionList < Array
     }.each{ |action|
       resolve_action_triggers action
     }
-    @actions << this
+    @actions << this unless @actions.include? this
   end
 end
