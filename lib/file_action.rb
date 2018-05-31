@@ -31,4 +31,8 @@ class FileAction < Action
       ).render
     end
   end
+
+  def same_file
+    @node.actions.file(path) - [self]
+  end
 end

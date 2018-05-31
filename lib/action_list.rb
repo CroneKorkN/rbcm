@@ -45,6 +45,10 @@ class ActionList < Array
     ActionList.new actions
   end
 
+  def applyable
+    ActionList.new approved.collect{|action| action.applied == false}
+  end
+
   def succeeded
     ActionList.new approved.select.succeeded
   end

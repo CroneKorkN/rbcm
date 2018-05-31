@@ -19,6 +19,7 @@ class Command < Action
 
   # execute the command remote
   def apply!
+    @applied = true
     @result = @node.remote.execute(@line)
   end
 end
