@@ -12,7 +12,7 @@ class FileAction < Action
   end
 
   def siblings
-    @node.actions.file(path) - self
+    @node.actions.file(path) - [self]
   end
 
   def apply!
