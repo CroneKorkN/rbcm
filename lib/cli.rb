@@ -67,13 +67,16 @@ class CLI
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-      out "┣━\ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
-        "#{format}\ \ #{format :cyan}#{@action.job.params}#{format}"
+      out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
+        "#{format} #{format :cyan}#{@action.job.params}#{format}"
     elsif element == :capabilities
       out prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
     elsif element == :nodes
       out prefix + @core.nodes.values.collect{ |node|
-        "#{node.name}: #{node.jobs.count} jobs, #{node.actions.count} commands"
+        name = node.name.+(":").ljust(@core.nodes.keys.each.length.max+1, " ")
+        jobs = node.jobs.count.to_s.rjust(@core.nodes.values.collect{|node| node.jobs.count}.max.digits.count, " ")
+        actions = node.actions.count.to_s.rjust(@core.nodes.values.collect{|node| node.actions.count}.max.digits.count, " ")
+        "#{name} #{jobs} jobs, #{actions} actions"
       }.flatten(1).join("\n#{prefix}")
     elsif element == :command
       check_string = " UNLESS #{@action.check}" if @action.check

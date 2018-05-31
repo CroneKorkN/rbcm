@@ -93,9 +93,9 @@ class Sandbox
     if not @@capabilities.include? capability_name
       super
     elsif name =~ /\!$/
-      return # dont call cap!
+      return # never call cap! diectly
     elsif name =~ /\?$/
-      __search capability_name, params
+      __search capability_name, params, &block
     end
   end
 
@@ -129,8 +129,8 @@ class Sandbox
         }
       end
     end
-    return r.collect &block if block_given?
-    r
+    return r.collect &block if block_given? # no-each-syntax
+    return r
   end
 
   def self.import_capabilities capabilities_path
