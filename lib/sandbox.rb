@@ -143,7 +143,7 @@ class Sandbox
     @@capabilities.each do |capability_name|
       # copy method
       define_method(
-        "__#{capability_name}".to_sym,
+        :"__#{capability_name}",
         instance_method(capability_name)
       )
       # define wrapper method
@@ -158,14 +158,14 @@ class Sandbox
         end
         @dependency_cache = [:file]
       end
-      next unless instance_methods(false).include? "#{capability_name}!".to_sym
+      next unless instance_methods(false).include? :"#{capability_name}!"
       # copy method
       define_method(
-        "__#{capability_name}!".to_sym,
-        instance_method("#{capability_name}!")
+        :"__#{capability_name}!",
+        instance_method(:"#{capability_name}!")
       )
       # define wrapper method
-      define_method("#{capability_name}!".to_sym) do
+      define_method(:"#{capability_name}!") do
         __cache chain: __method__ do
           send "__#{__method__}"
         end
