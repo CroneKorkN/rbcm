@@ -7,11 +7,6 @@ class FileAction < Action
     @node.files[path]
   end
 
-  def neccessary?
-    check!
-    not obsolete
-  end
-
   def obsolete
     @node.files[path].chomp.chomp == content.chomp.chomp
   end
