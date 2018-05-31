@@ -122,7 +122,6 @@ class Sandbox
         r = jobs.find_all{ |job|
           job.params.named.keys.include? params[:with] and job.params.named.any?
         }.collect{ |job|
-          __cache source: job.node.name
           params = job.params.named
           params[:source] = job.node.name
           params
@@ -138,13 +137,9 @@ class Sandbox
     Dir["#{capabilities_path}/**/*.rb"].each {|path|
       eval File.read(path)
     }
-    @@capabilities = instance_methods(false).grep(
-      /[^\!]$/
-    ).-(
-      instance_methods_cache
-    ).+(
-      [:file, :run]
-    )
+    @@capabilities = instance_methods(false).grep(/[^\!]$/) -
+                     instance_methods_cache +
+                     [:file, :run]
     @@capabilities.each do |capability_name|
       # copy method
       define_method(
