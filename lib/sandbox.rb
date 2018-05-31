@@ -100,11 +100,16 @@ class Sandbox
   end
 
   def __search capability_name, params, &block
-    jobs = @node.jobs.find_all{|job| job.capability == capability_name}
-    if params.empty?
+    if params[:nodes] == :all
+      jobs = @node.rbcm.jobs
+    else
+      jobs = @node.jobs
+    end
+    jobs = jobs.select{|job| job.capability == capability_name}
+    if params.delete(:nodes).empty?
       # return ordered prarams
-      r = jobs.collect{|job| job.params.ordered}
-    elsif params.first.class == Symbol
+      r = jobs.collect{|job| job.params}
+    elsif params[0].class == Symbol
       # return values of a named param
       r = jobs.find_all{ |job|
         job.params.named.include? params.first if job.params.named.any?
@@ -114,9 +119,6 @@ class Sandbox
         named_params[params.first]
       }
     elsif params.named.any?
-      if params[:nodes] == :all
-        jobs = @node.rbcm.nodes.values.each.jobs.flatten(1).find_all{|job| job.capability == capability_name}
-      end
       if params[:with]
         # return values of a named param
         r = jobs.find_all{ |job|

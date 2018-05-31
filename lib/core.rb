@@ -56,4 +56,8 @@ class Core
   def actions
     ActionList.new nodes.values.each.actions.flatten(1)
   end
+
+  def jobs
+    nodes.values.each.jobs.flatten(1)
+  end
 end

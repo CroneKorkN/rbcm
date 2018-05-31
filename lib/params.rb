@@ -42,10 +42,11 @@ class Params
   end
 
   def delete *ids
+    copy = self.dup
     [ids].flatten.each do |id|
-      ordered.delete id if id.class == Integer
-      named.delete id if id.class == Symbol
+      copy.ordered.delete id if id.class == Integer
+      copy.named.delete id   if id.class == Symbol
     end
-    return self
+    return copy
   end
 end
