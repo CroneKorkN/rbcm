@@ -11,7 +11,7 @@ class FileAction < Action
     @node.files[path].chomp.chomp == content.chomp.chomp
   end
 
-  def siblings
+  def siblings 
     @node.actions.file(path) - [self]
   end
 
