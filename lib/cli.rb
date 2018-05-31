@@ -41,6 +41,7 @@ class CLI
       render :title, color: (action.obsolete ? :green : :yellow)
       render :command if action.class == Command
       render :siblings if action.siblings.any?
+      p action.source
       render :source if action.source.any?
       return if action.obsolete or action.approved or action.not_triggered
       render :diff if action.class == FileAction
