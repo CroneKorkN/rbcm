@@ -20,7 +20,7 @@ class CLI
       approve action
       if action.approved?
         approve action.siblings
-        approve action.same_file if action.class == FileAction
+        approve action.same_file if action.class == Action::File
       end
     end
     # apply
@@ -45,11 +45,11 @@ class CLI
     [actions].flatten(1).each do |action|
       @action = action
       render :title, color: (action.obsolete ? :green : :yellow)
-      render :command if action.class == Command
+      render :command if action.class == Action::Command
       render :siblings if action.siblings.any?
       render :source if action.source.any?
       next if not action.approvable?
-      render :diff if action.class == FileAction
+      render :diff if action.class == Action::File
       render :prompt
       action.approve! STDIN.gets.chomp.to_sym
       render :triggered if action.triggered.any?

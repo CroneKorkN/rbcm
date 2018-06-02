@@ -1,5 +1,5 @@
 # ToDo: approve all changes to a spicific file at once
-class FileAction < Action
+class Action::File < Action
   attr_reader :path, :content
 
   def check!

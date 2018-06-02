@@ -1,4 +1,4 @@
-class Command < Action
+class Action::Command < Action
   attr_reader :line
 
   # determine wether the command is neccessary

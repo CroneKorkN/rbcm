@@ -58,7 +58,7 @@ class Sandbox
   end
 
   def run action, check: nil, trigger: nil, triggered_by: nil
-    @node.actions << Command.new(
+    @node.actions << Action::Command.new(
       line: action,
       check: check,
       chain: @cache[:chain].dup.flatten(1),
@@ -74,7 +74,7 @@ class Sandbox
      raise "RBCM: invalid file paramteres '#{named}'" if (
        named.keys - [:exists, :includes_line, :after, :mode, :content, :template, :context]
      ).any?
-     @node.actions << FileAction.new(
+     @node.actions << Action::File.new(
        path: path,
        params: Params.new([path], named),
        chain: [@cache[:chain].dup].flatten(1),

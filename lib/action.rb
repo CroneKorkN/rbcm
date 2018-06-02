@@ -57,7 +57,7 @@ class Action
 
   def approve! input=:y
     if [:a, :y].include? input
-      @node.files[@path] = content if self.class == FileAction
+      @node.files[@path] = content if self.class == Action::File
       @approved = true
       siblings.each.approve! if input == :a
       @node.triggered << @trigger
