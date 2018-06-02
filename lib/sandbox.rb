@@ -16,8 +16,9 @@ class Sandbox
 
   def evaluate definitions
     [definitions].flatten.each do |definition|
-      __cache origin: definition.instance_variable_get(:@origin)
-      instance_eval &definition
+      __cache origin: definition.origin do
+        instance_eval &definition.content
+      end
     end
   end
 
@@ -47,7 +48,7 @@ class Sandbox
       @node.memberships << name
       __cache chain: "group:#{name}" do
         @node.rbcm.groups[name].each do |definition|
-          instance_eval &definition
+          instance_eval &definition.content
         end
       end
     end
@@ -194,13 +195,13 @@ class Sandbox
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
       chain: [], source: nil, reset: nil, tag: nil, origin: nil
     @cache[:source].append []             if chain
-    @cache[:origin]       =  origin       if origin
     @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
     @cache[:tag]          << tag          if tag
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
+    @cache[:origin]       =  origin       if origin
     yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
@@ -208,7 +209,8 @@ class Sandbox
     @cache[:trigger].pop                  if trigger
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
-    @cache[reset]         = []            if reset
+    @cache[reset]         =  []           if reset
+    @cache[:origin]       =  nil          if origin
   end
 
   def self.capabilities

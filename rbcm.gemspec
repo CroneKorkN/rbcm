@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
     "lib/array_hash.rb",
     "lib/cli.rb",
     "lib/core.rb",
+    "lib/definition.rb",
     "lib/definition_file.rb",
     "lib/file_system.rb",
     "lib/job.rb",

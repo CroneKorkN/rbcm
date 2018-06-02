@@ -13,7 +13,7 @@ class DefinitionFile
   end
 
   def group name=nil
-    @groups[name] = Proc.new
+    @groups[name] = Definition.new Proc.new
   end
 
   def node names=nil
@@ -21,9 +21,9 @@ class DefinitionFile
     [names].flatten.each do |name|
       definition = Proc.new # Proc.new without paramaters catches a given block
       if name.class == Regexp
-        @patterns[name] = definition
+        @patterns[name] = Definition.new Proc.new, origin: "/#{name.source}/"
       else
-        @nodes[name] = definition
+        @nodes[name] = Definition.new Proc.new
       end
     end
   end
