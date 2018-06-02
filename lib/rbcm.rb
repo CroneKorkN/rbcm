@@ -5,6 +5,7 @@ require "shellwords"
 require "diffy"
 require "optparse"
 require "parallel"
+require "yaml"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :action, :definition_file, :file_system, :action_file, :node,

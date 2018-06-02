@@ -29,7 +29,7 @@ class Action
   end
 
   def approvable?
-    neccessary? and triggered? and not approved?
+    neccessary? and triggered? and approved? == nil
   end
 
   def applyable?

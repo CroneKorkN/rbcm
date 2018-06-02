@@ -51,7 +51,9 @@ class CLI
       next if not action.approvable?
       render :diff if action.class == Action::File
       render :prompt
-      action.approve! STDIN.gets.chomp.to_sym
+      sleep 0.2 unless [:a,:y,:n].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
+      action.approve! r
+      render :approved
       render :triggered if action.triggered.any?
     end
   end
@@ -103,6 +105,9 @@ class CLI
         @action.node.files[@action.path],
         @action.content
       ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
+    elsif element == :approved
+      string = @action.approved? ? "#{format :green}  APPROVED" : "#{format :red}  DECLINED"
+      out prefix + string + "  #{format}                  "
     elsif element.class == String
       out prefix + "#{element}"
     elsif checking
