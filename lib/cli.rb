@@ -28,9 +28,9 @@ class CLI
     while action = core.actions.applyable.resolve_dependencies.first
       apply action
     end
+    # finish
     render :applied
     puts "┗━━──"
-    # finish
   end
 
   private
@@ -140,7 +140,7 @@ class CLI
       green:   "\e[30;42m",
       yellow:  "\e[30;43m",
       cyan:    "\e[36m",
-      tag: "\e[35m",
+      tag:     "\e[35m"
     }.select{ |key, _|
       params.include? key
     }.values.join
