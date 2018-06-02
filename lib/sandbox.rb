@@ -9,14 +9,14 @@ class Sandbox
     @name = node.name
     @dependency_cache = []
     @cache = {
-      chain: [], trigger: [], triggered_by: [], check: [],
+      chain: [@node.name], trigger: [], triggered_by: [], check: [],
       source: [], tag: []
     }
   end
 
   def evaluate definitions
     [definitions].flatten.each do |definition|
-      __cache origin: definition.origin do
+      __cache chain: definition.origin do
         instance_eval &definition.content
       end
     end
@@ -116,7 +116,7 @@ class Sandbox
   end
 
   def __search capability_name, params, &block
-    if params[:nodes] == :all
+    if params[:nodes] == :all # scope
       jobs = @node.rbcm.jobs
     else
       jobs = @node.jobs
@@ -167,8 +167,8 @@ class Sandbox
       # define wrapper method
       define_method(capability_name.to_sym) do |*ordered, **named|
         params = Params.new ordered, named
-        @node.jobs << Job.new(@node, capability_name, params)
-        @node.triggered << capability_name
+        @node.jobs.append Job.new @node, capability_name, params
+        @node.triggered.append capability_name
         __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
               chain: capability_name do
