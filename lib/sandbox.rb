@@ -9,7 +9,7 @@ class Sandbox
     @name = node.name
     @dependency_cache = []
     @cache = {
-      chain: [@node.name], trigger: [], triggered_by: [], check: [],
+      chain: [], trigger: [], triggered_by: [], check: [],
       source: [], tag: []
     }
   end
