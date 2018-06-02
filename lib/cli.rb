@@ -48,7 +48,7 @@ class CLI
       render :command if action.class == Command
       render :siblings if action.siblings.any?
       render :source if action.source.any?
-      return if not action.approvable?
+      next if not action.approvable?
       render :diff if action.class == FileAction
       render :prompt
       action.approve! STDIN.gets.chomp.to_sym
