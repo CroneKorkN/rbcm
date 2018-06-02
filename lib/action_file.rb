@@ -22,7 +22,7 @@ class Action::File < Action
 
   def content
     @content ||= if @params[:content]
-      @params[:content]
+      @params[:content].to_s
     elsif @params[:template]
       Template.new(
         name: @params[:template],

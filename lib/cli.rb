@@ -46,9 +46,9 @@ class CLI
       @action = action
       render :title, color: (action.obsolete ? :green : :yellow)
       render :command if action.class == Action::Command
+      next if not action.approvable?
       render :siblings if action.siblings.any?
       render :source if action.source.any?
-      next if not action.approvable?
       render :diff if action.class == Action::File
       render :prompt
       sleep 0.2 unless [:a,:y,:n].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
@@ -76,7 +76,7 @@ class CLI
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
         out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
         "#{format} #{format :cyan}#{@action.job.params}#{format}" +
-        " #{format :tag}#{"tags:" if @action.tags.any?}#{@action.tags.join(",")}#{format}"
+        " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
       out prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
     elsif element == :nodes
@@ -90,8 +90,10 @@ class CLI
       check_string = " UNLESS #{@action.check}" if @action.check
       out prefix + "$> #{@action.line}\e[2m#{check_string}\e[0m"
     elsif element == :siblings
-      siblings_string = @action.siblings.each.node.each.name.join(", ")
-      out prefix + "siblings: #{format }#{siblings_string}#{format}"
+      string = @action.siblings.collect do |sibling|
+        "#{sibling.neccessary? ? format(:yellow) : format(:green)} #{sibling.node.name} #{format}"
+      end.join
+      out prefix + "siblings: #{string}"
     elsif element == :source
       out prefix + "source: #{format :bold}#{@source.join("#{format}, #{format :bold}")}#{format}"
     elsif element == :prompt
