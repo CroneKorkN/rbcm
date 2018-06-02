@@ -25,6 +25,10 @@ class ActionList < Array
     ActionList.new select{|action| action.path == path}
   end
 
+  def checkable
+    ActionList.new select.checkable?
+  end
+
   def unneccessary
     ActionList.new (self - neccessary)
   end

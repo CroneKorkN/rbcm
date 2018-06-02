@@ -21,6 +21,10 @@ class Action
     @path = path;                @params = params
   end
 
+  def checkable?
+    true if @check or self.class == Action::File
+  end
+
   def neccessary?
     check!
     not obsolete

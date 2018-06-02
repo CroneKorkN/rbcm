@@ -9,7 +9,7 @@ class CLI
     core.parse
     render :nodes
     # check
-    render section: "CHECKING #{core.nodes.count} nodes"
+    render section: "CHECKING #{core.actions.checkable.count} actions on #{core.nodes.count} nodes"
     core.actions.each do |action|
       check action
     end
@@ -51,7 +51,7 @@ class CLI
       render :source if action.source.any?
       render :diff if action.class == Action::File
       render :prompt
-      sleep 0.2 unless [:a,:y,:n].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
+      sleep 0.25 unless [:a,:y,:n].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
       action.approve! r
       render :approved
       render :triggered if action.triggered.any?
