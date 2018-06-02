@@ -75,7 +75,7 @@ class CLI
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
         out "┣━ #{triggerd_by}#{format color, :bold} #{"#{@action.origin} > " if @action.origin}#{(@action.chain).join(" > ")} " +
-        "#{format} #{format :cyan}#{@action.job.params}#{format}" +
+        "#{format} #{format :params}#{@action.job.params}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
       out prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
@@ -93,11 +93,11 @@ class CLI
       string = @action.siblings.collect do |sibling|
         "#{sibling.neccessary? ? format(:yellow) : format(:green)} #{sibling.node.name} #{format}"
       end.join
-      out prefix + "siblings: #{string}"
+      out prefix + "#{format :siblings}siblings:#{format} #{string}"
     elsif element == :source
       out prefix + "source: #{format :bold}#{@source.join("#{format}, #{format :bold}")}#{format}"
     elsif element == :prompt
-      color = @action.siblings.any? ? :magenta : :light
+      color = @action.siblings.any? ? :siblings : :light
       print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o > "
     elsif element == :triggered
       out prefix +
@@ -109,8 +109,8 @@ class CLI
         @action.content
       ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
     elsif element == :approved
-      string = @action.approved? ? "#{format :green}  APPROVED" : "#{format :red}  DECLINED"
-      out prefix + string + "  #{format}                  "
+      string = @action.approved? ? "#{format :green} APPROVED" : "#{format :red} DECLINED"
+      puts "#{string} #{format}"
     elsif element.class == String
       out prefix + "#{element}"
     elsif checking
@@ -131,16 +131,18 @@ class CLI
 
   def format *params, **_
     "\e[0m" + {
-      reset:   "\e[0m",
-      bold:    "\e[1m",
-      light:   "\e[2m",
-      invert:  "\e[7m",
-      trigger: "\e[30;46m",
-      red:     "\e[30;101m",
-      green:   "\e[30;42m",
-      yellow:  "\e[30;43m",
-      cyan:    "\e[36m",
-      tag:     "\e[35m"
+      reset:    "\e[0m",
+      bold:     "\e[1m",
+      light:    "\e[2m",
+      invert:   "\e[7m",
+      trigger:  "\e[30;46m",
+      red:      "\e[30;101m",
+      green:    "\e[30;42m",
+      yellow:   "\e[30;43m",
+      cyan:     "\e[36m",
+      tag:      "\e[35m",
+      params:   "\e[36m",
+      siblings: "\e[35m"
     }.select{ |key, _|
       params.include? key
     }.values.join
