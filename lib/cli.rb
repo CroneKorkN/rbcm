@@ -74,8 +74,9 @@ class CLI
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-      out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
-        "#{format} #{format :cyan}#{@action.job.params}#{format}"
+        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
+        "#{format} #{format :cyan}#{@action.job.params}#{format}" +
+        " #{format :tag}#{"tags:" if @action.tags.any?}#{@action.tags.join(",")}#{format}"
     elsif element == :capabilities
       out prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
     elsif element == :nodes
@@ -90,7 +91,7 @@ class CLI
       out prefix + "$> #{@action.line}\e[2m#{check_string}\e[0m"
     elsif element == :siblings
       siblings_string = @action.siblings.each.node.each.name.join(", ")
-      out prefix + "siblings: #{format :magenta}#{siblings_string}#{format}"
+      out prefix + "siblings: #{format }#{siblings_string}#{format}"
     elsif element == :source
       out prefix + "source: #{format :bold}#{@source.join("#{format}, #{format :bold}")}#{format}"
     elsif element == :prompt
@@ -137,7 +138,7 @@ class CLI
       green:   "\e[30;42m",
       yellow:  "\e[30;43m",
       cyan:    "\e[36m",
-      magenta: "\e[35m",
+      tag: "\e[35m",
     }.select{ |key, _|
       params.include? key
     }.values.join

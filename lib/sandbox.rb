@@ -8,12 +8,21 @@ class Sandbox
     @node = node
     @name = node.name
     @dependency_cache = []
-    @cache = {chain: [@node.name], trigger: [], triggered_by: [], check: [], source: []}
+    @cache = {
+      chain: [@node.name], trigger: [], triggered_by: [], check: [],
+      source: [], tag: []
+    }
   end
 
   def evaluate definitions
     [definitions].flatten.each do |definition|
       instance_eval &definition
+    end
+  end
+
+  def tag name, &block
+    __cache tag: name, chain: "tag:#{name}" do
+      instance_eval &block
     end
   end
 
@@ -57,31 +66,34 @@ class Sandbox
     end
   end
 
-  def run action, check: nil, trigger: nil, triggered_by: nil
+  def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
     @node.actions << Action::Command.new(
       line: action,
       check: check,
       chain: @cache[:chain].dup.flatten(1),
       dependencies: @dependency_cache.dup,
+      tags: [tags] + @cache[:tag].dup,
       trigger: [@cache[:trigger].dup, trigger].flatten(1),
       triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
       job: @node.jobs.last,
-      source: @cache[:source].flatten
+      source: @cache[:source].dup.flatten
     )
   end
 
   def file path, trigger: nil, **named
      raise "RBCM: invalid file paramteres '#{named}'" if (
-       named.keys - [:exists, :includes_line, :after, :mode, :content, :template, :context]
+       named.keys - [:exists, :includes_line, :after, :mode, :content,
+         :template, :context, :tags]
      ).any?
      @node.actions << Action::File.new(
        path: path,
        params: Params.new([path], named),
        chain: [@cache[:chain].dup].flatten(1),
+       tags: [named[:tags]] + @cache[:tag].dup,
        trigger: [@cache[:trigger].dup, trigger].flatten(1),
        triggered_by: @cache[:triggered_by].dup,
        job: @node.jobs.last,
-       source: @cache[:source].flatten
+       source: @cache[:source].dup.flatten
      )
   end
 
@@ -177,16 +189,18 @@ class Sandbox
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
-      chain: [], source: nil, reset: nil
+      chain: [], source: nil, reset: nil, tag: nil
     @cache[:source].append []             if chain
     @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
+    @cache[:tag]          << tag          if tag
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
     yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
+    @cache[:tag].pop                      if tag
     @cache[:trigger].pop                  if trigger
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
