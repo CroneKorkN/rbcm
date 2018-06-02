@@ -74,7 +74,7 @@ class CLI
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
+        out "┣━ #{triggerd_by}#{format color, :bold} #{[@action.origin].+(@action.chain).join(" > ")} " +
         "#{format} #{format :cyan}#{@action.job.params}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities

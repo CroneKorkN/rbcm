@@ -27,11 +27,13 @@ class Core
       @patterns << definition_file.patterns
       definition_file.nodes.each do |name, definition|
         @nodes[name] ||= Node.new self, name
+        definition.instance_variable_set :@origin, File.basename(definition_file.path)
         @nodes[name] << definition
       end
     end
     @patterns.each do |pattern, definition|
       @nodes.select{|name, node| name =~ /#{pattern}/}.each do |name, node|
+        definition.instance_variable_set :@origin, "/#{pattern.source}/"
         node << definition
       end
     end

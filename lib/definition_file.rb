@@ -2,9 +2,10 @@
 # provides affected node names and definition
 
 class DefinitionFile
-  attr_reader :groups, :patterns, :nodes
+  attr_reader :groups, :patterns, :nodes, :path
 
   def initialize definition_file_path
+    @path = definition_file_path
     @groups = {}
     @patterns = {}
     @nodes = {}

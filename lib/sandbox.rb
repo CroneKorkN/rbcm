@@ -16,6 +16,7 @@ class Sandbox
 
   def evaluate definitions
     [definitions].flatten.each do |definition|
+      __cache origin: definition.instance_variable_get(:@origin)
       instance_eval &definition
     end
   end
@@ -76,7 +77,8 @@ class Sandbox
       trigger: [@cache[:trigger].dup, trigger].flatten(1),
       triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
       job: @node.jobs.last,
-      source: @cache[:source].dup.flatten
+      source: @cache[:source].dup.flatten, # information from other nodes
+      origin: @cache[:origin].dup # origin of the definition
     )
   end
 
@@ -93,7 +95,8 @@ class Sandbox
        trigger: [@cache[:trigger].dup, trigger].flatten(1),
        triggered_by: @cache[:triggered_by].dup,
        job: @node.jobs.last,
-       source: @cache[:source].dup.flatten
+       source: @cache[:source].dup.flatten, # information from other nodes
+       origin: @cache[:origin].dup # origin of the definition
      )
   end
 
@@ -189,8 +192,9 @@ class Sandbox
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
-      chain: [], source: nil, reset: nil, tag: nil
+      chain: [], source: nil, reset: nil, tag: nil, origin: nil
     @cache[:source].append []             if chain
+    @cache[:origin]       =  origin       if origin
     @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
     @cache[:tag]          << tag          if tag
