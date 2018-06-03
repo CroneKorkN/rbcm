@@ -78,7 +78,7 @@ class CLI
         "#{format} #{format :params}#{@action.job.params}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
-      out prefix + "CAPABILITIES #{Sandbox.capabilities.join(", ")}"
+      out prefix + "capabilities: #{Sandbox.capabilities.join(", ")}"
     elsif element == :nodes
       out prefix + @core.nodes.values.collect{ |node|
         name = node.name.+(":").ljust(@core.nodes.keys.each.length.max+1, " ")
@@ -98,7 +98,7 @@ class CLI
       out prefix + "source: #{format :bold}#{@source.join("#{format}, #{format :bold}")}#{format}"
     elsif element == :prompt
       color = @action.siblings.any? ? :siblings : :light
-      print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o > "
+      print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o: "
     elsif element == :triggered
       out prefix +
         "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +
