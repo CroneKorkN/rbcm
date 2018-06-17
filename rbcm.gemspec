@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
     "lib/action.rb",
     "lib/action_list.rb",
     "lib/array_hash.rb",
+    "lib/capability.rb",
     "lib/cli.rb",
     "lib/rbcm.rb",
     "lib/definition.rb",

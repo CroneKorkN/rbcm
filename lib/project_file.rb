@@ -7,12 +7,14 @@ class Project::File
     @groups = {}
     @patterns = {}
     @nodes = {}
-    @capabilities = {}
-    methods_cache = methods(false)
+    @capabilities = []
+    method_names_cache = methods(false)
     instance_eval File.read project_file_path
-    capability_names = methods(false) - methods_cache
-    capability_names.each do |capability_name|
-      @capabilities[capability_name] = method capability_name
+    (methods(false) - method_names_cache).each do |capability_name|
+      @capabilities.append Capability.new(
+        capability_name,
+        method(capability_name)
+      )
     end
   end
 

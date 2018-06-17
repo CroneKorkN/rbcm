@@ -6,8 +6,10 @@ class Project
     }
   end
 
+  attr_reader :path
+
   def capabilities
-    @project_files.each.capabilities
+    @project_files.each.capabilities.flatten(1)
   end
 
   def nodes

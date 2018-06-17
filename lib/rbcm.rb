@@ -10,16 +10,17 @@ require "yaml"
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :action, :definition_file, :file_system, :action_file, :node,
   :action_list, :action_command, :job, :remote, :sandbox, :array_hash, :params,
-  :template, :rbcm, :options, :cli, :definition, :project, :project_file
+  :template, :rbcm, :options, :cli, :definition, :project, :project_file,
+  :capability
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
-  attr_reader :nodes, :groups, :project_path
+  attr_reader :nodes, :groups, :project
   attr_accessor :group_additions, :actions
 
   def initialize project_path
     @project = Project.new project_path
-    p @project.nodes.each.keys.flatten
+    p @project.capabilities.each.name
 
     @project_path = project_path
     @patterns = {}
