@@ -3,20 +3,20 @@ class CLI
     options = Options.new params
     render section: "RBCM starting", first: true
     # bootstrap
-    @core = core = Core.new params[0] || `pwd`.chomp
+    @rbcm = rbcm = RBCM.new params[0] || `pwd`.chomp
     render :capabilities
     # parse
-    core.parse
+    rbcm.parse
     render :nodes
     # check
-    render section: "CHECKING #{core.actions.checkable.count} actions on #{core.nodes.count} nodes"
-    core.actions.each do |action|
+    render section: "CHECKING #{rbcm.actions.checkable.count} actions on #{rbcm.nodes.count} nodes"
+    rbcm.actions.each do |action|
       check action
     end
     # approve
-    render section: "APPROVING #{core.actions.approvable.count}/#{core.actions.unneccessary.count} actions"
-    approve core.actions.unneccessary.resolve_triggers
-    while action = core.actions.approvable.resolve_triggers.first
+    render section: "APPROVING #{rbcm.actions.approvable.count}/#{rbcm.actions.unneccessary.count} actions"
+    approve rbcm.actions.unneccessary.resolve_triggers
+    while action = rbcm.actions.approvable.resolve_triggers.first
       approve action
       if action.approved?
         approve action.siblings
@@ -24,8 +24,8 @@ class CLI
       end
     end
     # apply
-    render section: "APPLYING #{core.actions.approved.count} actions"
-    while action = core.actions.applyable.resolve_dependencies.first
+    render section: "APPLYING #{rbcm.actions.approved.count} actions"
+    while action = rbcm.actions.applyable.resolve_dependencies.first
       apply action
     end
     # finish
@@ -80,10 +80,10 @@ class CLI
     elsif element == :capabilities
       out prefix + "capabilities: #{Sandbox.capabilities.join(", ")}"
     elsif element == :nodes
-      out prefix + @core.nodes.values.collect{ |node|
-        name = node.name.+(":").ljust(@core.nodes.keys.each.length.max+1, " ")
-        jobs = node.jobs.count.to_s.rjust(@core.nodes.values.collect{|node| node.jobs.count}.max.digits.count, " ")
-        actions = node.actions.count.to_s.rjust(@core.nodes.values.collect{|node| node.actions.count}.max.digits.count, " ")
+      out prefix + @rbcm.nodes.values.collect{ |node|
+        name = node.name.+(":").ljust(@rbcm.nodes.keys.each.length.max+1, " ")
+        jobs = node.jobs.count.to_s.rjust(@rbcm.nodes.values.collect{|node| node.jobs.count}.max.digits.count, " ")
+        actions = node.actions.count.to_s.rjust(@rbcm.nodes.values.collect{|node| node.actions.count}.max.digits.count, " ")
         "#{name} #{jobs} jobs, #{actions} actions"
       }.flatten(1).join("\n#{prefix}")
     elsif element == :command
@@ -119,8 +119,8 @@ class CLI
       out prefix + response.to_s.chomp.split("\n").join("\n#{prefix}")
     elsif element == :applied
       out prefix
-      out "┣━\ #{format :green, :bold} #{@core.actions.succeeded.count} secceeded #{format}"
-      out "┣━\ #{format :red, :bold} #{@core.actions.failed.count} failed #{format}"
+      out "┣━\ #{format :green, :bold} #{@rbcm.actions.succeeded.count} secceeded #{format}"
+      out "┣━\ #{format :red, :bold} #{@rbcm.actions.failed.count} failed #{format}"
     else
     end
   end
