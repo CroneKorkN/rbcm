@@ -9,7 +9,7 @@ class Project
   attr_reader :path
 
   def capabilities
-    @project_files.each.capabilities.flatten(1)
+    @project_files.each.capabilities.flatten(1).compact
   end
 
   def definitions type=nil

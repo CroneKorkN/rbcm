@@ -172,12 +172,12 @@ class Sandbox
   end
 
   @@capabilities = []
-  def self.wrap_capability capability
+  def self.add_capability capability
     @@capabilities << capability.name unless capability.name[-1] == "!"
     # define capability method
-    define_method(:"__#{capability.name}", &capability.content)
+    define_method :"__#{capability.name}", &capability.content
     # define wrapper method
-    define_method(capability.name.to_sym) do |*ordered, **named|
+    define_method capability.name do |*ordered, **named|
       if capability.type == :regular
         params = Params.new ordered, named
         @node.jobs.append Job.new @node, capability.name, params

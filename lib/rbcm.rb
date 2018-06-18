@@ -12,11 +12,12 @@ require "pry"
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ :lib, :action, :file_system, :action_file, :node, :capability,
   :action_list, :action_command, :job, :remote, :sandbox, :array_hash, :params,
-  :template, :rbcm, :options, :cli, :definition, :project, :project_file
+  :template, :rbcm, :options, :cli, :definition, :project, :project_file,
+  :project_file_capabilities
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
-  def initialize project_path
+  def initialize project_path, interactive: true
     # initialize project
     @project = Project.new project_path
     # create nodes
@@ -36,10 +37,15 @@ class RBCM
     end
     # place capabilities
     @project.capabilities.each do |capability|
-      Sandbox.include capability
+      Sandbox.add_capability capability
     end
     # tell project path to template class
     Template.project_path = @project.path
+    # interactively?
+    return if interactive
+    parse
+    actions.each.check
+    actions.each.apply
   end
 
   attr_reader   :nodes, :groups, :project, :actions

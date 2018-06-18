@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
     "lib/params.rb",
     "lib/project.rb",
     "lib/project_file.rb",
+    "lib/project_file_capabilities.rb",
     "lib/rbcm.rb",
     "lib/remote.rb",
     "lib/sandbox.rb",
