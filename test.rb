@@ -1,13 +1,8 @@
 #!/usr/bin/env ruby
 
-class A
-  def m
-    p self
+module M
+  def self.method_missing *params
+    p params
   end
+  p m
 end
-
-class B
-end
-
-B.define_method :m, &A.new.method(:m)
-B.new.m2

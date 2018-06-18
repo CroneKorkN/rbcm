@@ -21,6 +21,23 @@ class Array
   end
 end
 
+class Object
+  def self.exclude base
+    base.instance_methods.each{|method| undef_method method}
+  end
+end
+
+# https://stackoverflow.com/questions/2079240/removing-undefining-a-class-method
+class Object
+  def self.deextend _module
+    _module.instance_methods.each do |method|
+      class <<self
+        undef_method method
+      end
+    end
+  end
+end
+
 #
 # quickeach
 #
