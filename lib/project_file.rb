@@ -4,37 +4,37 @@
 class Project::File
   def initialize project_file_path
     @path = project_file_path
-    @groups = {}
-    @patterns = {}
-    @nodes = {}
+    @definitions = []
     @capabilities = []
     method_names_cache = methods(false)
     instance_eval File.read project_file_path
     (methods(false) - method_names_cache).each do |capability_name|
       @capabilities.append Capability.new(
-        capability_name,
-        method(capability_name)
+        name:    capability_name.to_sym,
+        content: method(capability_name).to_proc
       )
     end
   end
 
-  attr_reader :capabilities, :groups, :patterns, :nodes, :path
+  attr_reader :capabilities, :definitions, :path
 
   private
 
   def group name=nil
-    @groups[name] = Definition.new Proc.new
+    @definitions.append Definition.new(
+      type:    :group,
+      name:    name,
+      content: Proc.new
+    )
   end
 
   def node names=nil
-    return @nodes unless names
-    [names].flatten.each do |name|
-      definition = Proc.new # Proc.new without paramaters catches a given block
-      if name.class == Regexp
-        @patterns[name] = Definition.new Proc.new, origin: "/#{name.source}/"
-      else
-        @nodes[name] = Definition.new Proc.new
-      end
+    [names].flatten(1).each do |name|
+      @definitions.append Definition.new(
+        type:    name.class == Regexp ? :pattern : :node,
+        name:    name,
+        content: Proc.new
+      )
     end
   end
 end

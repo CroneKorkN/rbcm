@@ -150,48 +150,6 @@ class Sandbox
     return r
   end
 
-  def self.import_capabilities capabilities_path
-    instance_methods_cache = instance_methods(false)
-    Dir["#{capabilities_path}/**/*.rb"].each {|path|
-      eval File.read(path)
-    }
-    @@capabilities = instance_methods(false).grep(/[^\!]$/) -
-                     instance_methods_cache +
-                     [:file, :run]
-    @@capabilities.each do |capability_name|
-      # copy method
-      define_method(
-        :"__#{capability_name}",
-        instance_method(capability_name)
-      )
-      # define wrapper method
-      define_method(capability_name.to_sym) do |*ordered, **named|
-        params = Params.new ordered, named
-        @node.jobs.append Job.new @node, capability_name, params
-        @node.triggered.append capability_name
-        __cache trigger: params[:trigger],
-              triggered_by: params[:triggered_by],
-              chain: capability_name do
-          send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
-        end
-        @dependency_cache = [:file]
-      end
-      next unless instance_methods(false).include? :"#{capability_name}!"
-      # copy method
-      define_method(
-        :"__#{capability_name}!",
-        instance_method(:"#{capability_name}!")
-      )
-      # define wrapper method
-      define_method(:"#{capability_name}!") do
-        __cache chain: __method__ do
-          send "__#{__method__}"
-        end
-        @dependency_cache = [:file]
-      end
-    end
-  end
-
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
       chain: [], source: nil, reset: nil, tag: nil, origin: nil
     @cache[:source].append []             if chain
@@ -211,6 +169,31 @@ class Sandbox
     @cache[:check].pop                    if check
     @cache[reset]         =  []           if reset
     @cache[:origin]       =  nil          if origin
+  end
+
+  @@capabilities = []
+  def self.add_capability capability
+    @@capabilities << capability.name unless capability.name[-1] == "!"
+    # define capability method
+    define_method(:"__#{capability.name}", &capability.content)
+    # define wrapper method
+    define_method(capability.name.to_sym) do |*ordered, **named|
+      if capability.type == :regular
+        params = Params.new ordered, named
+        @node.jobs.append Job.new @node, capability.name, params
+        @node.triggered.append capability.name
+        __cache trigger: params[:trigger],
+              triggered_by: params[:triggered_by],
+              chain: capability.name do
+          send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
+        end
+      else # capability.type == :final
+        __cache chain: __method__ do
+          send "__#{__method__}"
+        end
+      end
+      @dependency_cache = [:file]
+    end
   end
 
   def self.capabilities

@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
     "lib/cli.rb",
     "lib/rbcm.rb",
     "lib/definition.rb",
-    "lib/definition_file.rb",
     "lib/file_system.rb",
     "lib/job.rb",
     "lib/lib.rb",

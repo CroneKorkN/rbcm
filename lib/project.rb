@@ -12,15 +12,10 @@ class Project
     @project_files.each.capabilities.flatten(1)
   end
 
-  def nodes
-    @project_files.each.nodes
-  end
-
-  def groups
-    @project_files.each.pattterns
-  end
-
-  def pattterns
-    @project_files.each.pattterns
+  def definitions type=nil
+    with @project_files.each.definitions.flatten(1) do
+      return select{|definition| definition.type == type} if type
+      return self
+    end
   end
 end

@@ -1,10 +1,13 @@
 #!/usr/bin/env ruby
 
-def f &block
-  p block.binding.local_variables
+class A
+  def m
+    p self
+  end
 end
 
+class B
+end
 
-t = 1
-
-f {}
+B.define_method :m, &A.new.method(:m)
+B.new.m2
