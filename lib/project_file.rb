@@ -4,9 +4,10 @@ class Project::File
   def initialize project_file_path
     @path = project_file_path
     @definitions = []
-    @capabilities = []
+    file = File.read project_file_path
     method_names_cache = methods(false)
-    instance_eval File.read project_file_path
+    instance_eval file
+    @capabilities = Capability.dup.instance_eval file
     (methods(false) - method_names_cache).each do |capability_name|
       @capabilities.append Capability.new(
         name:    capability_name.to_sym,

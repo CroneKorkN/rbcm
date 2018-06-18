@@ -172,7 +172,7 @@ class Sandbox
   end
 
   @@capabilities = []
-  def self.add_capability capability
+  def self.wrap_capability capability
     @@capabilities << capability.name unless capability.name[-1] == "!"
     # define capability method
     define_method(:"__#{capability.name}", &capability.content)

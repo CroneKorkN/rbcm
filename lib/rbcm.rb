@@ -36,7 +36,7 @@ class RBCM
     end
     # place capabilities
     @project.capabilities.each do |capability|
-      Sandbox.add_capability capability
+      Sandbox.include capability
     end
     # tell project path to template class
     Template.project_path = @project.path

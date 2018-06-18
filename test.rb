@@ -1,13 +1,11 @@
 #!/usr/bin/env ruby
 
-class A
+module M
   def m
     p self
   end
 end
 
-class B
-end
-
-B.define_method :m, &A.new.method(:m)
-B.new.m2
+class C end
+C.define_method :m, &M.instance_method(:m).bind(C)
+C.new.m
