@@ -1,5 +1,4 @@
 # accepts a path to a node-file
-# provides affected node names and definition
 
 class Project::File
   def initialize project_file_path
