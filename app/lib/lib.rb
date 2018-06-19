@@ -21,15 +21,19 @@ class Array
   end
 
   # backport
-  def append element
-    self << element
+  unless defined? append
+    def append element
+      self << element
+    end
   end
 end
 
 class Fixnum
   # backport
-  def digits
-    self.to_s.chars.map(&:to_i)
+  unless defined? digits
+    def digits
+      self.to_s.chars.map(&:to_i)
+    end
   end
 end
 
