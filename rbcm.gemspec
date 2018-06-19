@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name        =  'rbcm'
-  spec.version     =  '0.0.7'
+  spec.version     =  '0.0.8'
   spec.date        =  '2018-03-21'
   spec.summary     =  "Ruby Config Management"
   spec.description =  "manage your servers via simple config-files"

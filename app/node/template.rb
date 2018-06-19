@@ -27,7 +27,7 @@ class Node::Template
   private
 
   def path
-    @path ||= Dir["#{@@project_path}/#{"capabilities/#{@capability.to_s.gsub("!","")}" if @capability}/#{@name}*"].first
+    @path ||= Dir["#{@@project_path}/**/#{@name}*"].first
   end
 
   def filename
