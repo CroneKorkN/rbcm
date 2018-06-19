@@ -15,7 +15,14 @@ class Node::Sandbox
     # define in instance, otherwise method-binding will be wrong (to class)
     @@capabilities = @node.rbcm.project.capabilities.each.name
     @node.rbcm.project.capabilities.each do |capability|
-      add_capability capability
+      __add_capability capability
+    end
+    # wrap base_capabilities
+    [:file, :run].each do |base_capability|
+      __add_capability Project::Capability.new(
+        name: base_capability,
+        content: method(base_capability).unbind
+      )
     end
   end
 
@@ -174,7 +181,7 @@ class Node::Sandbox
     @cache[reset]         =  []           if reset
   end
 
-  def add_capability capability
+  def __add_capability capability
     @@capabilities << capability.name unless capability.name[-1] == "!"
     # define capability method
     define_singleton_method :"__#{capability.name}", &capability.content.bind(self)
