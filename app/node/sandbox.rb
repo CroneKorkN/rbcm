@@ -67,8 +67,8 @@ class Node::Sandbox
     @dependency_cache += [capabilities].flatten(1)
   end
 
-  def check action, &block
-    __cache check: action do
+  def check line, &block
+    __cache check: line do
       instance_eval &block
     end
   end
@@ -84,7 +84,6 @@ class Node::Sandbox
       triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
       job: @node.jobs.last,
       source: @cache[:source].dup.flatten, # information from other nodes
-      origin: @cache[:origin].dup # origin of the definition
     )
   end
 
@@ -102,7 +101,6 @@ class Node::Sandbox
        triggered_by: @cache[:triggered_by].dup,
        job: @node.jobs.last,
        source: @cache[:source].dup.flatten, # information from other nodes
-       origin: @cache[:origin].dup # origin of the definition
      )
   end
 
@@ -156,7 +154,7 @@ class Node::Sandbox
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
-      chain: [], source: nil, reset: nil, tag: nil, origin: nil
+      chain: [], source: nil, reset: nil, tag: nil
     @cache[:source].append []             if chain
     @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
@@ -164,7 +162,6 @@ class Node::Sandbox
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
-    @cache[:origin]       =  origin       if origin
     yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
@@ -173,7 +170,6 @@ class Node::Sandbox
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
     @cache[reset]         =  []           if reset
-    @cache[:origin]       =  nil          if origin
   end
 
   def add_capability capability

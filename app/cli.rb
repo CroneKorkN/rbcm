@@ -4,6 +4,7 @@ class CLI
     render section: "RBCM starting", first: true
     # bootstrap
     @rbcm = rbcm = RBCM.new params[0] || `pwd`.chomp
+    render :project
     render :capabilities
     # parse
     rbcm.parse
@@ -74,11 +75,13 @@ class CLI
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-        out "┣━ #{triggerd_by}#{format color, :bold} #{"#{@action.origin} > " if @action.origin}#{(@action.chain).join(" > ")} " +
+        out "┣━ #{triggerd_by}#{format color, :bold} #{(@action.chain).join(" > ")} " +
         "#{format} #{format :params}#{@action.job.params}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
       out prefix + "capabilities: #{Node::Sandbox.capabilities.join(", ")}"
+    elsif element == :project
+      out prefix + "project: #{@rbcm.project.files.count} ruby files"
     elsif element == :nodes
       out prefix + @rbcm.nodes.values.collect{ |node|
         name = node.name.+(":").ljust(@rbcm.nodes.keys.each.length.max+1, " ")
