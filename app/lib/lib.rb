@@ -19,13 +19,9 @@ class Array
   def include_one? array
     (self & array).any?
   end
-end
 
-unless defined? Array.append
-  class Array
-    def append element
-      self << element
-    end
+  def append element
+    self << element
   end
 end
 
