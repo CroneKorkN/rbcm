@@ -21,7 +21,7 @@ class Node
   end
 
   def parse
-    @sandbox.evaluate definitions
+    @sandbox.evaluate definitions.flatten.compact
   end
 
   def capabilities

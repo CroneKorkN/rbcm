@@ -7,6 +7,7 @@ module M
 end
 
 class C end
-C.define_method :m, &M.instance_method(:m).bind(C)
-C.new.m
+c = C.new
+c.define_singleton_method :m, &M.instance_method(:m).bind(c)
+c.m
 p M.instance_methods

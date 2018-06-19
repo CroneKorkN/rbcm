@@ -12,7 +12,11 @@ class Sandbox
       chain: [@node.name], trigger: [], triggered_by: [], check: [],
       source: [], tag: []
     }
-
+    # define in instance, otherwise method-binding will be wrong (to class)
+    @@capabilities = @node.rbcm.project.capabilities.each.name
+    @node.rbcm.project.capabilities.each do |capability|
+      add_capability capability
+    end
   end
 
   def evaluate definitions
@@ -172,14 +176,13 @@ class Sandbox
     @cache[:origin]       =  nil          if origin
   end
 
-  @@capabilities = []
-  def self.add_capability capability
+  def add_capability capability
     @@capabilities << capability.name unless capability.name[-1] == "!"
     # define capability method
-    Sandbox.define_method :"__#{capability.name}", &capability.content
+    define_singleton_method :"__#{capability.name}", &capability.content.bind(self)
     # define wrapper method
     if capability.type == :regular
-      Sandbox.define_method capability.name do |*ordered, **named|
+      define_singleton_method capability.name do |*ordered, **named|
         params = Params.new ordered, named
         @node.jobs.append Job.new @node, capability.name, params
         @node.triggered.append capability.name
@@ -191,7 +194,7 @@ class Sandbox
         @dependency_cache = [:file]
       end
     else # capability.type == :final
-      Sandbox.define_method capability.name do
+      define_singleton_method capability.name do
         __cache chain: __method__ do
           send "__#{__method__}"
         end

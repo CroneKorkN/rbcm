@@ -21,6 +21,7 @@ class RBCM
     # initialize project
     @project = Project.new project_path
     # create nodes
+    @group_additions = ArrayHash.new
     @nodes = {}
     @project.definitions(:node).each do |node_definition|
       @nodes[node_definition.name] ||= Node.new self, node_definition.name
@@ -35,11 +36,7 @@ class RBCM
     @project.definitions(:group).each do |group_definition|
       @groups[group_definition.name] << group_definition
     end
-    # place capabilities
-    @project.capabilities.each do |capability|
-      Sandbox.add_capability capability
-    end
-    binding.pry
+    # else
     # tell project path to template class
     Template.project_path = @project.path
     # interactively?
