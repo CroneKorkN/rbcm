@@ -3,7 +3,7 @@ class Node::Remote
 
   def initialize node
     @host = node.name
-    @files = Node::FileSystem.new node
+    @files = Node::Filesystem.new node
   end
 
   def execute action

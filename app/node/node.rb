@@ -8,7 +8,7 @@ class Node
     @definitions = []
     @sandbox = Node::Sandbox.new self
     @remote = Node::Remote.new self
-    @files = Node::FileSystem.new self, overlays: @remote.files
+    @files = Node::Filesystem.new self, overlays: @remote.files
     @actions = ActionList.new
     @memberships = []
     @jobs = []

@@ -1,4 +1,4 @@
-class Node::FileSystem
+class Node::Filesystem
   def initialize node, overlays: false
     @node = node
     @underlying = overlays
@@ -9,7 +9,7 @@ class Node::FileSystem
     if @underlying
       @files[path] || @underlying[path]
     else
-      @files[path] ||= download path
+      @files[path] ||= download path #Node::File.new path: path, file_system:  self
     end
   end
 

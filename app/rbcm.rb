@@ -12,7 +12,7 @@ require "pry"
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ "action/action", "action/command", "action/file", "action/list",
   "lib/array_hash", "lib/lib", "node/node", "node/file", "node/job",
-  "node/file_system", "node/remote", "node/sandbox", "node/template",
+  "node/filesystem", "node/remote", "node/sandbox", "node/template",
   "lib/options", "lib/quick_each",
   "lib/params", "project/project", "project/definition", "project/file",
   "project/capability", "project/sandbox", "cli"
