@@ -171,7 +171,7 @@ class Node::Sandbox
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
-    yield if block_given?
+    r = yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
     @cache[:tag].pop                      if tag
@@ -179,6 +179,7 @@ class Node::Sandbox
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
     @cache[reset]         =  []           if reset
+    r
   end
 
   def __add_capability capability
@@ -191,19 +192,21 @@ class Node::Sandbox
         params = Params.new ordered, named
         @node.jobs.append Node::Job.new @node, capability.name, params
         @node.triggered.append capability.name
-        __cache trigger: params[:trigger],
+        r = __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
               chain: capability.name do
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
         end
         @dependency_cache = [:file]
+        r
       end
     else # capability.type == :final
       define_singleton_method capability.name do
-        __cache chain: __method__ do
+        r = __cache chain: __method__ do
           send "__#{__method__}"
         end
         @dependency_cache = [:file]
+        r
       end
     end
   end
