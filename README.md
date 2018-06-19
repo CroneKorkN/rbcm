@@ -3,7 +3,15 @@ Ruby Config Management
 
 Navigate into a configuration dir and call rbcm.
 
-`>_ rbcm`
+```bash
+rbcm
+```
+```bash
+rbcm project.rb
+```
+```bash
+rbcm project/
+```
 
 ## applying
 
