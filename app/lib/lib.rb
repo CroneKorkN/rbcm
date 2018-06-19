@@ -20,8 +20,15 @@ class Array
     (self & array).any?
   end
 
+  # backport
   def append element
     self << element
+  end
+end
+
+class Fixnum
+  def digits
+    self.to_s.chars.map(&:to_i)
   end
 end
 
