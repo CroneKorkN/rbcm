@@ -67,4 +67,19 @@ class RBCM
       node.capabilities.each{|capability| node.sandbox.send "#{capability}!"}
     end
   end
+
+  def check! &block
+    Net::SSH::Multi.start do |session|
+      session.via 'gateway', 'gateway-user'
+      @nodes.each do |name, node|
+        session.group name.to_sym do
+          session.use "root@#{name}"
+        end
+      end
+      actions.checkable.each do |action|
+        session.with(action.node.name.to_sym).exec action.check &block
+      end
+      session.loop
+    end
+  end
 end
