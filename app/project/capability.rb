@@ -1,3 +1,6 @@
+# holds a capability in form of an unbound method, extracted from
+# Project::Sandbox module
+
 class Project::Capability
   def initialize name:, content:
     @name = name

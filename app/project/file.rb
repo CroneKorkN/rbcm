@@ -1,4 +1,4 @@
-# accepts a path to a node-file
+# extracts capabilities and definitions from project files
 
 class Project::File
   def initialize project_file_path
