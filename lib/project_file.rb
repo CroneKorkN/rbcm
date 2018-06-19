@@ -13,7 +13,7 @@ class Project::File
     capability_module.instance_methods.each do |capability_name|
       @capabilities.append Capability.new(
         name:    capability_name.to_sym,
-        content: method(capability_name)
+        content: capability_module.instance_method(capability_name).bind(Sandbox)
       )
     end
   end

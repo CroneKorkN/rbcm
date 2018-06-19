@@ -39,6 +39,7 @@ class RBCM
     @project.capabilities.each do |capability|
       Sandbox.add_capability capability
     end
+    binding.pry
     # tell project path to template class
     Template.project_path = @project.path
     # interactively?
@@ -63,6 +64,7 @@ class RBCM
     # parse definitions
     log "parsing nodes"
     nodes.values.each.parse
+
     # parse group additions
     log "parsing additions"
     nodes.values.each do |node|

@@ -8,6 +8,6 @@ class Capability
   attr_reader :name, :content
 
   def type
-    @name[-1] == "!" ? :regular : :final
+    @name[-1] == "!" ? :final : :regular
   end
 end

@@ -12,6 +12,7 @@ class Sandbox
       chain: [@node.name], trigger: [], triggered_by: [], check: [],
       source: [], tag: []
     }
+
   end
 
   def evaluate definitions
@@ -175,10 +176,10 @@ class Sandbox
   def self.add_capability capability
     @@capabilities << capability.name unless capability.name[-1] == "!"
     # define capability method
-    define_method :"__#{capability.name}", &capability.content
+    Sandbox.define_method :"__#{capability.name}", &capability.content
     # define wrapper method
-    define_method capability.name do |*ordered, **named|
-      if capability.type == :regular
+    if capability.type == :regular
+      Sandbox.define_method capability.name do |*ordered, **named|
         params = Params.new ordered, named
         @node.jobs.append Job.new @node, capability.name, params
         @node.triggered.append capability.name
@@ -187,12 +188,15 @@ class Sandbox
               chain: capability.name do
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
         end
-      else # capability.type == :final
+        @dependency_cache = [:file]
+      end
+    else # capability.type == :final
+      Sandbox.define_method capability.name do
         __cache chain: __method__ do
           send "__#{__method__}"
         end
+        @dependency_cache = [:file]
       end
-      @dependency_cache = [:file]
     end
   end
 
