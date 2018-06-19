@@ -27,6 +27,7 @@ class Array
 end
 
 class Fixnum
+  # backport
   def digits
     self.to_s.chars.map(&:to_i)
   end
