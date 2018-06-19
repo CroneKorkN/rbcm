@@ -4,9 +4,9 @@ Ruby Config Management
 Navigate into a configuration dir and call rbcm.
 
 ```bash
-rbcm project.rb # single file
 rbcm            # cwd
 rbcm project/   # specific directory
+rbcm project.rb # single file
 ```
 
 ## applying
