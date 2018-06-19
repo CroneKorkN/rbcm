@@ -26,7 +26,7 @@ class Action::File < Action
     elsif @params[:template]
       Template.new(
         name: @params[:template],
-        capability: @chain[-2],
+        capability: @chain[-1],
         context: @params[:context]
       ).render
     end
