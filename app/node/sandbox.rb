@@ -75,6 +75,7 @@ class Node::Sandbox
 
   def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
     @node.actions << Action::Command.new(
+      node: @node,
       line: action,
       check: check,
       chain: @cache[:chain].dup.flatten(1),
@@ -93,6 +94,7 @@ class Node::Sandbox
          :template, :context, :tags]
      ).any?
      @node.actions << Action::File.new(
+       node: @node,
        path: path,
        params: Params.new([path], named),
        chain: [@cache[:chain].dup].flatten(1),

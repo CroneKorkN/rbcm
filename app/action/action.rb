@@ -6,12 +6,12 @@ class Action
 
   def initialize job:, chain:, path: nil, params: nil, line: nil, check: nil,
                  dependencies: nil, trigger: nil, triggered_by: nil,
-                 source: nil, tags: nil
+                 source: nil, tags: nil, node:
     @dependencies = [:file] + [dependencies].flatten - [chain.last]
     @trigger = [trigger, chain.last].flatten.compact
     @triggered_by = [triggered_by].flatten.compact
     @triggered = [];              @source = source
-    @node = job.node;             @job = job
+    @node = node;                 @job = job
     @chain = chain;               @capability = chain.last
     @obsolete = nil;              @approved = nil
     @tags = tags.compact.flatten

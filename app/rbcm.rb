@@ -1,13 +1,7 @@
 require "net/ssh"
-require "net/scp"
 require "fileutils"
 require "shellwords"
 require "diffy"
-require "optparse"
-require "parallel"
-require "yaml"
-
-require "pry"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ "action/action", "action/command", "action/file", "action/list",

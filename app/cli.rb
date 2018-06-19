@@ -76,7 +76,7 @@ class CLI
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
         out "┣━ #{triggerd_by}#{format color, :bold} #{(@action.chain).join(" > ")} " +
-        "#{format} #{format :params}#{@action.job.params}#{format}" +
+        "#{format} #{format :params}#{@action.job.params if @action.job}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
       out prefix + "capabilities: #{Node::Sandbox.capabilities.join(", ")}"

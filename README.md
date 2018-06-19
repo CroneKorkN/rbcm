@@ -26,13 +26,12 @@ All approved actions are being executed.
 
 # documentation
 
-Rbcm expects to be called from within a configuration-directory. It must contain
-each, a `capabilities/`- and a `definitions/`-directory.
+Rbcm expects to be called from within a project directory.
 
 ## capabilities
 
 Nodes are defined by calling capabilities. Capabilities are user defined methods
-residing in files in `capabilities/` directory. Each capability may have a
+residing in project directory. Each capability may have a
 second incarnation with a bang suffix ("cap!"). The bang version is called once
 on each node if the node called the non-bang-version before.
 
@@ -118,7 +117,7 @@ end
 
 ## nodes
 
-Nodes represent a real server; they reside in the `definitions/`-directory.
+Nodes represent a real server.
 
 ```ruby
 node "example.com" do
@@ -133,8 +132,7 @@ Further actions:
 
 ## groups
 
-Groups can be used to apply definition to multiple nodes. They also reside in
-the `definitions/`-directory.
+Groups can be used to apply definition to multiple nodes.
 
 ```ruby
 group :dhcp_clients do
@@ -239,5 +237,6 @@ end
 - display "used infos from" when approving
 - https://github.com/jamis/net-ssh-multi, https://github.com/delano/rye
 - warn if apt? hasnt been called yet
+- dont
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
