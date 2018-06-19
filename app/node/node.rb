@@ -6,9 +6,9 @@ class Node
     @rbcm = rbcm
     @name = name
     @definitions = []
-    @sandbox = Sandbox.new self
-    @remote = Remote.new self
-    @files = FileSystem.new self, overlays: @remote.files
+    @sandbox = Node::Sandbox.new self
+    @remote = Node::Remote.new self
+    @files = Node::FileSystem.new self, overlays: @remote.files
     @actions = ActionList.new
     @memberships = []
     @jobs = []

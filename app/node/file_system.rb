@@ -1,4 +1,4 @@
-class FileSystem
+class Node::FileSystem
   def initialize node, overlays: false
     @node = node
     @underlying = overlays

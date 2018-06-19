@@ -1,4 +1,4 @@
-class Template
+class Node::Template
   @@engines = [:erb, :mustache]
 
   def initialize name:, capability: nil, context: {}

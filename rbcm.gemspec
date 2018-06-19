@@ -9,30 +9,8 @@ Gem::Specification.new do |spec|
   spec.executables << 'rbcm'
   spec.homepage    =  'https://github.com/CroneKorkN/rbcm'
   spec.license     =  'MIT'
-  spec.files       =  [
-    "lib/action_file.rb",
-    "lib/action_command.rb",
-    "lib/action.rb",
-    "lib/action_list.rb",
-    "lib/array_hash.rb",
-    "lib/capability.rb",
-    "lib/cli.rb",
-    "lib/rbcm.rb",
-    "lib/definition.rb",
-    "lib/file_system.rb",
-    "lib/job.rb",
-    "lib/lib.rb",
-    "lib/node.rb",
-    "lib/options.rb",
-    "lib/params.rb",
-    "lib/project.rb",
-    "lib/project_file.rb",
-    "lib/project_file_capabilities.rb",
-    "lib/rbcm.rb",
-    "lib/remote.rb",
-    "lib/sandbox.rb",
-    "lib/template.rb",
-  ]
+  spec.require_paths = ['app/']
+  spec.files       =  Dir['app/**/*.rb']
   spec.add_runtime_dependency 'diffy',     "= 3.2.0"
   spec.add_runtime_dependency 'mustache',  "= 1.0.2"
   spec.add_runtime_dependency 'net-ssh',   "= 4.2.0"

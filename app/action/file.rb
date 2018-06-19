@@ -24,7 +24,7 @@ class Action::File < Action
     @content ||= if @params[:content]
       @params[:content].to_s
     elsif @params[:template]
-      Template.new(
+      Node::Template.new(
         name: @params[:template],
         capability: @chain[-1],
         context: @params[:context]

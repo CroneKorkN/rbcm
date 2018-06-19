@@ -8,12 +8,12 @@ class Project::File
     file = File.read project_file_path
     method_names_cache = methods(false)
     instance_eval file
-    capability_module = Project::File::Capabilities.dup
-    capability_module.module_eval(file)
-    capability_module.instance_methods.each do |capability_name|
-      @capabilities.append Capability.new(
-        name:    capability_name.to_sym,
-        content: capability_module.instance_method(capability_name)
+    sandbox = Project::Sandbox.dup
+    sandbox.module_eval(file)
+    sandbox.instance_methods.each do |name|
+      @capabilities.append Project::Capability.new(
+        name:    name,
+        content: sandbox.instance_method(name)
       )
     end
   end
@@ -23,7 +23,7 @@ class Project::File
   private
 
   def group name=nil
-    @definitions.append Definition.new(
+    @definitions.append Project::Definition.new(
       type:    :group,
       name:    name,
       content: Proc.new
@@ -32,7 +32,7 @@ class Project::File
 
   def node names=nil
     [names].flatten(1).each do |name|
-      @definitions.append Definition.new(
+      @definitions.append Project::Definition.new(
         type:    name.class == Regexp ? :pattern : :node,
         name:    name,
         content: Proc.new

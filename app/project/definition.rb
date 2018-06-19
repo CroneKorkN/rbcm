@@ -1,4 +1,4 @@
-class Definition
+class Project::Definition
   def initialize type:, name:, content:
     @type, @name, @content = type, name, content
   end

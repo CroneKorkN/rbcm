@@ -78,7 +78,7 @@ class CLI
         "#{format} #{format :params}#{@action.job.params}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
-      out prefix + "capabilities: #{Sandbox.capabilities.join(", ")}"
+      out prefix + "capabilities: #{Node::Sandbox.capabilities.join(", ")}"
     elsif element == :nodes
       out prefix + @rbcm.nodes.values.collect{ |node|
         name = node.name.+(":").ljust(@rbcm.nodes.keys.each.length.max+1, " ")

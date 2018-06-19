@@ -1,9 +1,9 @@
-class Remote
+class Node::Remote
   attr_reader :files
 
   def initialize node
     @host = node.name
-    @files = FileSystem.new node
+    @files = Node::FileSystem.new node
   end
 
   def execute action

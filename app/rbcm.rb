@@ -10,10 +10,12 @@ require "yaml"
 require "pry"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
-[ :lib, :action, :file_system, :action_file, :node, :capability,
-  :action_list, :action_command, :job, :remote, :sandbox, :array_hash, :params,
-  :template, :rbcm, :options, :cli, :definition, :project, :project_file,
-  :project_file_capabilities
+[ "action/action", "action/command", "action/file", "action/list",
+  "lib/array_hash", "lib/lib", "node/node", "node/file", "node/job",
+  "node/file_system", "node/remote", "node/sandbox", "node/template",
+  "lib/options", "lib/quick_each",
+  "lib/params", "project/project", "project/definition", "project/file",
+  "project/capability", "project/sandbox", "cli"
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
@@ -38,7 +40,7 @@ class RBCM
     end
     # else
     # tell project path to template class
-    Template.project_path = @project.path
+    Node::Template.project_path = @project.path
   end
 
   attr_reader   :nodes, :groups, :project, :actions

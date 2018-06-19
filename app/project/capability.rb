@@ -1,4 +1,4 @@
-class Capability
+class Project::Capability
   def initialize name:, content:
     @name = name
     @content = content

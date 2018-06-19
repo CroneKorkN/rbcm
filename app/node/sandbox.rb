@@ -1,7 +1,7 @@
 # runs a definition and catches jobs
 # accepts definition-Proc and provides definition-Proc and job list
 
-class Sandbox
+class Node::Sandbox
   attr_reader :content, :jobs
 
   def initialize node
@@ -184,7 +184,7 @@ class Sandbox
     if capability.type == :regular
       define_singleton_method capability.name do |*ordered, **named|
         params = Params.new ordered, named
-        @node.jobs.append Job.new @node, capability.name, params
+        @node.jobs.append Node::Job.new @node, capability.name, params
         @node.triggered.append capability.name
         __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
