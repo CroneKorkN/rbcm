@@ -1,9 +1,13 @@
 class Project
   def initialize path
     @path = path
-    @files = Dir["#{path}/**/*.rb"].collect{ |project_file_path|
-      Project::File.new project_file_path
-    }
+    if File.directory? path
+      @files = Dir["#{path}/**/*.rb"].collect{ |project_file_path|
+        Project::ProjectFile.new project_file_path
+      }
+    elsif
+      @files = [Project::ProjectFile.new(path)]
+    end
   end
 
   attr_reader :path, :files

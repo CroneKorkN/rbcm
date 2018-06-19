@@ -1,4 +1,4 @@
-class Node::Filesystem
+class Node::NodeFilesystem
   def initialize node, overlays: false
     @node = node
     @underlying = overlays
@@ -11,7 +11,7 @@ class Node::Filesystem
     if @underlying
       @files[path] || @underlying[path]
     else
-      @files[path] ||= Node::File.new path: path, filesystem: self
+      @files[path] ||= Node::NodeFile.new path: path, filesystem: self
     end
   end
 end

@@ -1,6 +1,6 @@
 # extracts capabilities and definitions from project files
 
-class Project::File
+class Project::ProjectFile
   def initialize project_file_path
     @path = project_file_path
     @definitions = []

@@ -1,4 +1,4 @@
-class Node::File
+class Node::NodeFile
   def initialize path:, filesystem:
     @path       = path
     @filesystem = filesystem
