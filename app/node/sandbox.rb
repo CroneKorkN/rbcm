@@ -204,6 +204,6 @@ class Node::Sandbox
   end
 
   def self.capabilities
-    @@capabilities
+    @@capabilities.uniq
   end
 end

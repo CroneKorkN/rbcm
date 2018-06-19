@@ -9,13 +9,8 @@ class Node::Filesystem
     if @underlying
       @files[path] || @underlying[path]
     else
-      @files[path] ||= download path #Node::File.new path: path, file_system:  self
+      @files[path] ||= Node::File.new path: path, filesystem: self
     end
-  end
-
-  def []= path, content
-    raise "ERROR: dont change remote fs" unless @underlying
-    @files[path] = content
   end
 
   def download path

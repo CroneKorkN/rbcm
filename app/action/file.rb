@@ -4,11 +4,11 @@ class Action::File < Action
 
   def check!
     # compare
-    @node.files[path]
+    @node.files[path].content
   end
 
   def obsolete
-    @node.files[path].chomp.chomp == content.chomp.chomp
+    @node.files[path].content.chomp.chomp == content.chomp.chomp
   end
 
   def siblings
