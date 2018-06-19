@@ -17,7 +17,7 @@ APPDIR = File.expand_path File.dirname(__FILE__)
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
 class RBCM
-  def initialize project_path, interactive: true
+  def initialize project_path
     # initialize project
     @project = Project.new project_path
     # create nodes
@@ -39,11 +39,6 @@ class RBCM
     # else
     # tell project path to template class
     Template.project_path = @project.path
-    # interactively?
-    return if interactive
-    parse
-    actions.each.check
-    actions.each.apply
   end
 
   attr_reader   :nodes, :groups, :project, :actions
@@ -58,16 +53,12 @@ class RBCM
   end
 
   def parse
-    # parse definitions
     log "parsing nodes"
     nodes.values.each.parse
-
-    # parse group additions
     log "parsing additions"
     nodes.values.each do |node|
       node.sandbox.evaluate node.additions
     end
-    # parse final capabilities
     log "parsing 'cap!'"
     nodes.values.each do |node|
       node.capabilities.each{|capability| node.sandbox.send "#{capability}!"}
