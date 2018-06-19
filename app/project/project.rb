@@ -5,7 +5,7 @@ class Project
       @files = Dir["#{path}/**/*.rb"].collect{ |project_file_path|
         Project::ProjectFile.new project_file_path
       }
-    elsif
+    else
       @files = [Project::ProjectFile.new(path)]
     end
   end
