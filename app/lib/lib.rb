@@ -21,6 +21,14 @@ class Array
   end
 end
 
+unless defined? Array.append
+  class Array
+    def append element
+      self << element
+    end
+  end
+end
+
 # a hash which keys are initiated as arrays
 # default values via `Hash.new []` are inadequate for being volatile
 
