@@ -12,7 +12,7 @@ APPDIR = File.expand_path File.dirname(__FILE__)
   "node/template",
   "lib/lib",         "lib/array_hash",
   "lib/options",     "lib/quick_each",
-  "lib/params",
+  "lib/params",      "lib/aescrypt",
   "project/project", "project/definition",
   "project/file",    "project/capability",
   "project/sandbox",

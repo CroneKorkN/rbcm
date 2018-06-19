@@ -113,6 +113,10 @@ class Node::Sandbox
      )
   end
 
+  def decrypt secret
+    AESCrypt.decrypt secret, File.read(File.expand_path("~/.rbcm.secret")).chomp
+  end
+
   # handle getter method calls
   def method_missing name, *named, **ordered, &block
     #log "method #{name} missing on #{@name}"

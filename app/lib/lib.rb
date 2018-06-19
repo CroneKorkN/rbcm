@@ -28,7 +28,7 @@ class Array
   end
 end
 
-class Fixnum
+class Integer
   # backport
   unless defined? digits
     def digits
