@@ -7,10 +7,16 @@ class Node::File
   attr_writer :content, :mode
 
   def content
-    @content ||= @filesystem.download @path
+    return @content if @content
+    log "DOWNLOADING #{@filesystem.node.name}: '#{@path}'"
+    response = @filesystem.node.remote.execute("cat '#{@path}'")
+    response = "" if response.exitstatus != 0
+    @content = response
   end
 
   def mode
-    @mode ||= @filesystem.mode @path
+    @mode ||= @filesystem.node.remote.execute(
+      "stat -c \"%a\" * '#{@path}'"
+    ).chomp.chomp.to_i
   end
 end
