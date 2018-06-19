@@ -4,7 +4,7 @@ class Node::File
     @filesystem = filesystem
   end
 
-  attr_writer :content, :mode
+  attr_writer :content, :mode 
 
   def content
     @content ||= (
