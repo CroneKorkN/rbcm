@@ -1,13 +1,24 @@
 class Project
-  def initialize path
+  def initialize path, template_engines: [:mustache, :erb]
     @path = path
+    @files = []
+    @templates = []
+    @else = []
     if File.directory? path
-      @files = Dir["#{path}/**/*.rb"].collect{ |project_file_path|
-        Project::ProjectFile.new project_file_path
-      }
+      Dir["#{path}/**/*"].each do |path|
+        if path.end_with? ".rb"
+          @files << Project::ProjectFile.new(path)
+        elsif template_engines.include? path.split(".").last.to_sym
+          @templates << path
+        else
+          @else << path
+        end
+      end
+      p @templates
     else
       @files = [Project::ProjectFile.new(path)]
     end
+    raise "ERROR: empty project" unless @files.any?
   end
 
   attr_reader :path, :files
@@ -21,5 +32,10 @@ class Project
       return select{|definition| definition.type == type} if type
       return self
     end
+  end
+
+  #TODO?
+  def template name
+    # @templates.find{|name| name...}
   end
 end
