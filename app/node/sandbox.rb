@@ -202,7 +202,6 @@ class Node::Sandbox
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
         end
         @dependency_cache = [:file]
-        r
       end
     else # capability.type == :final
       define_singleton_method capability.name do
@@ -210,9 +209,9 @@ class Node::Sandbox
           send "__#{__method__}"
         end
         @dependency_cache = [:file]
-        r
       end
     end
+    r
   end
 
   def self.capabilities
