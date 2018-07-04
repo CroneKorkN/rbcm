@@ -11,6 +11,7 @@ class Project::ProjectFile
     sandbox = Project::Sandbox.dup
     sandbox.module_eval(file)
     sandbox.instance_methods.each do |name|
+      raise "ERROR: capability name '#{name}' not allowed" if [:node, :group].include? name
       @capabilities.append Project::Capability.new(
         name:    name,
         content: sandbox.instance_method(name)

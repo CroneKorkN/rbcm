@@ -242,5 +242,6 @@ end
 - https://github.com/jamis/net-ssh-multi, https://github.com/delano/rye
 - warn if apt? hasnt been called yet
 - dont
+- https://shopify.github.io/liquid/basics/introduction/
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
