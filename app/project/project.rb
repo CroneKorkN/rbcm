@@ -3,25 +3,13 @@ class Project
     @path = path
     @files = []
     @templates = []
-    @else = []
-    if File.directory? path
-      Dir["#{path}/**/*"].each do |path|
-        if path.end_with? ".rb"
-          @files << Project::ProjectFile.new(path)
-        elsif template_engines.include? path.split(".").last.to_sym
-          @templates << path
-        else
-          @else << path
-        end
-      end
-      p @templates
-    else
-      @files = [Project::ProjectFile.new(path)]
-    end
-    raise "ERROR: empty project" unless @files.any?
+    @other = []
+    @directories = []
+    @template_engines = template_engines
+    load_files path
   end
 
-  attr_reader :path, :files
+  attr_reader :path, :files, :templates, :other, :directories
 
   def capabilities
     @files.each.capabilities.flatten(1).compact
@@ -37,5 +25,28 @@ class Project
   #TODO?
   def template name
     # @templates.find{|name| name...}
+  end
+
+
+  private
+
+  def load_files path
+    if File.directory? path
+      Dir["#{path}/**/*"].each do |file_path|
+        if file_path.end_with? ".rb"
+          @files << Project::ProjectFile.new(file_path)
+        elsif @template_engines.include? file_path.split(".").last.to_sym
+          @templates << file_path.sub(@path, "")
+        elsif File.directory? path
+          @directories << file_path.sub(@path, "")
+        else
+          @other << file_path.sub(@path, "")
+        end
+      end
+      log "templates: #{@templates}"
+    else
+      @files = [Project::ProjectFile.new(@path)]
+    end
+    raise "ERROR: empty project" unless @files.any?
   end
 end

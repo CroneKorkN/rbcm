@@ -81,10 +81,11 @@ class CLI
     elsif element == :capabilities
       out prefix + "capabilities: #{Node::Sandbox.capabilities.join(", ")}"
     elsif element == :project
-      out prefix + "project: #{@rbcm.project.files.count} ruby files"
+      out prefix + "project: #{@rbcm.project.files.count} ruby files, #{@rbcm.project.templates.count} templates"
+      out prefix + "  #{@rbcm.project.directories.count} directories, #{@rbcm.project.other.count} other files"
     elsif element == :nodes
       out prefix + @rbcm.nodes.values.collect{ |node|
-        name = node.name.+(":").ljust(@rbcm.nodes.keys.each.length.max+1, " ")
+        name = node.name.to_s.+(":").ljust(@rbcm.nodes.keys.each.length.max+1, " ")
         jobs = node.jobs.count.to_s.rjust(@rbcm.nodes.values.collect{|node| node.jobs.count}.max.digits.count, " ")
         actions = node.actions.count.to_s.rjust(@rbcm.nodes.values.collect{|node| node.actions.count}.max.digits.count, " ")
         "#{name} #{jobs} jobs, #{actions} actions"
