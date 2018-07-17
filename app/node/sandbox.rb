@@ -115,11 +115,12 @@ class Node::Sandbox
      )
   end
 
-  def dir templates:
+  def dir path="", templates:
     @node.rbcm.project.templates.select{ |template|
       /^#{working_dir}/.match? template
     }.each do |template|
-      file template, template: template
+      file path + template.gsub(/^#{working_dir}\/#{templates}/,""),
+        template: template
     end
   end
 
