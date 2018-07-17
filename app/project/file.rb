@@ -1,7 +1,8 @@
 # extracts capabilities and definitions from project files
 
 class Project::ProjectFile
-  def initialize project_file_path
+  def initialize project, project_file_path
+    @project = project
     @path = project_file_path
     @definitions = []
     @capabilities = []
@@ -14,7 +15,8 @@ class Project::ProjectFile
       raise "ERROR: capability name '#{name}' not allowed" if [:node, :group].include? name
       @capabilities.append Project::Capability.new(
         name:    name,
-        content: sandbox.instance_method(name)
+        content: sandbox.instance_method(name),
+        path:    relative_path
       )
     end
   end
@@ -27,7 +29,8 @@ class Project::ProjectFile
     @definitions.append Project::Definition.new(
       type:    :group,
       name:    name,
-      content: Proc.new
+      content: Proc.new,
+      path:    relative_path
     )
   end
 
@@ -36,8 +39,15 @@ class Project::ProjectFile
       @definitions.append Project::Definition.new(
         type:    name.class == Regexp ? :pattern : :node,
         name:    name,
-        content: Proc.new
+        content: Proc.new,
+        path:    relative_path
       )
     end
+  end
+
+  def relative_path
+    p @path
+    p @path.gsub /^#{@project.path}/, ""
+    @path.gsub /^#{@project.path}/, ""
   end
 end

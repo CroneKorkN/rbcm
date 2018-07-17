@@ -9,7 +9,7 @@ APPDIR = File.expand_path File.dirname(__FILE__)
   "node/node",       "node/file",
   "node/job",        "node/filesystem",
   "node/remote",     "node/sandbox",
-  "node/template",
+  "node/template",   "node/job_search",
   "lib/lib",         "lib/array_hash",
   "lib/options",     "lib/quick_each",
   "lib/params",      "lib/aescrypt",

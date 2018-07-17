@@ -34,7 +34,7 @@ class Project
     if File.directory? path
       Dir["#{path}/**/*"].each do |file_path|
         if file_path.end_with? ".rb"
-          @files << Project::ProjectFile.new(file_path)
+          @files << Project::ProjectFile.new(self, file_path)
         elsif @template_engines.include? file_path.split(".").last.to_sym
           @templates << file_path.sub(@path, "")
         elsif File.directory? path

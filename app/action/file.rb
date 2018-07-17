@@ -27,8 +27,7 @@ class Action::File < Action
       Node::Template.new(
         name: @params[:template],
         capability: @chain[-1],
-        context: @params[:context]
-      ).render
+      ).render context: @params[:context]
     end
   end
 

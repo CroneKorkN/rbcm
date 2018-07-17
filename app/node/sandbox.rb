@@ -21,7 +21,8 @@ class Node::Sandbox
     [:file, :run].each do |base_capability|
       __add_capability Project::Capability.new(
         name: base_capability,
-        content: method(base_capability).unbind
+        content: method(base_capability).unbind,
+        path: false
       )
     end
   end
@@ -92,6 +93,7 @@ class Node::Sandbox
       triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
       job: @node.jobs.last,
       source: @cache[:source].dup.flatten, # information from other nodes
+      # cache: @cache.dup,
     )
   end
 
@@ -111,6 +113,12 @@ class Node::Sandbox
        job: @node.jobs.last,
        source: @cache[:source].dup.flatten, # information from other nodes
      )
+  end
+
+  def dir templates:
+    @node.rbcm.project.templates.collect do |template|
+
+    end
   end
 
   def decrypt secret
@@ -164,6 +172,7 @@ class Node::Sandbox
     end
     return r.collect &block if block_given? # no-each-syntax
     return r
+    JobSearch.new r
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
@@ -204,7 +213,7 @@ class Node::Sandbox
         @dependency_cache = [:file]
         r
       end
-    else # capability.type == :final
+    elsif capability.type == :final
       define_singleton_method capability.name do
         r = __cache chain: __method__ do
           send "__#{__method__}"
@@ -212,7 +221,10 @@ class Node::Sandbox
         @dependency_cache = [:file]
         r
       end
+    else
+      raise "unknown capability type #{capability.type}"
     end
+    # return JobSearch.new r
   end
 
   def self.capabilities

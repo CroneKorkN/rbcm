@@ -2,10 +2,11 @@
 # Project::Sandbox module
 
 class Project::Capability
-  def initialize name:, content:
+  def initialize name:, content:, path:
     @name = name
     @content = content
     @type = type
+    @path = path
   end
 
   attr_reader :name, :content
