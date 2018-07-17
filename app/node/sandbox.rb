@@ -207,8 +207,7 @@ class Node::Sandbox
         @node.triggered.append capability.name
         r = __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
-              chain: capability.name
-        do
+              chain: capability.name do
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
         end
         @dependency_cache = [:file]
