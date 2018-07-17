@@ -9,7 +9,7 @@ class Node::Sandbox
     @name = node.name
     @dependency_cache = []
     @cache = {
-      chain: [@node.name], trigger: [], triggered_by: [], check: [],
+      chain: [@node], trigger: [], triggered_by: [], check: [],
       source: [], tag: []
     }
     # define in instance, otherwise method-binding will be wrong (to class)
@@ -116,9 +116,17 @@ class Node::Sandbox
   end
 
   def dir templates:
-    @node.rbcm.project.templates.collect{ |template|
+    @node.rbcm.project.templates.select{ |template|
+      /^#{working_dir}/.match? template
+    }.each do |template|
+      file template, template: template
+    end
+  end
 
-    }
+  def working_dir
+    @cache[:chain].select{ |i|
+      i.class == Node or i.class == Project::Capability
+    }.last.path.split("/")[0..-2].join("/")
   end
 
   def decrypt secret
@@ -207,7 +215,7 @@ class Node::Sandbox
         @node.triggered.append capability.name
         r = __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
-              chain: capability.name do
+              chain: capability do
           send "__#{__method__}", *params.delete(:trigger, :triggered_by).sendable
         end
         @dependency_cache = [:file]
@@ -215,7 +223,7 @@ class Node::Sandbox
       end
     elsif capability.type == :final
       define_singleton_method capability.name do
-        r = __cache chain: __method__ do
+        r = __cache chain: capability do
           send "__#{__method__}"
         end
         @dependency_cache = [:file]

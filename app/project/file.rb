@@ -46,8 +46,6 @@ class Project::ProjectFile
   end
 
   def relative_path
-    p @path
-    p @path.gsub /^#{@project.path}/, ""
     @path.gsub /^#{@project.path}/, ""
   end
 end

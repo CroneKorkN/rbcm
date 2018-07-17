@@ -27,7 +27,11 @@ class RBCM
     @group_additions = ArrayHash.new
     @nodes = {}
     @project.definitions(:node).each do |node_definition|
-      @nodes[node_definition.name] ||= Node.new self, node_definition.name
+      @nodes[node_definition.name] ||= Node.new(
+        self,
+        node_definition.name,
+        node_definition.path
+      )
       @nodes[node_definition.name] << node_definition
       # apply pattern definitions to node
       @nodes[node_definition.name] << @project.definitions(:pattern).collect do |pattern_definition|

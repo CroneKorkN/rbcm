@@ -9,9 +9,13 @@ class Project::Capability
     @path = path
   end
 
-  attr_reader :name, :content
+  attr_reader :name, :content, :path
 
   def type
     @name[-1] == "!" ? :final : :regular
+  end
+
+  def to_str
+    name.to_s
   end
 end
