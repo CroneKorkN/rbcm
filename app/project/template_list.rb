@@ -1,5 +1,9 @@
 class RBCM::TemplateList < Array
-  def filter
-    
+  def for target_path
+
   end
+
+  def under target_path
+
+  end 
 end

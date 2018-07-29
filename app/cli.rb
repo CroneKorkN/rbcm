@@ -64,7 +64,7 @@ class CLI
       @action = action
       response = action.apply!
       render :title, color: response.exitstatus == 0 ? :green : :red
-      render :command if response.exitstatus != 0
+      render :command if action.class == Action::Command and response.exitstatus != 0
       render response: response if response.length > 0
     end
   end
