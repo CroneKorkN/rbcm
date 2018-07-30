@@ -99,9 +99,9 @@ class Node::Sandbox
         :template, :context, :tags]
     ).any?
     job = @node.jobs.last
-    run "mkdir -p #{path.split('/')[0..-2].join('/')}",
-      check: "ls #{path.split('/')[0..-2].join('/')}"
-    __cache tag: tags, trigger: trigger, triggered_by: triggered_by do # TODO tag
+    run "mkdir -p #{File.dirname path}",
+      check: "ls #{File.dirname path}"
+    __cache tag: tags, trigger: trigger, triggered_by: triggered_by do
       @node.actions << Action::File.new(
         node: @node,
         path: path,
@@ -112,15 +112,15 @@ class Node::Sandbox
     end
   end
 
-  def dir path="", templates:, context: {}
-    p working_dir
-    @node.rbcm.project.templates.select{ |template|
-      /^#{working_dir}/.match? template
-    }.each do |template|
-      p template
-      file path + template.gsub(/^#{working_dir}\/#{templates}/,"").gsub(".erb", "").gsub(".mustache", ""),
-        template: template,
-        context: context
+  def dir path="", templates:, context: {}, tags: nil, trigger: nil, triggered_by: nil
+    __cache tag: tags, trigger: trigger, triggered_by: triggered_by do
+      @node.rbcm.project.templates.select{ |template|
+        /^#{working_dir}/.match? template
+      }.each do |template|
+        file path + template.gsub(/^#{working_dir}\/#{templates}/,"").gsub(".erb", "").gsub(".mustache", ""),
+          template: template,
+          context: context
+      end
     end
   end
 
