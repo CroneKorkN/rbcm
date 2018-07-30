@@ -44,8 +44,6 @@ class CLI
 
   def approve actions
     [actions].flatten(1).each do |action|
-      binding.pry
-      
       @action = action
       render :title, color: (action.obsolete ? :green : :yellow)
       render :command if action.class == Action::Command
