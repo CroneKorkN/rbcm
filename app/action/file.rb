@@ -24,6 +24,9 @@ class Action::File < Action
     @content ||= if @params[:content]
       @params[:content].to_s
     elsif @params[:template]
+      # @node.rbcm.project.templates.find_for(
+      #  @params[:template]
+      # ).render context: @params[:context]
       Node::Template.new(
         name: @params[:template],
         capability: @chain[-1],

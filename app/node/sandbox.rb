@@ -93,7 +93,7 @@ class Node::Sandbox
       triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
       job: @node.jobs.last,
       source: @cache[:source].dup.flatten, # information from other nodes
-      # cache: @cache.dup,
+      # state: @cache.dup,
     )
   end
 
