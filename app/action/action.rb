@@ -2,21 +2,20 @@ class Action
   attr_accessor :approved, :applied
   attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
                 :capability, :obsolete, :job, :check, :triggered, :result,
-                :source, :path, :tags
+                :source, :path, :tags, :line
 
-  def initialize job:, chain:, path: nil, params: nil, line: nil, check: nil,
-                 dependencies: nil, trigger: nil, triggered_by: nil,
-                 source: nil, tags: nil, node:
-    @dependencies = [:file] + [dependencies].flatten - [chain.last]
-    @trigger = [trigger, chain.last].flatten.compact
-    @triggered_by = [triggered_by].flatten.compact
-    @triggered = [];              @source = source
+  def initialize job:, path: nil, params: nil, line: nil, check: nil,
+                 dependencies: nil, node:, state:
+    @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
+    @trigger = [state[:trigger], state[:chain].last].flatten.compact
+    @triggered_by = [state[:triggerd_by]].flatten.compact
+    @triggered = [];              @source = state[:source]
     @node = node;                 @job = job
-    @chain = chain;               @capability = chain.last
+    @chain = state[:chain];       @capability = state[:chain].last
     @obsolete = nil;              @approved = nil
-    @tags = tags.compact.flatten
+    @tags = state[:tag].compact.flatten
     # command specific
-    @line = line;                @check = check
+    @line = line;                @check = state[:check].last
     # file specific
     @path = path;                @params = params
   end

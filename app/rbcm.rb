@@ -2,6 +2,7 @@ require "net/ssh"
 require "fileutils"
 require "shellwords"
 require "diffy"
+require "pry"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ "action/action",   "action/command",

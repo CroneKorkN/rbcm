@@ -82,37 +82,31 @@ class Node::Sandbox
   end
 
   def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
-    @node.actions << Action::Command.new(
-      node: @node,
-      line: action,
-      check: check,
-      chain: @cache[:chain].dup.flatten(1),
-      dependencies: @dependency_cache.dup,
-      tags: [tags] + @cache[:tag].dup,
-      trigger: [@cache[:trigger].dup, trigger].flatten(1),
-      triggered_by: [triggered_by, @cache[:triggered_by].dup].flatten(1),
-      job: @node.jobs.last,
-      source: @cache[:source].dup.flatten, # information from other nodes
-      # state: @cache.dup,
-    )
+    __cache check: check, tag: tags, trigger: trigger, triggered_by: triggered_by do
+      @node.actions << Action::Command.new(
+        node: @node,
+        line: action,
+        dependencies: @dependency_cache.dup,
+        job: @node.jobs.last,
+        state: @cache.collect{|k,v| [k, v.dup]}.to_h,
+      )
+    end
   end
 
-  def file path, trigger: nil, **named
+  def file path, tags: nil, trigger: nil, triggered_by: nil, **named
      raise "RBCM: invalid file paramteres '#{named}'" if (
        named.keys - [:exists, :includes_line, :after, :mode, :content,
          :template, :context, :tags]
      ).any?
-     @node.actions << Action::File.new(
-       node: @node,
-       path: path,
-       params: Params.new([path], named),
-       chain: [@cache[:chain].dup].flatten(1),
-       tags: [named[:tags]] + @cache[:tag].dup,
-       trigger: [@cache[:trigger].dup, trigger].flatten(1),
-       triggered_by: @cache[:triggered_by].dup,
-       job: @node.jobs.last,
-       source: @cache[:source].dup.flatten, # information from other nodes
-     )
+     __cache tag: tags, trigger: trigger, triggered_by: triggered_by do # TODO tag
+       @node.actions << Action::File.new(
+         node: @node,
+         path: path,
+         params: Params.new([path], named),
+         job: @node.jobs.last,
+         state: @cache.collect{|k,v| [k, v.dup]}.to_h,
+       )
+     end
   end
 
   def dir path="", templates:, context: {}

@@ -44,6 +44,8 @@ class CLI
 
   def approve actions
     [actions].flatten(1).each do |action|
+      binding.pry
+      
       @action = action
       render :title, color: (action.obsolete ? :green : :yellow)
       render :command if action.class == Action::Command
@@ -75,7 +77,7 @@ class CLI
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-        out "┣━ #{triggerd_by}#{format color, :bold} #{(@action.chain).join(" > ")} " +
+        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
         "#{format} #{format :params}#{@action.job.params if @action.job}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
@@ -99,7 +101,7 @@ class CLI
       end.join
       out prefix + "#{format :siblings}siblings:#{format} #{string}"
     elsif element == :source
-      out prefix + "source: #{format :bold}#{@source.join("#{format}, #{format :bold}")}#{format}"
+      out prefix + "source: #{format :bold}#{@action.source.join("#{format}, #{format :bold}")}#{format}"
     elsif element == :prompt
       color = @action.siblings.any? ? :siblings : :light
       print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o: "
