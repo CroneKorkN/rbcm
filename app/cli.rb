@@ -49,10 +49,11 @@ class CLI
       render :command if action.class == Action::Command
       next if not action.approvable?
       render :siblings if action.siblings.any?
-      render :source if action.source.any?
+      render :source if action.source.flatten.compact.any?
       render :diff if action.class == Action::File
       render :prompt
-      sleep 0.25 unless [:a,:y,:n].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
+      sleep 0.25 unless [:a,:y,:n,:i].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
+      (binding.pry; sleep 1) if r == :i
       action.approve! r
       render :approved
       render :triggered if action.triggered.any?
@@ -75,7 +76,7 @@ class CLI
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.join(" > ")} " +
+        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} " +
         "#{format} #{format :params}#{@action.job.params if @action.job}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities

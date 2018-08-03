@@ -6,6 +6,7 @@ class Project::ProjectFile
     @path = project_file_path
     @definitions = []
     @capabilities = []
+    @include = {github: [], dir: [], file: []}
     file = File.read project_file_path
     method_names_cache = methods(false)
     instance_eval file
@@ -24,6 +25,15 @@ class Project::ProjectFile
   attr_reader :capabilities, :definitions, :path
 
   private
+
+  def include_project **named
+    if (keys = named.keys - [:github, :dir, :file]).any?
+      raise "illegal project source: #{keys}"
+    end
+    named.each do |type, name|
+      @include[type] << name
+    end
+  end
 
   def group name=nil
     @definitions.append Project::Definition.new(

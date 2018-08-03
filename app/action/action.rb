@@ -8,7 +8,7 @@ class Action
                  dependencies: nil, node:, state:
     @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
     @trigger = [state[:trigger], state[:chain].last].flatten.compact
-    @triggered_by = [state[:triggerd_by]].flatten.compact
+    @triggered_by = [state[:triggered_by]].flatten.compact
     @triggered = [];              @source = state[:source]
     @node = node;                 @job = job
     @chain = state[:chain];       @capability = state[:chain].last
@@ -21,7 +21,7 @@ class Action
   end
 
   def checkable?
-    true if @check or self.class == Action::File
+    @check or self.class == Action::File
   end
 
   def neccessary?
@@ -42,9 +42,9 @@ class Action
   end
 
   def triggered?
-    triggered_by.empty? or triggered_by.one? do |triggered_by|
+    triggered_by.empty? or triggered_by.one?{ |triggered_by|
       @node.triggered.flatten.include? triggered_by
-    end
+    }
   end
 
   def applied?

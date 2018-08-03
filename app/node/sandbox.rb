@@ -96,7 +96,7 @@ class Node::Sandbox
   def file path, tags: nil, trigger: nil, triggered_by: nil, **named
     raise "RBCM: invalid file paramteres '#{named}'" if (
       named.keys - [:exists, :includes_line, :after, :mode, :content,
-        :template, :context, :tags]
+        :template, :context, :tags, :user, :group]
     ).any?
     job = @node.jobs.last
     run "mkdir -p #{File.dirname path}",
