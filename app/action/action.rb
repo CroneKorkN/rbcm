@@ -2,22 +2,24 @@ class Action
   attr_accessor :approved, :applied
   attr_reader   :triggered_by, :trigger, :chain, :dependencies,
                 :capability, :obsolete, :job, :check, :triggered, :result,
-                :source, :path, :tags, :line
+                :source, :path, :line, :state, :tags
 
   def initialize job:, path: nil, params: nil, line: nil, check: nil,
                  dependencies: nil, node:, state:
     @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
-    @trigger = [state[:trigger], state[:chain].last].flatten.compact
-    @triggered_by = [state[:triggered_by]].flatten.compact
-    @triggered = [];              @source = state[:source]
+    @triggered = [];
     @job = job
-    @chain = state[:chain];       @capability = state[:chain].last
+    @capability = state[:chain].last
     @obsolete = nil;              @approved = nil
-    @tags = state[:tag].compact.flatten
     # command specific
-    @line = line;                @check = state[:check].last
+    @line = line;
     # file specific
     @path = path;                @params = params
+    # extract state
+    [:chain, :trigger, :triggered_by, :check, :source, :tags].each do |key|
+      instance_variable_set "@#{key}", state[key]
+    end
+    @check = state[:check].last # WORKAROUND
   end
 
   def checkable?

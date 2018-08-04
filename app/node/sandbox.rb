@@ -10,7 +10,7 @@ class Node::Sandbox
     @dependency_cache = []
     @cache = {
       chain: [@node], trigger: [], triggered_by: [], check: [],
-      source: [], tag: []
+      source: [], tags: []
     }
     # define in instance, otherwise method-binding will be wrong (to class)
     @@capabilities = @node.rbcm.project.capabilities.each.name
@@ -36,7 +36,7 @@ class Node::Sandbox
   end
 
   def tag name, &block
-    __cache tag: name, chain: "tag:#{name}" do
+    __cache tags: name, chain: "tag:#{name}" do
       instance_eval &block
     end
   end
@@ -82,7 +82,7 @@ class Node::Sandbox
   end
 
   def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
-    __cache check: check, tag: tags, trigger: trigger, triggered_by: triggered_by do
+    __cache check: check, tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.actions << Action::Command.new(
         node: @node,
         line: action,
@@ -101,7 +101,7 @@ class Node::Sandbox
     job = @node.jobs.last
     run "mkdir -p #{File.dirname path}",
       check: "ls #{File.dirname path}"
-    __cache tag: tags, trigger: trigger, triggered_by: triggered_by do
+    __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.actions << Action::File.new(
         node: @node,
         path: path,
@@ -113,7 +113,7 @@ class Node::Sandbox
   end
 
   def dir path="", templates:, context: {}, tags: nil, trigger: nil, triggered_by: nil
-    __cache tag: tags, trigger: trigger, triggered_by: triggered_by do
+    __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.rbcm.project.templates.select{ |template|
         /^#{working_dir}/.match? template
       }.each do |template|
@@ -185,18 +185,18 @@ class Node::Sandbox
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
-      chain: [], source: nil, reset: nil, tag: nil
+      chain: [], source: nil, reset: nil, tags: nil
     @cache[:source].append []             if chain
     @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
-    @cache[:tag]          << tag          if tag
+    @cache[:tags]          << tags          if tags
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
     r = yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
-    @cache[:tag].pop                      if tag
+    @cache[:tags].pop                      if tags
     @cache[:trigger].pop                  if trigger
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
