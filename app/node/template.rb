@@ -1,8 +1,7 @@
 class Node::Template
   @@engines = [:erb, :mustache]
 
-  def initialize name:, job:
-    @job = job
+  def initialize name:
     @name = name
   end
 

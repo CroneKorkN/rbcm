@@ -28,8 +28,7 @@ class Action::File < Action
       #  @params[:template]
       # ).render context: @params[:context]
       Node::Template.new(
-        name: @params[:template],
-        job: @job,
+        name: @params[:template]
       ).render context: @params[:context]
     end
   end
