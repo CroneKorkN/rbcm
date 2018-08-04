@@ -5,7 +5,7 @@ class Action::Command < Action
   def check!
     return if @obsolete != nil
     if @check
-      @obsolete = @node.remote.execute(@check).exitstatus == 0
+      @obsolete = @job.node.remote.execute(@check).exitstatus == 0
     else
       @obsolete = false
     end
@@ -13,7 +13,7 @@ class Action::Command < Action
 
   # matching commands on  other nodes to be approved at once
   def siblings
-    @node.rbcm.actions.select{ |action|
+    @job.node.rbcm.actions.select{ |action|
       action.chain[1..-1] == @chain[1..-1] and action.line == @line
     } - [self]
   end
@@ -21,6 +21,6 @@ class Action::Command < Action
   # execute the command remote
   def apply!
     @applied = true
-    @result = @node.remote.execute(@line)
+    @result = @job.node.remote.execute(@line)
   end
 end

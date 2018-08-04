@@ -1,6 +1,6 @@
 class Action
   attr_accessor :approved, :applied
-  attr_reader   :node, :triggered_by, :trigger, :chain, :dependencies,
+  attr_reader   :triggered_by, :trigger, :chain, :dependencies,
                 :capability, :obsolete, :job, :check, :triggered, :result,
                 :source, :path, :tags, :line
 
@@ -10,7 +10,7 @@ class Action
     @trigger = [state[:trigger], state[:chain].last].flatten.compact
     @triggered_by = [state[:triggered_by]].flatten.compact
     @triggered = [];              @source = state[:source]
-    @node = node;                 @job = job
+    @job = job
     @chain = state[:chain];       @capability = state[:chain].last
     @obsolete = nil;              @approved = nil
     @tags = state[:tag].compact.flatten
@@ -43,7 +43,7 @@ class Action
 
   def triggered?
     triggered_by.empty? or triggered_by.one?{ |triggered_by|
-      @node.triggered.flatten.include? triggered_by
+      @job.node.triggered.flatten.include? triggered_by
     }
   end
 
@@ -62,11 +62,11 @@ class Action
 
   def approve! input=:y
     if [:a, :y].include? input
-      @node.files[@path].content = content if self.class == Action::File
+      @job.node.files[@path].content = content if self.class == Action::File
       @approved = true
       siblings.each.approve! if input == :a
-      @node.triggered << @trigger
-      @triggered = @trigger.compact - @node.triggered
+      @job.node.triggered << @trigger
+      @triggered = @trigger.compact - @job.node.triggered
     else
       @approved = false
     end

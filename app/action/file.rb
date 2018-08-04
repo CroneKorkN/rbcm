@@ -4,11 +4,11 @@ class Action::File < Action
 
   def check!
     # compare
-    @node.files[path].content
+    @job.node.files[path].content
   end
 
   def obsolete
-    @node.files[path].content.chomp.chomp == content.chomp.chomp
+    @job.node.files[path].content.chomp.chomp == content.chomp.chomp
   end
 
   def siblings
@@ -17,7 +17,7 @@ class Action::File < Action
 
   def apply!
     @applied = true
-    @result = @node.remote.execute("echo #{Shellwords.escape content} > #{path}")
+    @result = @job.node.remote.execute("echo #{Shellwords.escape content} > #{path}")
   end
 
   def content
@@ -35,6 +35,6 @@ class Action::File < Action
   end
 
   def same_file
-    @node.actions.file(path) - [self]
+    @job.node.actions.file(path) - [self]
   end
 end
