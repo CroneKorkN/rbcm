@@ -15,7 +15,7 @@ class Node::NodeFile
     )
   end
 
-  def diffable
+  def diffable # TODO?
     "#{content}" +
     "\\" +
     "PERMISSIONS #{user}:#{group} #{mode}"

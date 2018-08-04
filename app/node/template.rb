@@ -1,9 +1,9 @@
 class Node::Template
   @@engines = [:erb, :mustache]
 
-  def initialize name:, capability: nil
+  def initialize name:, job:
+    @job = job
     @name = name
-    @capability = capability
   end
 
   def render context: {}

@@ -29,7 +29,7 @@ class Action::File < Action
       # ).render context: @params[:context]
       Node::Template.new(
         name: @params[:template],
-        capability: @chain[-1],
+        job: @job,
       ).render context: @params[:context]
     end
   end
