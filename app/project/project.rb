@@ -1,5 +1,5 @@
 class Project
-  def initialize path, template_engines: [:mustache, :erb]
+  def initialize path, template_engines: [:mustache, :erb], addon: false
     @path = path
     @files = []
     @templates = []

@@ -6,7 +6,7 @@ class Project::ProjectFile
     @path = project_file_path
     @definitions = []
     @capabilities = []
-    @include = {github: [], dir: [], file: []}
+    @addons_names = {github: [], dir: [], file: []}
     file = File.read project_file_path
     method_names_cache = methods(false)
     instance_eval file
@@ -22,16 +22,16 @@ class Project::ProjectFile
     end
   end
 
-  attr_reader :capabilities, :definitions, :path
+  attr_reader :capabilities, :definitions, :addon_names, :path
 
   private
 
-  def include_project **named
-    if (keys = named.keys - [:github, :dir, :file]).any?
-      raise "illegal project source: #{keys}"
-    end
+  def addon branch: "master", **named
+    raise "illegal project source: #{keys}" if (
+      keys = named.keys - [:github, :dir, :file]
+    ).any?
     named.each do |type, name|
-      @include[type] << name
+      @addons[type] << name
     end
   end
 
