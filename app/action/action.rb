@@ -20,11 +20,10 @@ class Action
     [:chain, :trigger, :triggered_by, :check, :source, :tags].each do |key|
       instance_variable_set "@#{key}", state[key]
     end
-    @check = state[:check].last # WORKAROUND
   end
 
   def checkable?
-    @check or self.class == Action::File
+    @check.any? or self.class == Action::File
   end
 
   def neccessary?

@@ -38,7 +38,7 @@ class CLI
 
   def check action
     @action = action
-    render checking: action.check
+    render checking: action.check.join("; ")
     action.check!
   end
 
@@ -54,6 +54,7 @@ class CLI
       render :prompt
       sleep 0.25 unless [:a,:y,:n,:i].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
       (binding.pry; sleep 1) if r == :i
+      (puts; exit) if r == :q
       action.approve! r
       render :approved
       render :triggered if action.triggered.any?
@@ -92,7 +93,7 @@ class CLI
         "#{name} #{jobs} jobs, #{actions} actions"
       }.flatten(1).join("\n#{prefix}")
     elsif element == :command
-      check_string = " UNLESS #{@action.check}" if @action.check
+      check_string = " UNLESS #{@action.check.join("; ")}" if @action.check.any?
       out prefix + "$> #{@action.line}\e[2m#{check_string}\e[0m"
     elsif element == :siblings
       string = @action.siblings.collect do |sibling|
@@ -103,7 +104,7 @@ class CLI
       out prefix + "source: #{format :bold}#{@action.source.join("#{format}, #{format :bold}")}#{format}"
     elsif element == :prompt
       color = @action.siblings.any? ? :siblings : :light
-      print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o: "
+      print prefix + "APPROVE? #{format color}[a]ll#{format}, [y]es, [N]o, [i]nteractive, [q]uit: "
     elsif element == :triggered
       out prefix +
         "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +

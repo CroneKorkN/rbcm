@@ -4,8 +4,10 @@ class Action::Command < Action
   # determine wether the command is neccessary
   def check!
     return if @obsolete != nil
-    if @check
-      @obsolete = @job.node.remote.execute(@check).exitstatus == 0
+    if @check.any?
+      @obsolete = @check.all? do |check|
+        @job.node.remote.execute(check).exitstatus == 0
+      end
     else
       @obsolete = false
     end

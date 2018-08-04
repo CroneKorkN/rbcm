@@ -83,7 +83,9 @@ class RBCM
         end
       end
       actions.checkable.each do |action|
-        session.with(action.job.node.name.to_sym).exec action.check &block
+        actions.check.each do |check|
+          session.with(action.job.node.name.to_sym).exec check &block
+        end
       end
       session.loop
     end
