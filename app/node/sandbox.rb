@@ -84,10 +84,9 @@ class Node::Sandbox
   def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
     __cache check: check, tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.actions << Action::Command.new(
-        node: @node,
+        job: @node.jobs.last,
         line: action,
         dependencies: @dependency_cache.dup,
-        job: @node.jobs.last,
         state: @cache.collect{|k,v| [k, v.dup]}.to_h,
       )
     end
@@ -103,10 +102,9 @@ class Node::Sandbox
       check: "ls #{File.dirname path}"
     __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.actions << Action::File.new(
-        node: @node,
+        job: job,
         path: path,
         params: Params.new([path], named),
-        job: job,
         state: @cache.collect{|k,v| [k, v.dup]}.to_h,
       )
     end

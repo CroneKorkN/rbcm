@@ -5,11 +5,11 @@ class Action
                 :source, :path, :line, :state, :tags
 
   def initialize job:, path: nil, params: nil, line: nil, check: nil,
-                 dependencies: nil, node:, state:
+                 dependencies: nil, state:
     @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
     @triggered = [];
     @job = job
-    @capability = state[:chain].last
+    @capability = job.capability
     @obsolete = nil;              @approved = nil
     # command specific
     @line = line;
