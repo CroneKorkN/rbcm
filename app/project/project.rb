@@ -23,14 +23,20 @@ class Project
   end
 
   def files
-    (@files + addons.each.files).flatten
+    (@files + all_addons.each.files).flatten
+  end
+
+  def addons
+    @files.each.addons.flatten
   end
 
   # collect addons recursively
-  def addons project=self
-    project.addons + project.addons.each.project.collect do |project|
-      addons project
-    end.flatten
+  def all_addons project=self
+    cache = project.addons
+    if project.addons.any?
+      cache += project.addons.each.project.collect{|project| all_addons project}
+    end
+    cache.flatten
   end
 
   #TODO?

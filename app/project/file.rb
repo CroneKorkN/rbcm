@@ -22,7 +22,7 @@ class Project::ProjectFile
     end
   end
 
-  attr_reader :capabilities, :definitions, :addon_names, :path
+  attr_reader :capabilities, :definitions, :addon_names, :path, :addons
 
   private
 
@@ -31,7 +31,7 @@ class Project::ProjectFile
       keys = named.keys - [:github, :dir, :file]
     ).any?
     named.each do |type, name|
-      @addons << RBCM::Addon.new type: type, name: name
+      @addons.append RBCM::Addon.new type: type, name: name
     end
   end
 
