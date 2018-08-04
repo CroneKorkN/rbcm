@@ -70,7 +70,7 @@ class RBCM
     end
     log "parsing 'cap!'"
     nodes.values.each do |node|
-      node.capabilities.each{|capability| node.sandbox.send "#{capability}!"}
+      node.capabilities.each{|capability| node.sandbox.send "#{capability.name}!"}
     end
   end
 

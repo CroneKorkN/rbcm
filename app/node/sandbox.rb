@@ -212,7 +212,7 @@ class Node::Sandbox
     if capability.type == :regular
       define_singleton_method capability.name do |*ordered, **named|
         params = Params.new ordered, named
-        @node.jobs.append Node::Job.new @node, capability.name, params
+        @node.jobs.append Node::Job.new @node, capability, params
         @node.triggered.append capability.name
         r = __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],
