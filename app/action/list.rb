@@ -65,7 +65,7 @@ class ActionList < Array
 
   def resolve_action_dependencies this
     self.select{ |action|
-      this.dependencies.include? action.capability
+      this.dependencies.include? action.job.capability
     }.each{ |action|
       resolve_action_dependencies action
     }

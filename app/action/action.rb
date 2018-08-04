@@ -1,20 +1,21 @@
 class Action
   attr_accessor :approved, :applied
   attr_reader   :triggered_by, :trigger, :chain, :dependencies,
-                :capability, :obsolete, :job, :check, :triggered, :result,
+                :obsolete, :job, :check, :triggered, :result,
                 :source, :path, :line, :state, :tags
 
   def initialize job:, path: nil, params: nil, line: nil, check: nil,
                  dependencies: nil, state:
     @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
-    @triggered = [];
     @job = job
-    @capability = job.capability
-    @obsolete = nil;              @approved = nil
+    @triggered = []
+    @obsolete = nil
+    @approved = nil
     # command specific
-    @line = line;
+    @line = line
     # file specific
-    @path = path;                @params = params
+    @path = path
+    @params = params
     # extract state
     [:chain, :trigger, :triggered_by, :check, :source, :tags].each do |key|
       instance_variable_set "@#{key}", state[key]
