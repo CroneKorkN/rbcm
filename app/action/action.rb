@@ -4,7 +4,7 @@ class Action
                 :obsolete, :job, :check, :triggered, :result,
                 :source, :path, :line, :state, :tags
 
-  def initialize job:, path: nil, params: nil, line: nil, check: nil,
+  def initialize job:, params: nil, line: nil, check: nil,
                  dependencies: nil, state:
     @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
     @job = job
@@ -14,8 +14,8 @@ class Action
     # command specific
     @line = line
     # file specific
-    @path = path
     @params = params
+    @path = params.first if job.capability.name == :file
     # extract state
     [:chain, :trigger, :triggered_by, :check, :source, :tags].each do |key|
       instance_variable_set "@#{key}", state[key]

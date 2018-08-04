@@ -103,7 +103,6 @@ class Node::Sandbox
     __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.actions << Action::File.new(
         job: job,
-        path: path,
         params: Params.new([path], named),
         state: @cache.collect{|k,v| [k, v.dup]}.to_h,
       )
