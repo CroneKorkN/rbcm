@@ -32,7 +32,7 @@ class RBCM
       @nodes[node_definition.name] ||= Node.new(
         self,
         node_definition.name,
-        node_definition.path
+        node_definition.project_file.path
       )
       @nodes[node_definition.name] << node_definition
       # apply pattern definitions to node

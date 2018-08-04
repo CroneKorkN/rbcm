@@ -40,17 +40,17 @@ class Project::ProjectFile
       type:    :group,
       name:    name,
       content: Proc.new,
-      path:    relative_path
+      project_file: self
     )
   end
 
   def node names=nil
     [names].flatten(1).each do |name|
       @definitions.append Project::Definition.new(
-        type:    name.class == Regexp ? :pattern : :node,
-        name:    name,
-        content: Proc.new,
-        path:    relative_path
+        type:         name.class == Regexp ? :pattern : :node,
+        name:         name,
+        content:      Proc.new,
+        project_file: self
       )
     end
   end

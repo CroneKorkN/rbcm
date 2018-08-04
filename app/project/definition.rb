@@ -1,11 +1,11 @@
 # holds a definition on form of a proc to be executed in a nodes sandbox
 
 class Project::Definition
-  def initialize type:, name:, content:, path:
-    @type, @name, @content, @path = type, name, content, path
+  def initialize type:, name:, content:, project_file:
+    @type, @name, @content, @project_file = type, name, content, project_file
   end
 
-  attr_reader :type, :name, :content, :path
+  attr_reader :type, :name, :content, :project_file
 
   def origin
     "#{type}:#{name}"
