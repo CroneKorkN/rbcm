@@ -23,13 +23,11 @@ APPDIR = File.expand_path File.dirname(__FILE__)
 class RBCM
   def initialize project_path
     # initialize project
-    @addons = []
+    @project = Project.new project_path
     # create nodes
     @group_additions = ArrayHash.new
     @nodes = {}
-    @groups = ArrayHash.new
-    import_project dir: project_path
-    @projects.each.definitions(:node).each do |node_definition|
+    @project.definitions(:node).each do |node_definition|
       @nodes[node_definition.name] ||= Node.new(
         self,
         node_definition.name,
@@ -37,12 +35,13 @@ class RBCM
       )
       @nodes[node_definition.name] << node_definition
       # apply pattern definitions to node
-      @nodes[node_definition.name] << @project.each.definitions(:pattern).collect do |pattern_definition|
+      @nodes[node_definition.name] << @project.definitions(:pattern).collect do |pattern_definition|
          pattern_definition if node_definition.name =~ /#{pattern_definition.name}/
       end
     end
     # create groups
-    @project.each.definitions(:group).each do |group_definition|
+    @groups = ArrayHash.new
+    @project.definitions(:group).each do |group_definition|
       @groups[group_definition.name] << group_definition
     end
     # else
@@ -52,34 +51,6 @@ class RBCM
 
   attr_reader   :nodes, :groups, :project, :actions
   attr_accessor :group_additions
-
-  def project
-    @projects.first
-  end
-
-  def import_project
-    @projects << Project.new project_path
-    @projects.last.addons.each do |type, name|
-      require "git"
-      dir = "/tmp/rbcm-checkout/#{repo}"
-      p dir
-      p Dir.exist? dir
-      repo = if Dir.exist? dir
-        Git.open dir
-      else
-        Git.clone "https://github.com/#{repo}.git",
-          repo,
-          path: '/tmp/rbcm-checkout'
-      end
-      repo.pull
-      p Dir.glob("#{dir}/**.rb")
-      Dir.glob("#{dir}/**.rb").each do |path|
-        p path
-        require path
-      end
-      repo
-    end
-  end
 
   def actions
     ActionList.new nodes.values.each.actions.flatten(1)

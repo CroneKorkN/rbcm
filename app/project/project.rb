@@ -12,21 +12,31 @@ class Project
   attr_reader :path, :files, :templates, :other, :directories
 
   def capabilities
-    @files.each.capabilities.flatten(1).compact
+    files.each.capabilities.flatten(1).compact
   end
 
   def definitions type=nil
-    with @files.each.definitions.flatten(1) do
+    with files.each.definitions.flatten(1) do
       return select{|definition| definition.type == type} if type
       return self
     end
+  end
+
+  def files
+    (@files + addons.each.files).flatten
+  end
+
+  # collect addons recursively
+  def addons project=self
+    project.addons + project.addons.each.project.collect do |project|
+      addons project
+    end.flatten
   end
 
   #TODO?
   def template name
     # @templates.find{|name| name...}
   end
-
 
   private
 

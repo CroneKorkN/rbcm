@@ -6,7 +6,7 @@ class Project::ProjectFile
     @path = project_file_path
     @definitions = []
     @capabilities = []
-    @addons_names = {github: [], dir: [], file: []}
+    @addons = []
     file = File.read project_file_path
     method_names_cache = methods(false)
     instance_eval file
@@ -31,7 +31,7 @@ class Project::ProjectFile
       keys = named.keys - [:github, :dir, :file]
     ).any?
     named.each do |type, name|
-      @addons[type] << name
+      @addons << RBCM::Addon.new type: type, name: name
     end
   end
 
