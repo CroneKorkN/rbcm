@@ -31,7 +31,7 @@ class Project::ProjectFile
       keys = named.keys - [:github, :dir, :file]
     ).any?
     named.each do |type, name|
-      @addons.append RBCM::Addon.new type: type, name: name
+      @addons.append Addon.new type: type, name: name
     end
   end
 

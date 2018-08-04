@@ -23,7 +23,7 @@ class Project
   end
 
   def files
-    (@files + all_addons.each.files).flatten
+    (@files + all_addons.each.project.each.files).flatten
   end
 
   def addons

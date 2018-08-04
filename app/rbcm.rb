@@ -3,6 +3,7 @@ require "fileutils"
 require "shellwords"
 require "diffy"
 require "pry"
+require "git"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
 [ "action/action",   "action/command",
@@ -16,7 +17,7 @@ APPDIR = File.expand_path File.dirname(__FILE__)
   "lib/params",      "lib/aescrypt",
   "project/project", "project/definition",
   "project/file",    "project/capability",
-  "project/sandbox",
+  "project/sandbox", "project/addon",
   "cli"
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
