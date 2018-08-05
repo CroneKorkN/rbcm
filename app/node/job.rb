@@ -4,7 +4,7 @@
 class Node::Job
   attr_reader :capability, :params, :node
 
-  def initialize node, capability, params
+  def initialize node:, capability:, params:
     @node = node
     @capability = capability
     @params = params
