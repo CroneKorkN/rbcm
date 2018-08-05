@@ -114,7 +114,7 @@ class Node::Sandbox
       @node.rbcm.project.templates_.under("#{working_dir}/#{templates}").each do |template|
         # binding.pry
         # sleep 1
-        file template.clean_path,
+        file template.clean_full_path.gsub(/#{working_dir}/),
           template: template.clean_path,
           context: context
       end

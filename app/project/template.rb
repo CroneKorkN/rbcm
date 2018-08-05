@@ -4,25 +4,32 @@ class Project::Template
   def initialize project:, path:
     @project = project
     @path    = path
+    @content = File.read path
   end
 
   attr_accessor :project, :path
 
   def render context: {}
-    content = File.read path
+    cache = @content
     engine_names.each do |layer|
       if layer == :mustache
         require "mustache"
-        content = Mustache.render(content, **context)
+        cache = Mustache.render(@content, **context)
       elsif layer == :erb
         # https://zaiste.net/rendering_erb_template_with_bindings_from_hash/
         require "ostruct"; require "erb"
-        content = ERB.new(content).result(
+        cache = ERB.new(@content).result(
           OpenStruct.new(context).instance_eval{binding}
         )
       end
     end
-    return content
+    return cache
+  end
+
+  def clean_full_path
+    path.gsub(
+      /#{engine_names.reverse.collect{|e| ".#{e}"}.join}$/, ''
+    )
   end
 
   def clean_path
@@ -37,7 +44,7 @@ class Project::Template
 
   def engine_names
     path.split(".").reverse.collect{ |layer|
-      layer if @@engines.include? layer.to_sym
+      layer.to_sym if @@engines.include? layer.to_sym
     }.compact
   end
 end
