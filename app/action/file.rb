@@ -30,6 +30,9 @@ class Action::File < Action
       Node::Template.new(
         name: @params[:template]
       ).render context: @params[:context]
+      # @job.project_file.project.templates.for(self).render(
+      #   context: @params[:context]
+      # )
     end
   end
 

@@ -6,18 +6,19 @@ require "pry"
 require "git"
 
 APPDIR = File.expand_path File.dirname(__FILE__)
-[ "action/action",   "action/command",
-  "action/file",     "action/list",
-  "node/node",       "node/file",
-  "node/job",        "node/filesystem",
-  "node/remote",     "node/sandbox",
-  "node/template",   "node/job_search",
-  "lib/lib",         "lib/array_hash",
-  "lib/options",     "lib/quick_each",
-  "lib/params",      "lib/aescrypt",
-  "project/project", "project/definition",
-  "project/file",    "project/capability",
-  "project/sandbox", "project/addon",
+[ "action/action",    "action/command",
+  "action/file",      "action/list",
+  "node/node",        "node/file",
+  "node/job",         "node/filesystem",
+  "node/remote",      "node/sandbox",
+  "node/template",    "node/job_search",
+  "lib/lib",          "lib/array_hash",
+  "lib/options",      "lib/quick_each",
+  "lib/params",       "lib/aescrypt",
+  "project/project",   "project/definition",
+  "project/file",     "project/capability",
+  "project/sandbox",  "project/addon",
+  "project/template",
   "cli"
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 

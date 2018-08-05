@@ -3,6 +3,7 @@ class Project
     @path = path
     @files = []
     @templates = []
+    @templates_ = []
     @other = []
     @directories = []
     @template_engines = template_engines
@@ -47,12 +48,16 @@ class Project
     if File.directory? path
       Dir["#{path}/**/*"].each do |file_path|
         if file_path.end_with? ".rb"
-          @files << Project::ProjectFile.new(
+          @files.append Project::ProjectFile.new(
             project: self,
-            path: file_path
+            path:    file_path
           )
         elsif @template_engines.include? file_path.split(".").last.to_sym
           @templates << file_path.sub(@path, "")
+          @templates_.append Project::Template.new(
+            project: self,
+            path:    file_path
+          )
         elsif File.directory? path
           @directories << file_path.sub(@path, "")
         else
