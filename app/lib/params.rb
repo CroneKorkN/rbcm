@@ -20,7 +20,7 @@ class Params
         "#{param}"
       },
       named.collect{ |k, v|
-        "\e[2m\e[1m#{k}:\e[21m\e[22m #{v[0..40].to_s.gsub("\n"," \\ ")}#{"\e[2m\e[1m…\e[21m\e[22m" if v.length > 40}"
+        "\e[2m\e[1m#{k}:\e[21m\e[22m #{v[0..60].to_s.gsub("\n"," \\ ")}#{"\e[2m\e[1m…\e[21m\e[22m" if v.length > 60}"
       }
     ].flatten(1).join("\e[2m\e[1m, \e[21m\e[22m")
   end
