@@ -64,7 +64,12 @@ class Project
       end
       log "templates: #{@templates.each.path}"
     else
-      @files = [Project::ProjectFile.new(@path)]
+      @files = [
+        Project::ProjectFile.new(
+          project: self,
+          path:    path
+        )
+      ]
     end
     raise "ERROR: empty project" unless @files.any?
   end
