@@ -5,8 +5,7 @@ class Action
                 :source, :path, :line, :state, :tags
 
   def initialize job:, params: nil, line: nil, check: nil,
-                 dependencies: nil, state:, working_dir: nil
-    @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
+                 dependencies: nil, state:
     @job = job
     @triggered = []
     @obsolete = nil
@@ -17,9 +16,11 @@ class Action
     @params = params
     @path = params.first if job.capability.name == :file
     # extract state
-    [:chain, :trigger, :triggered_by, :check, :source, :tags].each do |key|
+    [:chain, :trigger, :triggered_by, :check, :source, :tags, :working_dirs].each do |key|
       instance_variable_set "@#{key}", state[key]
     end
+    @working_dir = @working_dirs.last
+    @dependencies = [:file] + [dependencies].flatten - [@chain.last]
   end
 
   def checkable?

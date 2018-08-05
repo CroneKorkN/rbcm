@@ -10,7 +10,7 @@ class Node::Sandbox
     @dependency_cache = []
     @cache = {
       chain: [@node], trigger: [], triggered_by: [], check: [],
-      source: [], tags: []
+      source: [], tags: [], working_dirs: []
     }
     # define in instance, otherwise method-binding will be wrong (to class)
     @@capabilities = @node.rbcm.project.capabilities.each.name
@@ -82,7 +82,7 @@ class Node::Sandbox
   end
 
   def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
-    __cache check: check, tags: tags, trigger: trigger, triggered_by: triggered_by do
+    __cache check: check, tags: tags, trigger: trigger, triggered_by: triggered_by, working_dirs: working_dir do
       @node.actions << Action::Command.new(
         job: @node.jobs.last,
         line: action,
@@ -93,7 +93,6 @@ class Node::Sandbox
   end
 
   def file path, tags: nil, trigger: nil, triggered_by: nil, **named
-    p ">>>>> #{working_dir}"
     raise "RBCM: invalid file paramteres '#{named}'" if (
       named.keys - [:exists, :includes_line, :after, :mode, :content,
         :template, :context, :tags, :user, :group]
@@ -101,18 +100,17 @@ class Node::Sandbox
     job = @node.jobs.last
     run "mkdir -p #{File.dirname path}",
       check: "ls #{File.dirname path}"
-    __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
+    __cache tags: tags, trigger: trigger, triggered_by: triggered_by, working_dirs: working_dir do
       @node.actions << Action::File.new(
         job: job,
         params: Params.new([path], named),
-        state: @cache.collect{|k,v| [k, v.dup]}.to_h,
-        working_dir: working_dir
+        state: @cache.collect{|k,v| [k, v.dup]}.to_h
       )
     end
   end
 
   def dir path="", templates:, context: {}, tags: nil, trigger: nil, triggered_by: nil
-    __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
+    __cache tags: tags, trigger: trigger, triggered_by: triggered_by, working_dirs: working_dir do
       @node.rbcm.project.templates.select{ |template|
         /^#{working_dir}/.match? template
       }.each do |template|
@@ -186,7 +184,7 @@ class Node::Sandbox
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
-      chain: nil, source: nil, reset: nil, tags: nil
+      chain: nil, source: nil, reset: nil, tags: nil, working_dirs: nil
     @cache[:source].append []             if chain
     @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
@@ -194,6 +192,7 @@ class Node::Sandbox
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
+    @cache[:working_dirs] << working_dirs if working_dirs
     r = yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
@@ -201,6 +200,7 @@ class Node::Sandbox
     @cache[:trigger].pop                  if trigger
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
+    @cache[:working_dirs].pop             if working_dirs
     @cache[reset]         =  []           if reset
     r
   end
