@@ -23,6 +23,12 @@ class Action
     @dependencies = [:file] + [dependencies].flatten - [@chain.last]
   end
 
+  def project_file
+    @chain.reverse.find{ |element|
+      defined?(element.project_file) and element.project_file
+    }.project_file
+  end
+
   def checkable?
     @check.any? or self.class == Action::File
   end

@@ -22,7 +22,7 @@ class Project::ProjectFile
     end
   end
 
-  attr_reader :capabilities, :definitions, :addon_names, :path, :addons
+  attr_reader :project, :capabilities, :definitions, :addon_names, :path, :addons
 
   private
 

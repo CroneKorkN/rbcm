@@ -25,20 +25,18 @@ class Project::Template
     return content
   end
 
-  def filename
-    File.basename(path)
+  def clean_path
+    path.gsub(/^#{project.path}/, '').gsub(
+      /#{engine_names.reverse.collect{|e| ".#{e}"}.join}$/, ''
+    )
   end
 
-  def target_filename
-    filename.gsub /#{engine_names.reverse.collect{|e| ".#{e}"}.join}$/, ''
-  end
-
-  def path_in_project
-    path.gsub /^#{project.path}/, ''
+  def clean_filename
+    File.basename(clean_path)
   end
 
   def engine_names
-    filename.split(".").reverse.collect{ |layer|
+    path.split(".").reverse.collect{ |layer|
       layer if @@engines.include? layer.to_sym
     }.compact
   end

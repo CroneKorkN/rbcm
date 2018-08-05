@@ -10,7 +10,7 @@ class Project
     load_files path
   end
 
-  attr_reader :path, :files, :templates, :other, :directories
+  attr_reader :path, :files, :templates, :other, :directories, :templates_
 
   def capabilities
     files.each.capabilities.flatten(1).compact
