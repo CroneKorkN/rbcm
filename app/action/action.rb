@@ -5,7 +5,7 @@ class Action
                 :source, :path, :line, :state, :tags
 
   def initialize job:, params: nil, line: nil, check: nil,
-                 dependencies: nil, state:
+                 dependencies: nil, state:, working_dir: nil
     @dependencies = [:file] + [dependencies].flatten - [state[:chain].last]
     @job = job
     @triggered = []

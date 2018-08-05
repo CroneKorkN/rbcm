@@ -93,7 +93,6 @@ class Node::Sandbox
   end
 
   def file path, tags: nil, trigger: nil, triggered_by: nil, **named
-    p working_dir
     raise "RBCM: invalid file paramteres '#{named}'" if (
       named.keys - [:exists, :includes_line, :after, :mode, :content,
         :template, :context, :tags, :user, :group]
