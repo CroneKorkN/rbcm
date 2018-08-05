@@ -93,6 +93,7 @@ class Node::Sandbox
   end
 
   def file path, tags: nil, trigger: nil, triggered_by: nil, **named
+    p ">>>>> #{working_dir}"
     raise "RBCM: invalid file paramteres '#{named}'" if (
       named.keys - [:exists, :includes_line, :after, :mode, :content,
         :template, :context, :tags, :user, :group]
@@ -104,7 +105,8 @@ class Node::Sandbox
       @node.actions << Action::File.new(
         job: job,
         params: Params.new([path], named),
-        state: @cache.collect{|k,v| [k, v.dup]}.to_h
+        state: @cache.collect{|k,v| [k, v.dup]}.to_h,
+        working_dir: working_dir
       )
     end
   end
