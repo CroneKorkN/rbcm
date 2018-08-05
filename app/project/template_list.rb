@@ -11,9 +11,9 @@ class Project::TemplateList < Array
     end
   end
 
-  def under file_action
+  def under path
     find_all{ |template|
-      template.path.start_with? File.dirname(file_action.project_file.path)
+      template.path.start_with? path
     }
   end
 end

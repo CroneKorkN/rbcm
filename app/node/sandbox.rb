@@ -111,13 +111,21 @@ class Node::Sandbox
 
   def dir path="", templates:, context: {}, tags: nil, trigger: nil, triggered_by: nil
     __cache tags: tags, trigger: trigger, triggered_by: triggered_by, working_dirs: working_dir do
-      @node.rbcm.project.templates.select{ |template|
-        /^#{working_dir}/.match? template
-      }.each do |template|
-        file path + template.gsub(/^#{working_dir}\/#{templates}/,"").gsub(".erb", "").gsub(".mustache", ""),
-          template: template,
+      @node.rbcm.project.templates_.under("#{working_dir}/#{templates}").each do |template|
+        # binding.pry
+        # sleep 1
+        file template.clean_path,
+          template: template.clean_path,
           context: context
       end
+
+      # @node.rbcm.project.templates.select{ |template|
+      #   /^#{working_dir}/.match? template
+      # }.each do |template|
+      #   file path + template.gsub(/^#{working_dir}\/#{templates}/,"").gsub(".erb", "").gsub(".mustache", ""),
+      #     template: template,
+      #     context: context
+      # end
     end
   end
 
