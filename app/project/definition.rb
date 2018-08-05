@@ -7,7 +7,7 @@ class Project::Definition
 
   attr_reader :type, :name, :content, :project_file
 
-  def origin
+  def to_str
     "#{type}:#{name}"
   end
 end

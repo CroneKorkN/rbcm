@@ -29,7 +29,7 @@ class Node::Sandbox
 
   def evaluate definitions
     [definitions].flatten.each do |definition|
-      __cache chain: definition.origin do
+      __cache chain: definition do
         instance_eval &definition.content
       end
     end
