@@ -32,7 +32,6 @@ class CLI
     end
     # finish
     render :applied
-    puts "┗━━──"
   end
 
   private
@@ -128,6 +127,8 @@ class CLI
       out prefix
       out "┣━\ #{format :green, :bold} #{@rbcm.actions.succeeded.count} secceeded #{format}"
       out "┣━\ #{format :red, :bold} #{@rbcm.actions.failed.count} failed #{format}"
+      out "┗━━──"
+
     else
     end
   end
