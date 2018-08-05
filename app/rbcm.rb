@@ -11,7 +11,7 @@ APPDIR = File.expand_path File.dirname(__FILE__)
   "node/node",        "node/file",
   "node/job",         "node/filesystem",
   "node/remote",      "node/sandbox",
-  "node/template",    "node/job_search",
+  "node/job_search",
   "lib/lib",          "lib/array_hash",
   "lib/options",      "lib/quick_each",
   "lib/params",       "lib/aescrypt",
@@ -46,9 +46,6 @@ class RBCM
     @project.definitions(:group).each do |group_definition|
       @groups[group_definition.name] << group_definition
     end
-    # else
-    # tell project path to template class
-    Node::Template.project_path = @project.path
   end
 
   attr_reader   :nodes, :groups, :project, :actions

@@ -38,7 +38,7 @@ class Project::Template
     )
   end
 
-  def clean_filename
+  def clean_filename 
     File.basename(clean_path)
   end
 
