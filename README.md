@@ -179,7 +179,7 @@ although nodes make no sense within an addon.
 ```ruby
 addon github: "CroneKorkN/rbcm-capabilities"
 
-node 'pc.example.com' do
+node 'localhost' do
   systemctl restart: "apache2"
 end
 ```
