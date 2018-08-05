@@ -101,11 +101,11 @@ class Node::Sandbox
     job = @node.jobs.last
     run "mkdir -p #{File.dirname path}",
       check: "ls #{File.dirname path}"
-    __cache tags: tags, trigger: trigger, triggered_by: triggered_by, working_dir: working_dir do
+    __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.actions << Action::File.new(
         job: job,
         params: Params.new([path], named),
-        state: @cache.collect{|k,v| [k, v.dup]}.to_h,
+        state: @cache.collect{|k,v| [k, v.dup]}.to_h
       )
     end
   end
@@ -193,7 +193,6 @@ class Node::Sandbox
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
-    @cache[:working_dir]  << working_dir  if working_dir
     r = yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
@@ -201,7 +200,6 @@ class Node::Sandbox
     @cache[:trigger].pop                  if trigger
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
-    @cache[:working_dir].pop              if working_dir
     @cache[reset]         =  []           if reset
     r
   end
