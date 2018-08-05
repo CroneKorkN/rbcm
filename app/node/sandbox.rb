@@ -101,7 +101,7 @@ class Node::Sandbox
     job = @node.jobs.last
     run "mkdir -p #{File.dirname path}",
       check: "ls #{File.dirname path}"
-    __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
+    __cache tags: tags, trigger: trigger, triggered_by: triggered_by, working_dir: working_dir do
       @node.actions << Action::File.new(
         job: job,
         params: Params.new([path], named),
@@ -125,7 +125,7 @@ class Node::Sandbox
   def working_dir
     @cache[:chain].select{ |i|
       i.class == Project::Definition or (
-        i.class == Project::Capability and not [:file, :run].include? i.name 
+        i.class == Project::Capability and not [:file, :run].include? i.name
       )
     }.last.project_file.path.split("/")[0..-2].join("/")
   end
@@ -193,6 +193,7 @@ class Node::Sandbox
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
+    @cache[:working_dir]  << working_dir  if working_dir
     r = yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
@@ -200,6 +201,7 @@ class Node::Sandbox
     @cache[:trigger].pop                  if trigger
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
+    @cache[:working_dir].pop              if working_dir
     @cache[reset]         =  []           if reset
     r
   end
