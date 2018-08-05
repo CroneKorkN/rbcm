@@ -9,16 +9,19 @@ class CLI
     render :capabilities
     # parse
     rbcm.parse
+    p args
+    p rbcm.actions.count
+    p rbcm.actions.node(args["node"]).count
     render :nodes
     # check
     render section: "CHECKING #{rbcm.actions.checkable.count} actions on #{rbcm.nodes.count} nodes"
-    rbcm.actions.each do |action|
+    rbcm.actions.node(args["node"]).each do |action|
       check action
     end
     # approve
     render section: "APPROVING #{rbcm.actions.approvable.count}/#{rbcm.actions.unneccessary.count} actions"
     approve rbcm.actions.unneccessary.resolve_triggers
-    while action = rbcm.actions.approvable.resolve_triggers.first
+    while action = rbcm.actions.node(args["node"]).approvable.resolve_triggers.first
       approve action
       if action.approved?
         approve action.siblings
