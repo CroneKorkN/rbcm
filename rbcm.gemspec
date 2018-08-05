@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name        =  'rbcm'
-  spec.version     =  '0.0.8'
+  spec.version     =  '0.0.9'
   spec.date        =  '2018-03-21'
   spec.summary     =  "Ruby Config Management"
   spec.description =  "manage your servers via simple config-files"
@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.files       =  Dir['app/**/*.rb']
   spec.add_runtime_dependency 'diffy',     "= 3.2.0"
   spec.add_runtime_dependency 'mustache',  "= 1.0.2"
-  spec.add_runtime_dependency 'liquid',    "= 4.0.0"
+  #spec.add_runtime_dependency 'liquid',    "= 4.0.0"
   spec.add_runtime_dependency 'net-ssh',   "= 4.2.0"
-  spec.add_runtime_dependency 'pry',       "= 0.11.3"
+  #spec.add_runtime_dependency 'pry',       "= 0.11.3"
 end
