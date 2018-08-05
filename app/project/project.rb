@@ -2,15 +2,14 @@ class Project
   def initialize path, template_engines: [:mustache, :erb], addon: false
     @path = path
     @files = []
-    @templates = []
-    @templates_ = Project::TemplateList.new
+    @templates = Project::TemplateList.new
     @other = []
     @directories = []
     @template_engines = template_engines
     load_files path
   end
 
-  attr_reader :path, :files, :templates, :other, :directories, :templates_
+  attr_reader :path, :files, :templates, :other, :directories, :templates
 
   def capabilities
     files.each.capabilities.flatten.compact
@@ -53,8 +52,7 @@ class Project
             path:    file_path
           )
         elsif @template_engines.include? file_path.split(".").last.to_sym
-          @templates << file_path.sub(@path, "")
-          @templates_.append Project::Template.new(
+          @templates.append Project::Template.new(
             project: self,
             path:    file_path
           )
@@ -64,7 +62,7 @@ class Project
           @other << file_path.sub(@path, "")
         end
       end
-      log "templates: #{@templates}"
+      log "templates: #{@templates.each.path}"
     else
       @files = [Project::ProjectFile.new(@path)]
     end

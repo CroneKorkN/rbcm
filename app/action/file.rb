@@ -24,13 +24,7 @@ class Action::File < Action
     @content ||= if @params[:content]
       @params[:content].to_s
     elsif @params[:template]
-      # @node.rbcm.project.templates.find_for(
-      #  @params[:template]
-      # ).render context: @params[:context]
-      # Node::Template.new(
-      #   name: @params[:template]
-      # ).render context: @params[:context]
-      project_file.project.templates_.for(self).render(
+      project_file.project.templates.for(self).render(
         context: @params[:context]
       )
     end

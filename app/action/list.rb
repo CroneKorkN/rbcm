@@ -25,6 +25,11 @@ class ActionList < Array
     ActionList.new select{|action| action.path == path}
   end
 
+  def node node_name
+    return self unless node_name
+    ActionList.new select{|action| action.node.name == node_name}
+  end
+
   def checkable
     ActionList.new select.checkable?
   end

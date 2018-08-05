@@ -172,7 +172,7 @@ end
 ## addons
 
 Projects can be combined via addons, even recursively. This can be used to
-centralizise and share capability-sets. An addon is an usal rbcm project,
+centralizise and share capability sets. An addon is an usal rbcm project,
 although nodes make no sense within an addon.
 
 `capabilities/localhost.rb`:

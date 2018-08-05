@@ -1,7 +1,7 @@
 class CLI
   def initialize argv
     args = Hash[ argv.join(' ').scan(/--?([^=\s]+)(?:[=\s](\S+))?/) ]
-    p args
+    puts "ARGS #{args}"
     render section: "RBCM starting", first: true
     # bootstrap
     @rbcm = rbcm = RBCM.new argv[0] || `pwd`.chomp
