@@ -2,7 +2,7 @@ class Action
   attr_accessor :approved, :applied
   attr_reader   :triggered_by, :trigger, :chain, :dependencies,
                 :obsolete, :job, :check, :triggered, :result,
-                :source, :path, :line, :state, :tags
+                :source, :path, :line, :state, :tags, :working_dir
 
   def initialize job:, params: nil, line: nil, check: nil,
                  dependencies: nil, state:

@@ -27,12 +27,13 @@ class Action::File < Action
       # @node.rbcm.project.templates.find_for(
       #  @params[:template]
       # ).render context: @params[:context]
-      Node::Template.new(
-        name: @params[:template]
-      ).render context: @params[:context]
-      # project_file.project.templates_.for(self).render(
-      #   context: @params[:context]
-      # )
+      # Node::Template.new(
+      #   name: @params[:template]
+      # ).render context: @params[:context]
+      binding.pry
+      project_file.project.templates_.for(self).render(
+        context: @params[:context]
+      )
     end
   end
 
