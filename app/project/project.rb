@@ -3,7 +3,7 @@ class Project
     @path = path
     @files = []
     @templates = []
-    @templates_ = []
+    @templates_ = Project::TemplateList.new
     @other = []
     @directories = []
     @template_engines = template_engines
@@ -64,7 +64,6 @@ class Project
           @other << file_path.sub(@path, "")
         end
       end
-      binding.pry
       log "templates: #{@templates}"
     else
       @files = [Project::ProjectFile.new(@path)]

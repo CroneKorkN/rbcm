@@ -15,10 +15,10 @@ APPDIR = File.expand_path File.dirname(__FILE__)
   "lib/lib",          "lib/array_hash",
   "lib/options",      "lib/quick_each",
   "lib/params",       "lib/aescrypt",
-  "project/project",   "project/definition",
+  "project/project",  "project/definition",
   "project/file",     "project/capability",
   "project/sandbox",  "project/addon",
-  "project/template",
+  "project/template", "project/template_list",
   "cli"
 ].each{|requirement| require "#{APPDIR}/#{requirement}.rb"}
 
