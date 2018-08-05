@@ -6,7 +6,7 @@ class Project::Template
     @path    = path
   end
 
-  attr_accessor :path
+  attr_accessor :project, :path
 
   def render context: {}
     content = File.read path
@@ -30,17 +30,16 @@ class Project::Template
   end
 
   def target_filename
-    filename.gsub /#{engine_names.reverse.join('.')}$/, ''
+    filename.gsub /#{engine_names.reverse.collect{|e| ".#{e}"}.join}$/, ''
   end
 
   def path_in_project
-
+    path.gsub /^#{project.path}/, ''
   end
 
   def engine_names
-    filename.split(".").reverse.each.to_sym.collect do |layer|
-      break unless @@engines.include? layer
-      layer
-    end
+    filename.split(".").reverse.collect{ |layer|
+      layer if @@engines.include? layer.to_sym
+    }.compact
   end
 end

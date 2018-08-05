@@ -64,6 +64,7 @@ class Project
           @other << file_path.sub(@path, "")
         end
       end
+      binding.pry
       log "templates: #{@templates}"
     else
       @files = [Project::ProjectFile.new(@path)]
