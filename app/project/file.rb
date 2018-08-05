@@ -15,9 +15,9 @@ class Project::ProjectFile
     sandbox.instance_methods.each do |name|
       raise "ERROR: capability name '#{name}' not allowed" if [:node, :group].include? name
       @capabilities.append Project::Capability.new(
-        name:    name,
-        content: sandbox.instance_method(name),
-        path:    relative_path
+        name:         name,
+        content:      sandbox.instance_method(name),
+        project_file: self
       )
     end
   end

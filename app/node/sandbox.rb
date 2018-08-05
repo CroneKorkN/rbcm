@@ -22,7 +22,7 @@ class Node::Sandbox
       __add_capability Project::Capability.new(
         name: base_capability,
         content: method(base_capability).unbind,
-        path: false
+        project_file: false
       )
     end
   end
@@ -93,6 +93,7 @@ class Node::Sandbox
   end
 
   def file path, tags: nil, trigger: nil, triggered_by: nil, **named
+    p working_dir
     raise "RBCM: invalid file paramteres '#{named}'" if (
       named.keys - [:exists, :includes_line, :after, :mode, :content,
         :template, :context, :tags, :user, :group]
@@ -123,8 +124,10 @@ class Node::Sandbox
 
   def working_dir
     @cache[:chain].select{ |i|
-      i.class == Node or i.class == Project::Capability
-    }.last.path.split("/")[0..-2].join("/")
+      i.class == Project::Definition or (
+        i.class == Project::Capability and not [:file, :run].include? i.name 
+      )
+    }.last.project_file.path.split("/")[0..-2].join("/")
   end
 
   def decrypt secret
