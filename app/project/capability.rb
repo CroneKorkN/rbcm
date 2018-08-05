@@ -3,14 +3,14 @@
 # type - regular: 'cap', final: 'cap!'
 
 class Project::Capability
-  def initialize name:, content:, path:
+  def initialize name:, content:, project_file: nil
     @name = name
     @content = content
     @type = type
-    @path = path
+    @project_file = project_file
   end
 
-  attr_reader :name, :content, :path
+  attr_reader :name, :content, :project_file
 
   def type
     @name[-1] == "!" ? :final : :regular

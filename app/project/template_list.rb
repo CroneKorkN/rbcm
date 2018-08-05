@@ -1,9 +1,15 @@
-class RBCM::TemplateList < Array
-  def for target_path
+class Project::TemplateList < Array
+  def for path:, capability:
+    find{ |template|
+      if path[0] == "/"
+        capability.project_file.project
+      else
 
+      end
+    }
   end
 
-  def under target_path
+  def under path:, capability:
 
-  end 
+  end
 end

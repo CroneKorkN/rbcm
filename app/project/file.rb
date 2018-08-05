@@ -1,13 +1,13 @@
 # extracts capabilities and definitions from project files
 
 class Project::ProjectFile
-  def initialize project, project_file_path
+  def initialize project:, path:
     @project = project
-    @path = project_file_path
+    @path = path
     @definitions = []
     @capabilities = []
     @addons = []
-    file = File.read project_file_path
+    file = File.read path
     method_names_cache = methods(false)
     instance_eval file
     sandbox = Project::Sandbox.dup
@@ -15,16 +15,15 @@ class Project::ProjectFile
     sandbox.instance_methods.each do |name|
       raise "ERROR: capability name '#{name}' not allowed" if [:node, :group].include? name
       @capabilities.append Project::Capability.new(
-        name:    name,
-        content: sandbox.instance_method(name),
-        path:    relative_path
+        name:         name,
+        content:      sandbox.instance_method(name),
+        project_file: self
       )
     end
   end
 
-  attr_reader :capabilities, :definitions, :addon_names, :path, :addons
-
-  private
+  attr_reader :capabilities, :definitions, :addon_names, :path, :addons,
+    :project
 
   def addon branch: "master", **named
     raise "illegal project source: #{keys}" if (

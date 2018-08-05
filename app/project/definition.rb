@@ -10,4 +10,8 @@ class Project::Definition
   def origin
     "#{type}:#{name}"
   end
+
+  def to_str
+    @name
+  end
 end

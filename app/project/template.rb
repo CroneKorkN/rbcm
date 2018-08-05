@@ -1,13 +1,16 @@
-class Node::Template
+class Project::Template
   @@engines = [:erb, :mustache]
 
-  def initialize name:
-    @name = name
+  def initialize project:, path:
+    @project = project
+    @path    = path
   end
+
+  attr_accessor :path
 
   def render context: {}
     content = File.read path
-    layers.each do |layer|
+    engine_names.each do |layer|
       if layer == :mustache
         require "mustache"
         content = Mustache.render(content, **context)
@@ -22,26 +25,22 @@ class Node::Template
     return content
   end
 
-  private
-
-  def path
-    @path ||= Dir["#{@@project_path}/**/#{@name}*"].first
-  end
-
   def filename
     File.basename(path)
   end
 
-  def layers
-    @layers = []
-    filename.split(".").reverse.each.to_sym.each do |layer|
-      break unless @@engines.include? layer
-      @layers << layer
-    end
-    return @layers
+  def target_filename
+    @path.gsub /#{engine_names.reverse.join('.')}$/, ''
   end
 
-  def self.project_path= path
-    @@project_path = path
+  def path_in_project
+
+  end
+
+  def engine_names
+    filename.split(".").reverse.each.to_sym.collect do |layer|
+      break unless @@engines.include? layer
+      layer
+    end
   end
 end

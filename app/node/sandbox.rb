@@ -10,7 +10,7 @@ class Node::Sandbox
     @dependency_cache = []
     @cache = {
       chain: [@node], trigger: [], triggered_by: [], check: [],
-      source: [], tags: []
+      source: [], tags: [], working_dir: []
     }
     # define in instance, otherwise method-binding will be wrong (to class)
     @@capabilities = @node.rbcm.project.capabilities.each.name
@@ -21,8 +21,7 @@ class Node::Sandbox
     [:file, :run].each do |base_capability|
       __add_capability Project::Capability.new(
         name: base_capability,
-        content: method(base_capability).unbind,
-        path: false
+        content: method(base_capability).unbind
       )
     end
   end
@@ -105,6 +104,7 @@ class Node::Sandbox
         job: job,
         params: Params.new([path], named),
         state: @cache.collect{|k,v| [k, v.dup]}.to_h,
+        working_dir: working_dir
       )
     end
   end
@@ -112,7 +112,7 @@ class Node::Sandbox
   def dir path="", templates:, context: {}, tags: nil, trigger: nil, triggered_by: nil
     __cache tags: tags, trigger: trigger, triggered_by: triggered_by do
       @node.rbcm.project.templates.select{ |template|
-        /^#{working_dir}/.match? template
+        /^#{working_dir}/.match? template.path
       }.each do |template|
         file path + template.gsub(/^#{working_dir}\/#{templates}/,"").gsub(".erb", "").gsub(".mustache", ""),
           template: template,
@@ -122,9 +122,10 @@ class Node::Sandbox
   end
 
   def working_dir
+    p @cache[:chain].collect(&:class)
     @cache[:chain].select{ |i|
-      i.class == Node or i.class == Project::Capability
-    }.last.path.split("/")[0..-2].join("/")
+      i.class == Project::Definition or i.class == Project::Capability
+    }.last.project_file.path.split("/")[0..-2].join("/")
   end
 
   def decrypt secret
@@ -209,7 +210,12 @@ class Node::Sandbox
     if capability.type == :regular
       define_singleton_method capability.name do |*ordered, **named|
         params = Params.new ordered, named
-        @node.jobs.append Node::Job.new @node, capability, params
+        @node.jobs.append Node::Job.new(
+          node: @node,
+          capability: capability,
+          params: params,
+          working_dir: working_dir
+        )
         @node.triggered.append capability.name
         r = __cache trigger: params[:trigger],
               triggered_by: params[:triggered_by],

@@ -2,7 +2,7 @@ class Project
   def initialize path, template_engines: [:mustache, :erb], addon: false
     @path = path
     @files = []
-    @templates = []
+    @templates = Project::TemplateList.new
     @other = []
     @directories = []
     @template_engines = template_engines
@@ -47,18 +47,24 @@ class Project
     if File.directory? path
       Dir["#{path}/**/*"].each do |file_path|
         if file_path.end_with? ".rb"
-          @files << Project::ProjectFile.new(self, file_path)
+          @files.append Project::ProjectFile.new(
+            project: self,
+            path:    file_path
+          )
         elsif @template_engines.include? file_path.split(".").last.to_sym
-          @templates << file_path.sub(@path, "")
+          @templates.append Project::Template.new(
+            project: self,
+            path:    file_path.sub(@path, "")
+          )
         elsif File.directory? path
-          @directories << file_path.sub(@path, "")
+          @directories.append file_path.sub(@path, "")
         else
-          @other << file_path.sub(@path, "")
+          @other.appen file_path.sub(@path, "")
         end
       end
       log "templates: #{@templates}"
     else
-      @files = [Project::ProjectFile.new(@path)]
+      @files = [Project::ProjectFile.new(project: self, path: @path)]
     end
     raise "ERROR: empty project" unless @files.any?
   end
