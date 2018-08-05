@@ -182,18 +182,18 @@ class Node::Sandbox
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
-      chain: [], source: nil, reset: nil, tags: nil
+      chain: nil, source: nil, reset: nil, tags: nil
     @cache[:source].append []             if chain
     @cache[:source].last  << source       if source
     @cache[:chain]        << chain        if chain
-    @cache[:tags]          << tags          if tags
+    @cache[:tags]         << tags         if tags
     @cache[:trigger]      << trigger      if trigger
     @cache[:triggered_by] << triggered_by if triggered_by
     @cache[:check]        << check        if check
     r = yield if block_given?
     @cache[:source].pop                   if chain
     @cache[:chain].pop                    if chain
-    @cache[:tags].pop                      if tags
+    @cache[:tags].pop                     if tags
     @cache[:trigger].pop                  if trigger
     @cache[:triggered_by].pop             if triggered_by
     @cache[:check].pop                    if check
