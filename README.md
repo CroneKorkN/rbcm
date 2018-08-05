@@ -169,6 +169,19 @@ group :dhcp_clients do
 end
 ```
 
+## addons
+
+Projects can be combined by adding an addon:
+
+`capabilities/localhost.rb`:
+```ruby
+addon github: "CroneKorkN/rbcm-capabilities"
+
+node 'pc.example.com' do
+  ip '10.0.0.2', mac: "22:22:22:22:22:22"
+end
+```
+
 # Examples
 
 ## dhcp server und clients

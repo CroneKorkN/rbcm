@@ -1,9 +1,10 @@
 class CLI
-  def initialize params
-    options = Options.new params
+  def initialize argv
+    args = Hash[ argv.join(' ').scan(/--?([^=\s]+)(?:[=\s](\S+))?/) ]
+    p args
     render section: "RBCM starting", first: true
     # bootstrap
-    @rbcm = rbcm = RBCM.new params[0] || `pwd`.chomp
+    @rbcm = rbcm = RBCM.new argv[0] || `pwd`.chomp
     render :project
     render :capabilities
     # parse
@@ -77,8 +78,8 @@ class CLI
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} " +
-        "#{format} #{format :params}#{@action.job.params if @action.job}#{format}" +
+        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} #{format}" +
+        "\n#{prefix}#{format}#{format :params}#{@action.job.params if @action.job}#{format}" +
         " #{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
     elsif element == :capabilities
       out prefix + "capabilities: #{Node::Sandbox.capabilities.join(", ")}"
@@ -116,7 +117,7 @@ class CLI
       ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
     elsif element == :approved
       string = @action.approved? ? "#{format :green} APPROVED" : "#{format :red} DECLINED"
-      puts "#{string} #{format}"
+      out "#{prefix} #{string} #{format}                                                 "
     elsif element.class == String
       out prefix + "#{element}"
     elsif checking
