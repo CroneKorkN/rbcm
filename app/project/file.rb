@@ -1,13 +1,13 @@
 # extracts capabilities and definitions from project files
 
 class Project::ProjectFile
-  def initialize project, project_file_path
+  def initialize project:, path:
     @project = project
-    @path = project_file_path
+    @path = path
     @definitions = []
     @capabilities = []
     @addons = []
-    file = File.read project_file_path
+    file = File.read path
     method_names_cache = methods(false)
     instance_eval file
     sandbox = Project::Sandbox.dup
