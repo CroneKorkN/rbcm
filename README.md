@@ -171,14 +171,16 @@ end
 
 ## addons
 
-Projects can be combined by adding an addon:
+Projects can be combined via addons, even recursively. This can be used to
+centralizise and share capability-sets. An addon is an usal rbcm project,
+although nodes make no sense within an addon.
 
 `capabilities/localhost.rb`:
 ```ruby
 addon github: "CroneKorkN/rbcm-capabilities"
 
 node 'pc.example.com' do
-  ip '10.0.0.2', mac: "22:22:22:22:22:22"
+  systemctl restart: "apache2"
 end
 ```
 
