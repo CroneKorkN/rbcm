@@ -46,7 +46,7 @@ class CLI
     [actions].flatten(1).each do |action|
       @action = action
       render :title, color: (action.obsolete ? :green : :yellow)
-      render :command if action.class == Action::Command
+      #render :command if action.class == Action::Command
       next if not action.approvable?
       render :siblings if action.siblings.any?
       render :source if action.source.flatten.compact.any?
