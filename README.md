@@ -92,6 +92,13 @@ triggered_by :reload_dhcp do
 end
 ```
 
+Inline-Version:
+
+```ruby
+dhcp_server conf: "dns-servers: 8.8.8.8;", trigger :reload_dhcp
+systemctl reload: :dhcpd, triggered_by :reload_dhcp
+```
+
 Every job automatically activiates a trigger with the name of the actions
 capability, if present.
 
