@@ -60,13 +60,13 @@ class RBCM
   end
 
   def parse
-    log "parsing nodes"
+    # parsing nodes
     nodes.values.each.parse
-    log "parsing additions"
+    # parsing additions
     nodes.values.each do |node|
       node.sandbox.evaluate node.additions
     end
-    log "parsing 'cap!'"
+    # parsing 'cap!'
     nodes.values.each do |node|
       node.capabilities.each{|capability| node.sandbox.send "#{capability.name}!"}
     end

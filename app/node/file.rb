@@ -8,7 +8,7 @@ class Node::NodeFile
 
   def content
     @content ||= (
-      log "DOWNLOADING #{@filesystem.node.name}: '#{@path}'"
+      # log "DOWNLOADING #{@filesystem.node.name}: '#{@path}'"
       response = @filesystem.node.remote.execute("cat '#{@path}'")
       response = "" if response.exitstatus != 0
       response

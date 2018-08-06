@@ -1,8 +1,8 @@
 class CLI
   def initialize argv
-    args = Hash[ argv.join(' ').scan(/--?([^=\s]+)(?:[=\s](\S+))?/) ]
-    puts "ARGS #{args}"
     render section: "RBCM starting", first: true
+    args = Hash[ argv.join(' ').scan(/--?([^=\s]+)(?:[=\s](\S+))?/) ]
+    render :args, content: args
     # bootstrap
     @rbcm = rbcm = RBCM.new argv[0] || `pwd`.chomp
     render :project
@@ -38,7 +38,13 @@ class CLI
 
   def check action
     @action = action
-    render checking: action.check.join("; ")
+    if action.class == Action::Command
+      render checking: action.check.join("; ") if action.checkable?
+    elsif action.class == Action::File
+      render checking: action.job.params[0]
+    end
+    #binding.pry
+    #sleep 0.15
     action.check!
   end
 
@@ -71,21 +77,27 @@ class CLI
     end
   end
 
-  def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil
+  def render element=nil, section: nil, color: nil, first: false, response: nil, checking: nil, content: nil
     prefix = "┃   "
     if section
       out "#{first ? nil : "┗━━──"}\n\n┏━━#{format :invert, :bold}#{" "*16}#{section}#{" "*16}#{format}━──\n┃"
+    elsif element == :args
+      out "#{prefix}ARGUMENTS #{content.to_s}"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
       tags = "#{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
         out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} #{format} #{tags}" +
         "\n#{prefix}#{format}#{format :params}#{@action.job.params if @action.job}#{format}"
     elsif element == :capabilities
-      out prefix + "capabilities: #{Node::Sandbox.capabilities.join(", ")}"
     elsif element == :project
-      out prefix + "project: #{@rbcm.project.files.count} ruby files, #{@rbcm.project.templates.count} templates"
-      out prefix + "  #{@rbcm.project.directories.count} directories, #{@rbcm.project.other.count} other files"
+      ([@rbcm.project] + @rbcm.project.all_addons).each do |project|
+        out "┣━  #{project.class}#{" #{project.type}: #{project.name}" if project.class == Addon}"
+        out prefix + "#{project.files.count} ruby files, #{project.templates.count} templates #{project.directories.count} directories, #{project.other.count} other files"
+        out prefix + "capabilities: #{project.capabilities.join(", ")}"
+        out prefix + "templates: #{project.templates.each.clean_path.join(", ")}"
+      end
     elsif element == :nodes
+      out "┣━  NODES #{@rbcm.nodes.count}"
       out prefix + @rbcm.nodes.values.collect{ |node|
         name = node.name.to_s.+(":").ljust(@rbcm.nodes.keys.each.length.max+1, " ")
         jobs = node.jobs.count.to_s.rjust(@rbcm.nodes.values.collect{|node| node.jobs.count}.max.digits.count, " ")
@@ -110,7 +122,7 @@ class CLI
         "triggered: #{format :trigger} #{@action.triggered.join(", ")} \e[0m;" +
         " again: #{@action.trigger.-(@action.triggered).join(", ")}"
     elsif element == :diff
-      out prefix[0..-2] + Diffy::Diff.new(
+      out prefix + Diffy::Diff.new(
         @action.job.node.files[@action.path].content,
         @action.content
       ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
