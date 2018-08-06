@@ -81,6 +81,10 @@ class Node::Sandbox
     end
   end
 
+  def localhost
+    # mark node as local
+  end
+
   def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
     __cache check: check, tags: tags, trigger: trigger, triggered_by: triggered_by, working_dirs: working_dir do
       @node.actions << Action::Command.new(
