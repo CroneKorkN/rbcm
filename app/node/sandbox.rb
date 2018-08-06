@@ -106,6 +106,8 @@ class Node::Sandbox
         params: Params.new([path], named),
         state: @cache.collect{|k,v| [k, v.dup]}.to_h
       )
+      run "chmod #{named[:mode]} #{path}",
+        check: "stat -c '%a' * #{path} | grep -q #{named[:mode]}" if named[:mode]
     end
   end
 
