@@ -7,17 +7,11 @@ class Node::NodeFile
   attr_writer :content, :user, :group, :mode
 
   def content
-    @content ||= (
-      # response = @filesystem.node.remote.execute("cat '#{@path}'")
-      # response = "" if response.exitstatus != 0
-      # response
-      begin
-        result = Net::SCP::download!(@filesystem.node.name, "root", @path)
-      rescue Net::SCP::Error
-        result = ""
-      end
-      result
-    )
+    @content ||= begin
+      result = Net::SCP::download!(@filesystem.node.name, "root", @path)
+    rescue Net::SCP::Error
+      result = ""
+    end
   end
 
   def diffable # TODO?
