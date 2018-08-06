@@ -78,7 +78,7 @@ class RBCM
       session.via 'gateway', 'gateway-user'
       @nodes.each do |name, node|
         session.group name.to_sym do
-          session.use "root@#{name}"
+          session.use "#{name}"
         end
       end
       actions.checkable.each do |action|

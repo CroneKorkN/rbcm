@@ -8,7 +8,7 @@ class Node::NodeFile
 
   def content
     @content ||= begin
-      result = Net::SCP::download!(@filesystem.node.name, "root", @path)
+      result = Net::SCP::download!(@filesystem.node.name, nil, @path)
     rescue Net::SCP::Error
       result = ""
     end

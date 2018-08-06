@@ -18,7 +18,7 @@ class Action::File < Action
   def apply!
     @applied = true
     #@result = @job.node.remote.execute("echo #{Shellwords.escape content} > #{path}")
-    @result = Net::SCP::upload!(@job.node.name, "root", StringIO.new(content), @params[0])
+    @result = Net::SCP::upload!(@job.node.name, nil, StringIO.new(content), @params[0])
     def @result.exitstatus
       self.class == TrueClass ? 0 : 1
     end
