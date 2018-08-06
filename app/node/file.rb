@@ -8,10 +8,15 @@ class Node::NodeFile
 
   def content
     @content ||= (
-      # log "DOWNLOADING #{@filesystem.node.name}: '#{@path}'"
-      response = @filesystem.node.remote.execute("cat '#{@path}'")
-      response = "" if response.exitstatus != 0
-      response
+      # response = @filesystem.node.remote.execute("cat '#{@path}'")
+      # response = "" if response.exitstatus != 0
+      # response
+      begin
+        result = Net::SCP::download!(@filesystem.node.name, "root", @path)
+      rescue Net::SCP::Error
+        result = ""
+      end
+      result
     )
   end
 

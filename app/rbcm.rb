@@ -1,4 +1,5 @@
 require "net/ssh"
+require "net/scp"
 require "fileutils"
 require "shellwords"
 require "diffy"

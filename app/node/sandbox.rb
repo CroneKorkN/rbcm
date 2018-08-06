@@ -106,9 +106,13 @@ class Node::Sandbox
         params: Params.new([path], named),
         state: @cache.collect{|k,v| [k, v.dup]}.to_h
       )
-      run "chmod #{named[:mode]} #{path}",
-        check: "stat -c '%a' * #{path} | grep -q #{named[:mode]}" if named[:mode]
-    end
+    end if named.keys.include? :content or named.keys.include? :template
+    run "chmod #{named[:mode]} '#{path}'",
+      check: "stat -c '%a' * #{path} | grep -q #{named[:mode]}" if named[:mode]
+    run "chown #{named[:user]} '#{path}'",
+      check: "stat -c '%U' * #{path} | grep -q #{named[:user]}" if named[:user]
+    run "chown :#{named[:group]} '#{path}'",
+      check: "stat -c '%G' * #{path} | grep -q #{named[:group]}" if named[:group]
   end
 
   def dir path="", templates:, context: {}, tags: nil, trigger: nil, triggered_by: nil

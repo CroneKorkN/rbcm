@@ -70,7 +70,7 @@ class CLI
       response = action.apply!
       render :title, color: response.exitstatus == 0 ? :green : :red
       render :command if action.class == Action::Command and response.exitstatus != 0
-      render response: response if response.length > 0
+      render response: response if response.to_s.length > 0
     end
   end
 
@@ -122,14 +122,14 @@ class CLI
       out prefix + Diffy::Diff.new(
         @action.job.node.files[@action.path].content,
         @action.content
-      ).to_s(:color).split("\n").join("\n#{prefix[0..-2]}")
+      ).to_s(:color).split("\n").join("\n#{prefix}")
     elsif element == :approved
       string = @action.approved? ? "#{format :green} APPROVED" : "#{format :red} DECLINED"
       out "#{prefix} #{string} #{format}                                                 "
     elsif element.class == String
       out prefix + "#{element}"
     elsif checking
-      out prefix + "CHECKING #{@action.job.node.name}: #{checking}"
+      out prefix + "#{@action.job.node.name}: #{checking}"
     elsif response
       out prefix + response.to_s.chomp.split("\n").join("\n#{prefix}")
     elsif element == :applied

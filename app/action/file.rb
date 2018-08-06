@@ -8,7 +8,7 @@ class Action::File < Action
   end
 
   def obsolete
-    @job.node.files[path].content.chomp.chomp == content.chomp.chomp
+    @job.node.files[path].content == content
   end
 
   def siblings
@@ -17,7 +17,12 @@ class Action::File < Action
 
   def apply!
     @applied = true
-    @result = @job.node.remote.execute("echo #{Shellwords.escape content} > #{path}")
+    #@result = @job.node.remote.execute("echo #{Shellwords.escape content} > #{path}")
+    @result = Net::SCP::upload!(@job.node.name, "root", StringIO.new(content), @params[0])
+    def @result.exitstatus
+      self.class == TrueClass ? 0 : 1
+    end
+    @result
   end
 
   def content
