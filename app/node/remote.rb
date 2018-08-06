@@ -7,10 +7,10 @@ class Node::Remote
   attr_reader :node, :files
 
   def execute action
-    @session ||= Net::SSH.start @node.name, 'root'
+    @session ||= Net::SSH.start @node.name
     @session.exec! action
   end
 end
 
-# @session = Net::SSH.start 'test.ckn.li', 'root'
+# @session = Net::SSH.start 'test.ckn.li'
 # @session.exec!("ls").class

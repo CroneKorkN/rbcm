@@ -69,8 +69,7 @@ class CLI
       @action = action
       response = action.apply!
       render :title, color: response.exitstatus == 0 ? :green : :red
-      render :command if action.class == Action::Command and response.exitstatus != 0
-      render response: response if response.to_s.length > 0
+      render response: response if response.to_s.length > 0 and action.class == Action::Command 
     end
   end
 
@@ -143,6 +142,7 @@ class CLI
   end
 
   def out line
+    # `tput cols`
     puts "\r#{line}"
   end
 
