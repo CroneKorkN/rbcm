@@ -1,7 +1,7 @@
 # contains parameters send to capabilities
 # used to read configuration via "?"-suffix methods
 
-class Node::Job
+class RBCM::Node::Job
   attr_reader :capability, :params, :node
 
   def initialize node:, capability:, params:

@@ -1,4 +1,4 @@
-class Node
+class RBCM::Node
   attr_reader   :jobs, :definitions, :files, :name, :remote, :rbcm, :sandbox,
                 :path
   attr_accessor :actions, :memberships, :triggered
@@ -8,10 +8,10 @@ class Node
     @name = name
     @path = path
     @definitions = []
-    @sandbox = Node::Sandbox.new self
-    @remote = Node::Remote.new self
-    @files = Node::NodeFilesystem.new self, overlays: @remote.files
-    @actions = ActionList.new
+    @sandbox = RBCM::Node::Sandbox.new self
+    @remote = RBCM::Node::Remote.new self
+    @files = RBCM::Node::NodeFilesystem.new self, overlays: @remote.files
+    @actions = RBCM::ActionList.new
     @memberships = []
     @jobs = []
     @blocked_jobs = []

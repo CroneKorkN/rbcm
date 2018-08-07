@@ -1,4 +1,4 @@
-class Addon < Project
+class RBCM::Addon < Project
   def initialize type:, name:
     @type, @name = type, name
     if [:file, :dir].include? type

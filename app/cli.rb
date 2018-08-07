@@ -1,10 +1,10 @@
-class CLI
+class RBCM::CLI
   def initialize argv
     render section: "RBCM starting", first: true
     args = Hash[ argv.join(' ').scan(/--?([^=\s]+)(?:[=\s](\S+))?/) ]
     render :args, content: args
     # bootstrap
-    @rbcm = rbcm = RBCM.new argv[0] || `pwd`.chomp
+    @rbcm = rbcm = RBCM::Core.new argv[0] || `pwd`.chomp
     render :project
     render :capabilities
     # parse
@@ -69,7 +69,7 @@ class CLI
       @action = action
       response = action.apply!
       render :title, color: response.exitstatus == 0 ? :green : :red
-      render response: response if response.to_s.length > 0 and action.class == Action::Command 
+      render response: response if response.to_s.length > 0 and action.class == Action::Command
     end
   end
 

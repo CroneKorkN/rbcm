@@ -1,4 +1,4 @@
-class Action::Command < Action
+class RBCM::Action::Command < Action
   attr_reader :line
 
   # determine wether the command is neccessary

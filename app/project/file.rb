@@ -1,6 +1,6 @@
 # extracts capabilities and definitions from project files
 
-class Project::ProjectFile
+class RBCM::Project::ProjectFile
   def initialize project:, path:
     @project = project
     @path = path
@@ -14,7 +14,7 @@ class Project::ProjectFile
     sandbox.module_eval(file)
     sandbox.instance_methods.each do |name|
       raise "ERROR: capability name '#{name}' not allowed" if [:node, :group].include? name
-      @capabilities.append Project::Capability.new(
+      @capabilities.append RBCM::Project::Capability.new(
         name:         name,
         content:      sandbox.instance_method(name),
         project_file: self
@@ -31,25 +31,25 @@ class Project::ProjectFile
       keys = named.keys - [:github, :dir, :file]
     ).any?
     named.each do |type, name|
-      @addons.append Addon.new type: type, name: name
+      @addons.append RBCM::Addon.new type: type, name: name
     end
   end
 
   def group name=nil
-    @definitions.append Project::Definition.new(
+    @definitions.append RBCM::Project::Definition.new(
       type:    :group,
       name:    name,
-      content: Proc.new,
+      content: RBCM::Proc.new,
       project_file: self
     )
   end
 
   def node names=nil
     [names].flatten(1).each do |name|
-      @definitions.append Project::Definition.new(
+      @definitions.append RBCM::Project::Definition.new(
         type:         name.class == Regexp ? :pattern : :node,
         name:         name,
-        content:      Proc.new,
+        content:      RBCM::Proc.new,
         project_file: self
       )
     end

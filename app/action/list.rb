@@ -1,4 +1,4 @@
-class ActionList < Array
+class RBCM::ActionList < Array
   def initialize array=[]
     array.each do |element|
       insert -1, element
@@ -10,7 +10,7 @@ class ActionList < Array
     self.each do |action|
       resolve_action_dependencies action
     end
-    ActionList.new @actions
+    RBCM::ActionList.new @actions
   end
 
   def resolve_triggers
@@ -18,52 +18,52 @@ class ActionList < Array
     self.each do |action|
       resolve_action_triggers action
     end
-    ActionList.new @actions
+    RBCM::ActionList.new @actions
   end
 
   def file path
-    ActionList.new select{|action| action.path == path}
+    RBCM::ActionList.new select{|action| action.path == path}
   end
 
   def node node_name
     return self unless node_name
-    ActionList.new select{|action| action.job.node.name == node_name}
+    RBCM::ActionList.new select{|action| action.job.node.name == node_name}
   end
 
   def checkable
-    ActionList.new select.checkable?
+    RBCM::ActionList.new select.checkable?
   end
 
   def unneccessary
-    ActionList.new (self - neccessary)
+    RBCM::ActionList.new (self - neccessary)
   end
 
   def neccessary
-    ActionList.new select.neccessary?
+    RBCM::ActionList.new select.neccessary?
   end
 
   def approvable
-    ActionList.new select.approvable?
+    RBCM::ActionList.new select.approvable?
   end
 
   def approved
-    ActionList.new select.approved?
+    RBCM::ActionList.new select.approved?
   end
 
   def applyable
-    ActionList.new select.applyable?
+    RBCM::ActionList.new select.applyable?
   end
 
   def applied
-    ActionList.new select.applied?
+    RBCM::ActionList.new select.applied?
   end
 
   def succeeded
-    ActionList.new applied.select.succeeded?
+    RBCM::ActionList.new applied.select.succeeded?
   end
 
   def failed
-    ActionList.new applied.select.failed?
+    RBCM::ActionList.new applied.select.failed?
   end
 
   private

@@ -1,7 +1,7 @@
 # runs a definition and catches jobs
 # accepts definition-Proc and provides definition-Proc and job list
 
-class Node::Sandbox
+class RBCM::Node::Sandbox
   attr_reader :content, :jobs
 
   def initialize node
@@ -19,7 +19,7 @@ class Node::Sandbox
     end
     # wrap base_capabilities
     [:file, :run].each do |base_capability|
-      __add_capability Project::Capability.new(
+      __add_capability RBCM::Project::Capability.new(
         name: base_capability,
         content: method(base_capability).unbind,
         project_file: false
@@ -87,7 +87,7 @@ class Node::Sandbox
 
   def run action, check: nil, tags: nil, trigger: nil, triggered_by: nil
     __cache check: check, tags: tags, trigger: trigger, triggered_by: triggered_by, working_dirs: working_dir do
-      @node.actions << Action::Command.new(
+      @node.actions << RBCM::Action::Command.new(
         job: @node.jobs.last,
         line: action,
         dependencies: @dependency_cache.dup,
@@ -105,9 +105,9 @@ class Node::Sandbox
     run "mkdir -p #{File.dirname path}",
       check: "ls #{File.dirname path}"
     __cache tags: tags, trigger: trigger, triggered_by: triggered_by, working_dirs: working_dir do
-      @node.actions << Action::File.new(
+      @node.actions << RBCM::Action::File.new(
         job: job,
-        params: Params.new([path], named),
+        params: RBCM::Params.new([path], named),
         state: @cache.collect{|k,v| [k, v.dup]}.to_h
       )
     end if named.keys.include? :content or named.keys.include? :template
@@ -145,7 +145,7 @@ class Node::Sandbox
   def method_missing name, *named, **ordered, &block
     #log "method #{name} missing on #{@name}"
     capability_name = name[0..-2].to_sym
-    params = Params.new named, ordered
+    params = RBCM::Params.new named, ordered
     if not @@capabilities.include? capability_name
       super
     elsif name =~ /\!$/
@@ -188,7 +188,7 @@ class Node::Sandbox
     end
     return r.collect &block if block_given? # no-each-syntax
     return r
-    JobSearch.new r
+    RBCM::JobSearch.new r
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,
@@ -220,8 +220,8 @@ class Node::Sandbox
     # define wrapper method
     if capability.type == :regular
       define_singleton_method capability.name do |*ordered, **named|
-        params = Params.new ordered, named
-        @node.jobs.append Node::Job.new(
+        params = RBCM::Params.new ordered, named
+        @node.jobs.append RBCM::Node::Job.new(
           node: @node,
           capability: capability,
           params: params
@@ -246,7 +246,7 @@ class Node::Sandbox
     else
       raise "unknown capability type #{capability.type}"
     end
-    # return JobSearch.new r
+    # return RBCM::JobSearch.new r
   end
 
   def self.capabilities

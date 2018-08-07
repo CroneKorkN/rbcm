@@ -1,6 +1,6 @@
 # holds a definition on form of a proc to be executed in a nodes sandbox
 
-class Project::Definition
+class RBCM::Project::Definition
   def initialize type:, name:, content:, project_file:
     @type, @name, @content, @project_file = type, name, content, project_file
   end

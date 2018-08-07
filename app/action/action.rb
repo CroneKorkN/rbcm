@@ -1,4 +1,4 @@
-class Action
+class RBCM::Action
   attr_accessor :approved, :applied
   attr_reader   :triggered_by, :trigger, :chain, :dependencies,
                 :obsolete, :job, :check, :triggered, :result,

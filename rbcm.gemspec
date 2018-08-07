@@ -1,4 +1,4 @@
-Gem::Specification.new do |spec|
+RBCM::Gem::Specification.new do |spec|
   spec.name        =  'rbcm'
   spec.version     =  '0.0.11'
   spec.date        =  '2018-03-21'

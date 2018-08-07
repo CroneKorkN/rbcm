@@ -1,7 +1,7 @@
 # a hash which keys are initiated as arrays
-# default values via `Hash.new []` are inadequate for being volatile 
+# default values via RBCM::`Hash.new []` are inadequate for being volatile 
 
-class ArrayHash < Hash
+class RBCM::ArrayHash < Hash
   def [] key
     store key, [] unless has_key? key
     super

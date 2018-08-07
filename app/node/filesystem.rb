@@ -1,4 +1,4 @@
-class Node::NodeFilesystem
+class RBCM::Node::NodeFilesystem
   def initialize node, overlays: false
     @node = node
     @underlying = overlays
@@ -11,7 +11,7 @@ class Node::NodeFilesystem
     if @underlying
       @files[path] || @underlying[path]
     else
-      @files[path] ||= Node::NodeFile.new path: path, filesystem: self
+      @files[path] ||= RBCM::Node::NodeFile.new path: path, filesystem: self
     end
   end
 end

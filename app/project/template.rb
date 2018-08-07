@@ -1,4 +1,4 @@
-class Project::Template
+class RBCM::Project::Template
   @@engines = [:erb, :mustache]
 
   def initialize project:, path:
@@ -18,7 +18,7 @@ class Project::Template
       elsif layer == :erb
         # https://zaiste.net/rendering_erb_template_with_bindings_from_hash/
         require "ostruct"; require "erb"
-        cache = ERB.new(@content).result(
+        cache = RBCM::ERB.new(@content).result(
           OpenStruct.new(context).instance_eval{binding}
         )
       end
@@ -38,7 +38,7 @@ class Project::Template
     )
   end
 
-  def clean_filename 
+  def clean_filename
     File.basename(clean_path)
   end
 

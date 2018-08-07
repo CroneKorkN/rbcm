@@ -2,7 +2,7 @@
 # Project::Sandbox module
 # type - regular: 'cap', final: 'cap!'
 
-class Project::Capability
+class RBCM::Project::Capability
   def initialize name:, content:, project_file:
     @name = name
     @content = content

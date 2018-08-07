@@ -1,4 +1,4 @@
-class Params
+class RBCM::Params
   attr_reader :ordered, :named
 
   def initialize ordered, named

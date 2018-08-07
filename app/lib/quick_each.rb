@@ -2,7 +2,7 @@
 # quickeach
 #
 
-class QuickEach
+class RBCM::QuickEach
   def initialize enumerable
     @enumerable = enumerable
   end
@@ -13,7 +13,7 @@ class QuickEach
   end
 end
 
-class Array
+class RBCM::Array
   # copy method
   define_method(
     :_original_each,
@@ -22,7 +22,7 @@ class Array
 
   def each &block
     unless block_given?
-      return QuickEach.new self
+      return RBCM::QuickEach.new self
     else
       _original_each &block
     end
@@ -33,7 +33,7 @@ end
 # quickselect
 #
 
-class QuickSelect
+class RBCM::QuickSelect
   def initialize enumerable
     @enumerable = enumerable
   end
@@ -44,7 +44,7 @@ class QuickSelect
   end
 end
 
-class Array
+class RBCM::Array
   # copy method
   define_method(
     :_original_select,
@@ -53,7 +53,7 @@ class Array
 
   def select &block
     unless block_given?
-      return QuickSelect.new self
+      return RBCM::QuickSelect.new self
     else
       _original_select &block
     end

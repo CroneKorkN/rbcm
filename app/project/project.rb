@@ -1,8 +1,8 @@
-class Project
+class RBCM::Project
   def initialize path, template_engines: [:mustache, :erb], addon: false
     @path = path
     @files = []
-    @templates = Project::TemplateList.new
+    @templates = RBCM::Project::TemplateList.new
     @other = []
     @directories = []
     @template_engines = template_engines
@@ -47,12 +47,12 @@ class Project
     if File.directory? path
       Dir["#{path}/**/*"].each do |file_path|
         if file_path.end_with? ".rb"
-          @files.append Project::ProjectFile.new(
+          @files.append RBCM::Project::ProjectFile.new(
             project: self,
             path:    file_path
           )
         elsif @template_engines.include? file_path.split(".").last.to_sym
-          @templates.append Project::Template.new(
+          @templates.append RBCM::Project::Template.new(
             project: self,
             path:    file_path
           )
@@ -64,7 +64,7 @@ class Project
       end
     else
       @files = [
-        Project::ProjectFile.new(
+        RBCM::Project::ProjectFile.new(
           project: self,
           path:    path
         )

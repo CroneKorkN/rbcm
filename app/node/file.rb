@@ -1,4 +1,4 @@
-class Node::NodeFile
+class RBCM::Node::NodeFile
   def initialize path:, filesystem:
     @path       = path
     @filesystem = filesystem

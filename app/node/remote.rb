@@ -1,7 +1,7 @@
-class Node::Remote
+class RBCM::Node::Remote
   def initialize node
     @node = node
-    @files = Node::NodeFilesystem.new node
+    @files = RBCM::Node::NodeFilesystem.new node
   end
 
   attr_reader :node, :files

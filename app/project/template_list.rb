@@ -1,4 +1,4 @@
-class Project::TemplateList < Array
+class RBCM::Project::TemplateList < Array
   def for file_action
     template_name = file_action.job.params[:template]
     if template_name.start_with? "/" # `/template.txt`
