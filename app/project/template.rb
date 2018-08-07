@@ -18,7 +18,7 @@ class RBCM::Project::Template
       elsif layer == :erb
         # https://zaiste.net/rendering_erb_template_with_bindings_from_hash/
         require "ostruct"; require "erb"
-        cache = RBCM::ERB.new(@content).result(
+        cache = ERB.new(@content).result(
           OpenStruct.new(context).instance_eval{binding}
         )
       end

@@ -9,13 +9,13 @@ module Kernel
   end
 end
 
-class RBCM::Hash
+class Hash
   def << hash
     merge! hash
   end
 end
 
-class RBCM::Array
+class Array
   def include_one? array
     (self & array).any?
   end
@@ -28,21 +28,11 @@ class RBCM::Array
   end
 end
 
-class RBCM::Integer
+class Integer
   # backport
   unless defined? digits
     def digits
       self.to_s.chars.map(&:to_i)
     end
-  end
-end
-
-# a hash which keys are initiated as arrays
-# default values via RBCM::`Hash.new []` are inadequate for being volatile
-
-class RBCM::ArrayHash < Hash
-  def [] key
-    store key, [] unless has_key? key
-    super
   end
 end

@@ -22,7 +22,7 @@ class RBCM::CLI
       approve action
       if action.approved?
         approve action.siblings
-        approve action.same_file if action.class == Action::File
+        approve action.same_file if action.class == RBCM::Action::File
       end
     end
     # apply
@@ -38,9 +38,9 @@ class RBCM::CLI
 
   def check action
     @action = action
-    if action.class == Action::Command
+    if action.class == RBCM::Action::Command
       render checking: action.check.join("; ") if action.checkable?
-    elsif action.class == Action::File
+    elsif action.class == RBCM::Action::File
       render checking: action.job.params[0]
     end
     action.check!
@@ -53,7 +53,7 @@ class RBCM::CLI
       next if not action.approvable?
       render :siblings if action.siblings.any?
       render :source if action.source.flatten.compact.any?
-      render :diff if action.class == Action::File
+      render :diff if action.class == RBCM::Action::File
       render :prompt
       sleep 0.25 unless [:a,:y,:n,:i].include? r = STDIN.getch.to_sym # avoid 'ctrl-c'-trap
       (binding.pry; sleep 1) if r == :i
@@ -69,7 +69,7 @@ class RBCM::CLI
       @action = action
       response = action.apply!
       render :title, color: response.exitstatus == 0 ? :green : :red
-      render response: response if response.to_s.length > 0 and action.class == Action::Command
+      render response: response if response.to_s.length > 0 and action.class == RBCM::Action::Command
     end
   end
 
@@ -87,7 +87,7 @@ class RBCM::CLI
     elsif element == :capabilities
     elsif element == :project
       ([@rbcm.project] + @rbcm.project.all_addons).each do |project|
-        out "┣━  #{project.class}#{" #{project.type}: #{project.name}" if project.class == Addon}"
+        out "┣━  #{project.class}#{" #{project.type}: #{project.name}" if project.class == RBCM::Addon}"
         out prefix + "#{project.files.count} ruby files, #{project.templates.count} templates #{project.directories.count} directories, #{project.other.count} other files"
         out prefix + "capabilities: #{project.capabilities.join(", ")}"
         out prefix + "templates: #{project.templates.each.clean_path.join(", ")}"

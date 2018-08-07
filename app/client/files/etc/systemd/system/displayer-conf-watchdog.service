@@ -1,0 +1,8 @@
+[Unit]
+Description=displayer-conf-watchdog
+
+[Service]
+ExecStart=/opt/displayer/displayer-conf-watchdog
+
+[Install]
+WantedBy=multi-user.target

@@ -131,8 +131,8 @@ class RBCM::Node::Sandbox
 
   def working_dir
     @cache[:chain].select{ |i|
-      i.class == Project::Definition or (
-        i.class == Project::Capability and not [:file, :run].include? i.name
+      i.class == RBCM::Project::Definition or (
+        i.class == RBCM::Project::Capability and not [:file, :run].include? i.name
       )
     }.last.project_file.path.split("/")[0..-2].join("/")
   end

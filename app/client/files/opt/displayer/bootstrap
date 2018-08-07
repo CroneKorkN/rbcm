@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/opt/displayer/displayer-gui >>/tmp/displayer.log 2>&1
+systemctl stop displayer-conf-watchdog.service
+/opt/displayer/display >>/tmp/displayer.log 2>&1

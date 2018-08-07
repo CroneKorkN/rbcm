@@ -10,7 +10,7 @@ class RBCM::Project::ProjectFile
     file = File.read path
     method_names_cache = methods(false)
     instance_eval file
-    sandbox = Project::Sandbox.dup
+    sandbox = RBCM::Project::Sandbox.dup
     sandbox.module_eval(file)
     sandbox.instance_methods.each do |name|
       raise "ERROR: capability name '#{name}' not allowed" if [:node, :group].include? name
@@ -39,7 +39,7 @@ class RBCM::Project::ProjectFile
     @definitions.append RBCM::Project::Definition.new(
       type:    :group,
       name:    name,
-      content: RBCM::Proc.new,
+      content: Proc.new,
       project_file: self
     )
   end
@@ -49,7 +49,7 @@ class RBCM::Project::ProjectFile
       @definitions.append RBCM::Project::Definition.new(
         type:         name.class == Regexp ? :pattern : :node,
         name:         name,
-        content:      RBCM::Proc.new,
+        content:      Proc.new,
         project_file: self
       )
     end

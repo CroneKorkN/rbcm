@@ -1,0 +1,4 @@
+rm -rf /home/displayer/.config/chromium
+unclutter -idle 0.01 -root &
+date >> /tmp/displayer.log
+/opt/displayer/bootstrap >>/tmp/displayer.log 2>&1 &

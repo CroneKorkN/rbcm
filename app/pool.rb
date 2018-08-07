@@ -1,4 +1,4 @@
-class RBCM::ConnectionPool
+class RBCM::Worker
   def initialize
 
   end

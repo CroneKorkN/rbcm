@@ -30,7 +30,7 @@ class RBCM::Action
   end
 
   def checkable?
-    @check.any? or self.class == Action::File
+    @check.any? or self.class == RBCM::Action::File
   end
 
   def neccessary?
@@ -71,7 +71,7 @@ class RBCM::Action
 
   def approve! input=:y
     if [:a, :y].include? input
-      @job.node.files[@path].content = content if self.class == Action::File
+      @job.node.files[@path].content = content if self.class == RBCM::Action::File
       @approved = true
       siblings.each.approve! if input == :a
       @job.node.triggered << @trigger
