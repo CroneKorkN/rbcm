@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          =  'rbcm'
-  spec.version       =  '0.0.12'
+  spec.version       =  '0.0.13'
   spec.date          =  '2018-03-21'
   spec.summary       =  "Ruby Config Management"
   spec.description   =  "manage your servers via simple config-files"
@@ -18,4 +18,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'net-scp',   "= 1.2.2.rc2"
   spec.add_runtime_dependency 'git',       "= 1.4.0"
   spec.add_runtime_dependency 'pry',       "= 0.11.3"
-end 
+end

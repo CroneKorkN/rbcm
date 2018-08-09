@@ -162,7 +162,7 @@ class RBCM::Node::Sandbox
     else
       jobs = @node.jobs
     end
-    jobs = jobs.select{|job| job.capability == capability_name}
+    jobs = jobs.select{|job| job.capability.name == capability_name}
     if params.delete(:nodes).empty?
       # return ordered prarams
       r = jobs.collect{|job| job.params}
