@@ -81,9 +81,9 @@ class RBCM::CLI
       out "#{prefix}ARGUMENTS #{content.to_s}"
     elsif element == :title
       triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
-      tags = "#{format :tag}#{"tags: " if @action.tags.any?}#{@action.tags.join(", ")}#{format}"
-        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} #{format} #{tags}" +
-        "\n#{prefix}#{format}#{format :params}#{@action.job.params if @action.job}#{format}"
+      tags = "#{format :tag}tags: #{@action.tags.join(", ")}#{format}"
+        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} #{format} #{tags if @action.tags.any?}"+
+        "\n#{prefix}#{format :params}#{@action.job.params if @action.job}#{format}"
     elsif element == :capabilities
     elsif element == :project
       ([@rbcm.project] + @rbcm.project.all_addons).each do |project|
@@ -136,7 +136,6 @@ class RBCM::CLI
       out "┣━\ #{format :green, :bold} #{@rbcm.actions.succeeded.count} secceeded #{format}"
       out "┣━\ #{format :red, :bold} #{@rbcm.actions.failed.count} failed #{format}" if @rbcm.actions.failed.any?
       out "┗━━──"
-
     else
     end
   end
@@ -160,8 +159,8 @@ class RBCM::CLI
       tag:      "\e[35m",
       params:   "\e[36m",
       siblings: "\e[35m"
-    }.select{ |key, _|
-      params.include? key
-    }.values.join
+    }.collect{ |key, val|
+      val if params.include? key
+    }.join
   end
 end

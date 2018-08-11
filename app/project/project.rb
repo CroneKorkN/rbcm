@@ -36,11 +36,6 @@ class RBCM::Project
     ).flatten
   end
 
-  #TODO?
-  def template name
-    # @templates.find{|name| name...}
-  end
-
   private
 
   def load_files path
