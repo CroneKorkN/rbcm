@@ -5,9 +5,7 @@ class String
     aes.key = OpenSSL::Digest::SHA256.new(password).digest
     aes.iv = iv = aes.random_iv
     aes.update(self.strip)
-    return (
-      Base64.encode64(iv) + Base64.encode64(aes.final.to_s)
-    ).chomp
+    Base64.encode64(iv).chomp + Base64.encode64(aes.final.to_s)
   end
 
   def decrypt password

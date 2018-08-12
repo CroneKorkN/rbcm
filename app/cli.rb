@@ -1,7 +1,8 @@
 class RBCM::CLI
   def initialize argv
     render section: "RBCM starting", first: true
-    args = Hash[ argv.join(' ').scan(/--?([^=\s]+)(?:[=\s](\S+))?/) ]
+    args = Hash[argv.join(' ').scan(/--?([^=\s]+)(?:[=\s](\S+))?/)]
+    encrypt args["encrypt"] if args["encrypt"]
     render :args, content: args
     # bootstrap
     @rbcm = rbcm = RBCM::Core.new argv[0] || `pwd`.chomp
@@ -35,6 +36,14 @@ class RBCM::CLI
   end
 
   private
+
+  def encrypt text
+    puts "┃   encrypting: '#{text[0..40]}#{"..." if text.length > 40}'"
+    print "┃   enter password: "
+    puts "┃   #{text.encrypt STDIN.gets}"
+    puts "┗━━──"
+    exit 0
+  end
 
   def check action
     @action = action
