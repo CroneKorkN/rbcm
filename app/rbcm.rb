@@ -6,6 +6,8 @@ module RBCM
   require "diffy"
   require "pry"
   require "git"
+  require 'openssl'
+  require 'base64'
 
   APPDIR = File.expand_path File.dirname(__FILE__)
   [ "action/action",    "action/command",

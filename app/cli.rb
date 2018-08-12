@@ -80,9 +80,9 @@ class RBCM::CLI
     elsif element == :args
       out "#{prefix}ARGUMENTS #{content.to_s}"
     elsif element == :title
-      triggerd_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
+      triggered_by = "#{format :trigger, :bold} #{@action.triggered_by.join(", ")} " if @action.triggered_by.any?
       tags = "#{format :tag}tags: #{@action.tags.join(", ")}#{format}"
-        out "┣━ #{triggerd_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} #{format} #{tags if @action.tags.any?}"+
+        out "┣━ #{triggered_by}#{format color, :bold} #{@action.chain.flatten.compact.join(" > ")} #{format} #{tags if @action.tags.any?}"+
         "\n#{prefix}#{format :params}#{@action.job.params if @action.job}#{format}"
     elsif element == :capabilities
     elsif element == :project

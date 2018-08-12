@@ -1,3 +1,30 @@
+addon github: 'CroneKorkN/rbcm-capabilities-base'
+
+node "client1.example.com" do
+  ip "10.0.0.11", mac: "11:11:11:11:11:11"
+  group :dhcp_clients
+end
+
+node "client2.example.com" do
+  ip "10.0.0.12", mac: "22:22:22:22:22:22"
+  group :dhcp_clients
+end
+
+node "server.example.com" do
+  group :dhcp_servers
+end
+
+group :dhcp_clients do
+  host = @node.name
+  ip = ip?(:v4).first
+  mac = ip?(:mac).first
+  group :dhcp_servers do
+    dhcpd host: host,
+      mac: mac,
+      ip:  ip
+  end
+end
+
 group :dhcp_servers do
   apt install: :"isc-dhcp-server"
   dhcpd conf: "authoritative;"

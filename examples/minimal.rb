@@ -1,3 +1,3 @@
 node "example.com" do
-  group :debian_servers
+  run "ls /"
 end
