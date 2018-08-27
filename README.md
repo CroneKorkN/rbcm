@@ -260,6 +260,7 @@ end
 
 # TODO
 
+- display not applied triggered actions if fail, that would otherwise get lost
 - auto apply via git integration
 - display "used infos from" when approving
 - https://github.com/jamis/net-ssh-multi, https://github.com/delano/rye

@@ -1,19 +1,20 @@
 class String
   def encrypt password
-    aes = OpenSSL::Cipher.new("AES-256-CBC")
-    aes.encrypt
-    aes.key = OpenSSL::Digest::SHA256.new(password).digest
-    aes.iv = iv = aes.random_iv
-    aes.update(self.strip)
-    Base64.encode64(iv).chomp + Base64.encode64(aes.final.to_s)
+    cipher = OpenSSL::Cipher::AES.new(256, :CBC)
+    cipher.encrypt
+    cipher.key = OpenSSL::Digest::SHA256.new(password).digest
+    iv = cipher.random_iv
+    p iv.length
+    Base64.encode64(iv + cipher.update(self) + cipher.final).chomp
   end
 
   def decrypt password
-    aes = OpenSSL::Cipher.new("AES-256-CBC")
-    aes.decrypt
-    aes.key = OpenSSL::Digest::SHA256.new(password).digest
-    aes.iv = Base64.decode64(self[0..23])
-    aes.update(Base64.decode64(self[24..-1]))
-    aes.final
+    cipher = OpenSSL::Cipher::AES.new(256, :CBC)
+    cipher.decrypt
+    cipher.key = OpenSSL::Digest::SHA256.new(password).digest
+    cipher.iv = Base64.decode64(self)[0..15]
+    cipher.update(Base64.decode64(self)[16..-1]) + cipher.final
   end
 end
+
+"abc".encrypt("a").decrypt("a")

@@ -1,5 +1,5 @@
 class RBCM::Project::Template
-  @@engines = [:erb, :mustache]
+  @@engines = [:erb, :mustache, :encrypted]
 
   def initialize project:, path:
     @project = project
@@ -21,6 +21,8 @@ class RBCM::Project::Template
         cache = ERB.new(@content).result(
           OpenStruct.new(context).instance_eval{binding}
         )
+      elsif layer == :encrypted
+        cache = cache.decrypt
       end
     end
     return cache
