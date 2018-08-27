@@ -22,7 +22,7 @@ class RBCM::Project::Template
           OpenStruct.new(context).instance_eval{binding}
         )
       elsif layer == :encrypted
-        cache = cache.decrypt
+        cache = cache.decrypt STDIN.gets
       end
     end
     return cache

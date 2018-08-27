@@ -1,3 +1,3 @@
 node "example.com" do
-  run "ls /"
+  file "/test", content: "123"
 end
