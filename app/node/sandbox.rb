@@ -67,6 +67,10 @@ class RBCM::Node::Sandbox
     end
   end
 
+  def user_password
+    @node.rbcm.user_password ||= (print "enter project password: "; STDIN.gets)
+  end
+
   def dont *params
     puts "dont #{params}"
   end
@@ -188,8 +192,9 @@ class RBCM::Node::Sandbox
       end
     end
     return r.collect &block if block_given? # no-each-syntax
-    return r
-    r.becomes RBCM::JobSearch
+    #return r
+    r.extend RBCM::JobSearch
+    r
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,

@@ -18,7 +18,7 @@ module RBCM
     "node/job_search",
     "lib/lib",          "lib/array_hash",
     "lib/options",      "lib/quick_each",
-    "lib/params",       "lib/aescrypt",
+    "lib/params",       "lib/encrypt",
     "project/project",  "project/definition",
     "project/file",     "project/capability",
     "project/sandbox",  "project/addon",
@@ -53,7 +53,8 @@ module RBCM
     end
 
     attr_reader   :nodes, :groups, :project, :actions
-    attr_accessor :group_additions
+    attr_accessor :group_additions, :user_password
+
 
     def actions
       RBCM::ActionList.new nodes.values.each.actions.flatten(1)
