@@ -189,7 +189,7 @@ class RBCM::Node::Sandbox
     end
     return r.collect &block if block_given? # no-each-syntax
     return r
-    RBCM::JobSearch.new r
+    r.becomes RBCM::JobSearch
   end
 
   def __cache trigger: nil, triggered_by: nil, params: nil, check: nil,

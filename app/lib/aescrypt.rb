@@ -4,7 +4,6 @@ class String
     cipher.encrypt
     cipher.key = OpenSSL::Digest::SHA256.new(password).digest
     iv = cipher.random_iv
-    p iv.length
     Base64.encode64(iv + cipher.update(self) + cipher.final).chomp
   end
 
@@ -16,5 +15,3 @@ class String
     cipher.update(Base64.decode64(self)[16..-1]) + cipher.final
   end
 end
-
-"abc".encrypt("a").decrypt("a")
