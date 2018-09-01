@@ -114,7 +114,7 @@ class RBCM::Node::Sandbox
         params: RBCM::Params.new([path], named),
         state: @cache.collect{|k,v| [k, v.dup]}.to_h
       )
-    end if named.keys.include? :content or named.keys.include? :template
+    end if (named.keys - [:content, :includes, :template]).length < named.keys.length
     run "chmod #{named[:mode]} '#{path}'",
       check: "stat -c '%a' * #{path} | grep -q #{named[:mode]}" if named[:mode]
     run "chown #{named[:user]} '#{path}'",

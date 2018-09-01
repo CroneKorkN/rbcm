@@ -162,8 +162,6 @@ class RBCM::CLI
 
   def out line
     # `tput cols`
-    p @rbcm.user_password if @rbcm and @rbcm.user_password
-    # line = line.gsub(@rbcm.user_password, "********") if @rbcm and @rbcm.user_password
     puts "\r#{line}"
   end
 
