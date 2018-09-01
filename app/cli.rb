@@ -43,7 +43,7 @@ class RBCM::CLI
   def encrypt text
     puts "┃   encrypting: '#{text[0..40]}#{"..." if text.length > 40}'"
     print "┃   enter password: "
-    puts "┃   #{text.encrypt STDIN.gets}"
+    puts "┃   #{text.encrypt STDIN.gets.chomp}"
     puts "┗━━──"
     exit 0
   end
@@ -51,7 +51,7 @@ class RBCM::CLI
   def decrypt text
     puts "┃   encrypting: '#{text[0..40]}#{"..." if text.length > 40}'"
     print "┃   enter password: "
-    puts "┃   #{text.decrypt STDIN.gets}"
+    puts "┃   #{text.decrypt STDIN.gets.chomp}"
     puts "┗━━──"
     exit 0
   end
@@ -162,6 +162,8 @@ class RBCM::CLI
 
   def out line
     # `tput cols`
+    p @rbcm.user_password if @rbcm and @rbcm.user_password
+    # line = line.gsub(@rbcm.user_password, "********") if @rbcm and @rbcm.user_password
     puts "\r#{line}"
   end
 

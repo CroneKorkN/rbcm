@@ -68,7 +68,7 @@ class RBCM::Node::Sandbox
   end
 
   def user_password
-    @node.rbcm.user_password ||= (print "enter project password: "; STDIN.gets)
+    @node.rbcm.user_password ||= (print "enter project password: "; STDIN.gets.chomp)
   end
 
   def dont *params
