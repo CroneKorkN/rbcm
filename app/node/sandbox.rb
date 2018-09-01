@@ -102,7 +102,7 @@ class RBCM::Node::Sandbox
 
   def file path, tags: nil, trigger: nil, triggered_by: nil, **named
     raise "RBCM: invalid file paramteres '#{named}'" if (
-      named.keys - [:exists, :includes_line, :after, :mode, :content,
+      named.keys - [:exists, :after, :mode, :content, :includes,
         :template, :context, :tags, :user, :group]
     ).any?
     job = @node.jobs.last
@@ -121,7 +121,7 @@ class RBCM::Node::Sandbox
       check: "stat -c '%U' * #{path} | grep -q #{named[:user]}" if named[:user]
     run "chown :#{named[:group]} '#{path}'",
       check: "stat -c '%G' * #{path} | grep -q #{named[:group]}" if named[:group]
-  end
+    end
 
   def dir path="/", templates:, context: {}, tags: nil, trigger: nil, triggered_by: nil
     templates.gsub! /\/^/, ''

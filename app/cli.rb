@@ -59,7 +59,7 @@ class RBCM::CLI
   def check action
     @action = action
     if action.class == RBCM::Action::Command
-      render checking: action.check.join("; ") if action.checkable?
+      render checking: action.check.collect{|a| a.force_encoding(Encoding::UTF_8)}.join("; ") if action.checkable?
     elsif action.class == RBCM::Action::File
       render checking: action.job.params[0]
     end

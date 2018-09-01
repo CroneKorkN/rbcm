@@ -17,10 +17,10 @@ class RBCM::Params
 
   def to_s
     [ ordered.collect{ |param|
-        "#{param}"
+        "#{param}".force_encoding(Encoding::UTF_8)
       },
       named.collect{ |k, v|
-        "\e[2m\e[1m#{k}:\e[21m\e[22m #{v.to_s[0..54].gsub("\n"," \\ ")}#{"\e[2m\e[1m…\e[21m\e[22m" if v.to_s.length > 54}"
+        "\e[2m\e[1m#{k}:\e[21m\e[22m #{v.to_s.force_encoding(Encoding::UTF_8)[0..54].gsub("\n"," \\ ")}#{"\e[2m\e[1m…\e[21m\e[22m" if v.to_s.length > 54}".force_encoding(Encoding::UTF_8)
       }
     ].flatten(1).join("\e[2m\e[1m, \e[21m\e[22m")
   end
