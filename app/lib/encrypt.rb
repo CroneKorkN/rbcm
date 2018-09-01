@@ -12,6 +12,6 @@ class String
     cipher.decrypt
     cipher.key = OpenSSL::Digest::SHA256.new(password).digest
     cipher.iv = Base64.decode64(self)[0..15]
-    marked = cipher.update(Base64.decode64(self)) + cipher.final
+    cipher.update(Base64.decode64(self)[16..-1]) + cipher.final
   end
 end
