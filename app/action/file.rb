@@ -29,7 +29,6 @@ class RBCM::Action::File < RBCM::Action
     @content ||= if @params[:content]
       @params[:content].to_s
     elsif @params[:includes]
-      binding.pry
       old = @job.node.files[path].content
       (old.include? @params[:includes]) ? old : [old, @params[:includes]].join("\n")
     elsif @params[:template]
