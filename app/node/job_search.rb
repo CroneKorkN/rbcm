@@ -4,7 +4,7 @@ module RBCM::JobSearch
       super
     else
       log warn: "warn: implicitly selected first: #{key}" if self.count > 1
-      fetch(0)[key]
+      last[key]
     end
   end
 end
