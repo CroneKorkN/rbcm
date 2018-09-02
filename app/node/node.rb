@@ -1,13 +1,14 @@
 class RBCM::Node
   attr_reader   :jobs, :definitions, :files, :name, :remote, :rbcm, :sandbox,
                 :path
-  attr_accessor :actions, :memberships, :triggered
+  attr_accessor :actions, :memberships, :triggered, :providers
 
   def initialize rbcm, name, path
     @rbcm = rbcm
     @name = name
     @path = path
     @definitions = []
+    @providers = []
     @sandbox = RBCM::Node::Sandbox.new self
     @remote = RBCM::Node::Remote.new self
     @files = RBCM::Node::NodeFilesystem.new self, overlays: @remote.files

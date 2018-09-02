@@ -36,7 +36,6 @@ module RBCM
       # create nodes
       @group_additions = RBCM::ArrayHash.new
       @nodes = {}
-      @providers = []
       @project.definitions(:node).each do |node_definition|
         @nodes[node_definition.name] ||= RBCM::Node.new(
           self,
@@ -57,8 +56,11 @@ module RBCM
     end
 
     attr_reader   :nodes, :groups, :project, :actions
-    attr_accessor :group_additions, :user_password, :providers
+    attr_accessor :group_additions, :user_password
 
+    def providers
+      nodes.values.each.providers.flatten(1)
+    end
 
     def actions
       RBCM::ActionList.new nodes.values.each.actions.flatten(1)

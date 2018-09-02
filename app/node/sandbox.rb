@@ -69,7 +69,7 @@ class RBCM::Node::Sandbox
 
   def provides name, for:, command:, required_tags: []
     # TODO check tagged actions
-    @node.rbcm.providers << {
+    @node.providers << {
       node:          @node,
       name:          name,
       group:         binding.local_variable_get(:for),
