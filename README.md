@@ -177,6 +177,35 @@ group :dhcp_clients do
 end
 ```
 
+## provider
+
+A node can act as an information provider for neighbouring nodes, by means of being in the same group. The scope of both, the offering and the request, may be limited to certain groups or a single group.
+
+The 'provide'-statements checks for providers in specified group or in all
+groups the node is part of.
+
+Nodes acting as provider will be parsed before their consuming nodes.
+
+```ruby
+def :easy_rsa
+  group :site_frankfurt
+  provides :vpn_certificate,
+    for: :datacenter_42,
+    by: "easy-rsa genarate cert; cat cert"
+  do
+    # needed for being able to provide 'vpn_certificate'
+    installl :openvpn
+  end
+end
+
+def :openvpn_client
+  group :site_frankfurt
+  file "/etc/openvpn/client.conf",
+    content: provide(:vpn_certificate, from: :datacenter_42)
+end
+
+```
+
 ## addons
 
 Projects can be combined via addons, even recursively. This can be used to

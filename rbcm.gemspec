@@ -14,6 +14,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'diffy',     "= 3.2.0"
   spec.add_runtime_dependency 'mustache',  "= 1.0.2"
   #spec.add_runtime_dependency 'liquid',    "= 4.0.0"
+  spec.add_runtime_dependency 'ipaddress', "= 0.8.2"
   spec.add_runtime_dependency 'net-ssh',   "= 4.2.0"
   spec.add_runtime_dependency 'net-scp',   "= 1.2.2.rc2"
   spec.add_runtime_dependency 'git',       "= 1.4.0"

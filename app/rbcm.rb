@@ -8,6 +8,7 @@ module RBCM
   require "git"
   require 'openssl'
   require 'base64'
+  require 'ipaddress'
 
   APPDIR = File.expand_path File.dirname(__FILE__)
   [ "action/action",    "action/command",
@@ -19,6 +20,7 @@ module RBCM
     "lib/lib",          "lib/array_hash",
     "lib/options",      "lib/quick_each",
     "lib/params",       "lib/encrypt",
+    "lib/binding",    
     "project/project",  "project/definition",
     "project/file",     "project/capability",
     "project/sandbox",  "project/addon",
