@@ -67,8 +67,27 @@ class RBCM::Node::Sandbox
     end
   end
 
+  def provides name, for:, command:, required_tags: []
+    # TODO check tagged actions
+    @node.rbcm.providers << {
+      node:          @node,
+      name:          name,
+      group:         binding.local_variable_get(:for),
+      command:       command,
+      required_tags: [required_tags].flatten(1),
+    }
+  end
+
+  def provide name, from: nil, context: {}
+    provider = @node.rbcm.providers.select{ |provider|
+      provider[:name] == name and
+      ([from] || @node.memberships).include? provider[:group]
+    }.first
+    provider[:node].remote.execute (provider[:command] % context)
+  end
+
   def user_password
-    @node.rbcm.user_password ||= (print "enter project password: "; STDIN.gets.chomp)
+    @node.rbcm.user_password ||= "123" #(print "enter project password: "; STDIN.gets.chomp)
   end
 
   def dont *params

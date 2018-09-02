@@ -188,20 +188,22 @@ Nodes acting as provider will be parsed before their consuming nodes.
 
 ```ruby
 def :easy_rsa
+  # surrounding actions are implicitly beeing made dependecies for the provider
+  # rbcm runs a second time, if the dependencies aren't fulllfilled on first run
   group :site_frankfurt
+  installl :openvpn
   provides :vpn_certificate,
-    for: :datacenter_42,
-    by: "easy-rsa genarate cert; cat cert"
+    for: :site_frankfurt,
+    required_tags: :easy_rsa_installed # add more dependencies
   do
-    # needed for being able to provide 'vpn_certificate'
-    installl :openvpn
+    "easy-rsa genarate cert; cat cert"
   end
 end
 
 def :openvpn_client
   group :site_frankfurt
   file "/etc/openvpn/client.conf",
-    content: provide(:vpn_certificate, from: :datacenter_42)
+    content: provide(:vpn_certificate, from: :site_frankfurt)
 end
 
 ```
