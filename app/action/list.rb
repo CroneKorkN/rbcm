@@ -21,6 +21,12 @@ class RBCM::ActionList < Array
     RBCM::ActionList.new @actions
   end
 
+  def tags tags
+    RBCM::ActionList.new select{|action| 
+      tags.one?{|tag| action.tags.include?(tag)}
+  }
+  end
+
   def file path
     RBCM::ActionList.new select{|action| action.path == path}
   end
