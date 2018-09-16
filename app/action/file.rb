@@ -3,12 +3,12 @@ class RBCM::Action::File < RBCM::Action
   attr_reader :path, :content
 
   def check!
-    # compare
     @job.node.files[path].content
   end
 
   def obsolete
-    @job.node.files[path].content == content
+    return true if @params[:provide_once] and @job.node.files[path].content.to_s.length > 0
+    return @job.node.files[path].content == content
   end
 
   def siblings
@@ -35,14 +35,15 @@ class RBCM::Action::File < RBCM::Action
       project_file.project.templates.for(self).render(
         context: @params[:context]
       )
-    elsif @params[:provide]
+    elsif @params[:provide] or @params[:provide_once]
+      provide = (@params[:provide] or @params[:provide_once]).to_sym
       provider = @job.node.rbcm.providers.select{ |provider|       # filter providers
-        provider[:name].to_sym == @params[:provide].to_sym
+        provider[:name].to_sym == provide
       }.select{ |provider|                              # filter neighbors
         provider[:node].name == @job.node.name or       # same node
         @job.node.memberships.include? provider[:group] # same group
       }.first
-      raise "no provider found for '#{@params[:provide]}' on '#{@job.node}'" unless provider
+      raise "no provider found for '#{provide}' on '#{@job.node}'" unless provider
       provider[:node].remote.execute (provider[:command] % @params[:context].to_h)
     end
   end

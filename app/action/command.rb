@@ -5,9 +5,9 @@ class RBCM::Action::Command < RBCM::Action
   def check!
     return if @obsolete != nil
     if @check.any?
-      @obsolete = @check.all? do |check|
+      @obsolete = @check.all? { |check|
         @job.node.remote.execute(check).exitstatus == 0
-      end
+      }
     else
       @obsolete = false
     end
