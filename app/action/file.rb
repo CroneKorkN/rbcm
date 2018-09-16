@@ -35,6 +35,14 @@ class RBCM::Action::File < RBCM::Action
       project_file.project.templates.for(self).render(
         context: @params[:context]
       )
+    elsif @params[:provide]
+      provider = @job.node.rbcm.providers.select{ |provider|       # filter providers
+        provider[:name] == @params[:provide]
+      }.select{ |provider|                              # filter neighbors
+        provider[:node].name == @job.node.name or       # same node
+        @job.node.memberships.include? provider[:group] # same group
+      }.first
+      provider[:node].remote.execute (provider[:command] % @params[:context])
     end
   end
 

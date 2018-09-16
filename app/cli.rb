@@ -125,7 +125,7 @@ class RBCM::CLI
       out prefix + "$> #{@action.line}\e[2m#{check_string}\e[0m"
     elsif element == :siblings
       string = @action.siblings.collect do |sibling|
-        "#{sibling.neccessary? ? format(:yellow) : format(:green)} #{sibling.node.name} #{format}"
+        "#{sibling.neccessary? ? format(:yellow) : format(:green)} #{sibling.job.node.name} #{format}"
       end.join
       out prefix + "#{format :siblings}siblings:#{format} #{string}"
     elsif element == :source

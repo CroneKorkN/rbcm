@@ -67,7 +67,7 @@ class RBCM::Node::Sandbox
     end
   end
 
-  def provides name, for:, command:, required_tags: []
+  def provides name, for: nil, command:, required_tags: []
     # TODO check tagged actions
     @node.providers << {
       node:          @node,
@@ -76,14 +76,6 @@ class RBCM::Node::Sandbox
       command:       command,
       required_tags: [required_tags].flatten(1),
     }
-  end
-
-  def provide name, from: nil, context: {}
-    provider = @node.rbcm.providers.select{ |provider|
-      provider[:name] == name and
-      ([from] || @node.memberships).include? provider[:group]
-    }.first
-    provider[:node].remote.execute (provider[:command] % context)
   end
 
   def user_password
@@ -120,9 +112,9 @@ class RBCM::Node::Sandbox
   end
 
   def file path, tags: nil, trigger: nil, triggered_by: nil, **named
-    raise "RBCM: invalid file paramteres '#{named}'" if (
+    raise "RBCM: invalid file parameters '#{named}'" if (
       named.keys - [:exists, :after, :mode, :content, :includes,
-        :template, :context, :tags, :user, :group]
+        :template, :provide, :context, :tags, :user, :group]
     ).any?
     job = @node.jobs.last
     run "mkdir -p #{File.dirname path}",
@@ -133,7 +125,7 @@ class RBCM::Node::Sandbox
         params: RBCM::Params.new([path], named),
         state: @cache.collect{|k,v| [k, v.dup]}.to_h
       )
-    end if (named.keys - [:content, :includes, :template]).length < named.keys.length
+    end if (named.keys - [:content, :includes, :template, :provide]).length < named.keys.length
     run "chmod #{named[:mode]} '#{path}'",
       check: "stat -c '%a' * #{path} | grep -q #{named[:mode]}" if named[:mode]
     run "chown #{named[:user]} '#{path}'",
