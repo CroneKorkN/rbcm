@@ -42,7 +42,7 @@ class RBCM::Action::File < RBCM::Action
         provider[:node].name == @job.node.name or       # same node
         @job.node.memberships.include? provider[:group] # same group
       }.first
-      provider[:node].remote.execute (provider[:command] % @params[:context])
+      provider[:node].remote.execute (provider[:command] % @params[:context].to_h)
     end
   end
 
