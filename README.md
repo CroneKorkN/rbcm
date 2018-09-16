@@ -291,6 +291,7 @@ end
 
 # TODO
 
+- interactive shell from within a virtual localhost-node to run actions
 - display not applied triggered actions if fail, that would otherwise get lost
 - auto apply via git integration
 - display "used infos from" when approving
