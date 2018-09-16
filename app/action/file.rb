@@ -42,6 +42,7 @@ class RBCM::Action::File < RBCM::Action
         provider[:node].name == @job.node.name or       # same node
         @job.node.memberships.include? provider[:group] # same group
       }.first
+      raise "no provider found for '#{@params[:provide]}' on '#{@job.node}'" unless provider
       provider[:node].remote.execute (provider[:command] % @params[:context].to_h)
     end
   end

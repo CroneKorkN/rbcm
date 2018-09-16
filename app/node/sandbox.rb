@@ -71,7 +71,7 @@ class RBCM::Node::Sandbox
     # TODO check tagged actions
     @node.providers << {
       node:          @node,
-      name:          name,
+      name:          name.to_sym,
       group:         binding.local_variable_get(:for),
       command:       command,
       required_tags: [required_tags].flatten(1),
