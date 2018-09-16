@@ -1,5 +1,5 @@
 class RBCM::Project
-  def initialize path, template_engines: [:mustache, :erb, :encrypted], addon: false
+  def initialize path, template_engines: [:mustache, :erb, :encrypted, :template], addon: false
     @path = path
     @files = []
     @templates = RBCM::Project::TemplateList.new

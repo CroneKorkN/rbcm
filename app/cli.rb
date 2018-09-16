@@ -118,7 +118,8 @@ class RBCM::CLI
         name = node.name.to_s.+(":").ljust(@rbcm.nodes.keys.each.length.max+1, " ")
         jobs = node.jobs.count.to_s.rjust(@rbcm.nodes.values.collect{|node| node.jobs.count}.max.digits.count, " ")
         actions = node.actions.count.to_s.rjust(@rbcm.nodes.values.collect{|node| node.actions.count}.max.digits.count, " ")
-        "#{name} #{jobs} jobs, #{actions} actions"
+        provides = "\n┃     provides #{node.providers.collect{|p| p[:name]}.join(", ")}"
+        "#{name} #{jobs} jobs, #{actions} actions #{provides if node.providers.any?}"
       }.flatten(1).join("\n#{prefix}")
     elsif element == :command
       check_string = " UNLESS #{@action.check.join("; ")}" if @action.check.any?

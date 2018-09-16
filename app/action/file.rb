@@ -37,7 +37,7 @@ class RBCM::Action::File < RBCM::Action
       )
     elsif @params[:provide]
       provider = @job.node.rbcm.providers.select{ |provider|       # filter providers
-        provider[:name] == @params[:provide]
+        provider[:name].to_sym == @params[:provide].to_sym
       }.select{ |provider|                              # filter neighbors
         provider[:node].name == @job.node.name or       # same node
         @job.node.memberships.include? provider[:group] # same group
