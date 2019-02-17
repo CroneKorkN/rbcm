@@ -7,13 +7,12 @@ class RBCM::Project
     @directories = []
     @template_engines = template_engines
     load_files
-    load_nodes
   end
 
   attr_reader :path, :templates, :directories, :templates, :nodes
   
   def definitions
-    files.each.definitions.flatten
+    @files.each.definitions.flatten
   end
 
   # collect addons recursively

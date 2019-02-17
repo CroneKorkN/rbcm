@@ -4,10 +4,10 @@
 class RBCM::Job
   attr_reader :type, :name, :params, :done
 
-  def initialize type: :capability, name:, params:, parent: false
+  def initialize type: :capability, name:, params: false, parent: false
     @type = type
     @name = name
-    @block = block
+    @params = params
     @parent = parent
     @done = false
   end
@@ -22,10 +22,6 @@ class RBCM::Job
     @done = true
   end
   
-  def definition
-    definition = 
-  end
-
   def to_s
     "#{@capability} #{@params}"
   end
