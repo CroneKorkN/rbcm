@@ -1,5 +1,8 @@
 class RBCM::Action
-  def initialize *params
+  def initialize job, *params
+    @job = job
     @params = params
   end
-end
+  
+  attr_reader :job
+end  

@@ -7,9 +7,9 @@ class RBCM::Context
     set_env
     define_singleton_method definition.name, definition.content
     if definition.content.parameters.any?
-      send definition.name, *job.params.sendable
+      send definition.name, *job.params.sendable, &job.params.block
     else
-      send definition.name
+      send definition.name, &job.params.block
     end
   end
   

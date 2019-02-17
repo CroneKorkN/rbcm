@@ -1,5 +1,5 @@
 class RBCM::Params
-  attr_reader :ordered, :named
+  attr_reader :ordered, :named, :block
 
   def initialize ordered, named={}, block=nil
     @ordered, @named, @block = ordered, named, block

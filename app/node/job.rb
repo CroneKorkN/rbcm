@@ -2,7 +2,7 @@
 # used to read configuration via "?"-suffix methods
 
 class RBCM::Job
-  attr_reader :type, :name, :params, :done
+  attr_reader :type, :name, :params, :done, :parent
 
   def initialize type: :capability, name:, params: RBCM::Params.new(ordered: [1]), parent: false
     @type = type

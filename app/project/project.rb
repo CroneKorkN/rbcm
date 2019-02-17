@@ -19,8 +19,8 @@ class RBCM::Project
   def addons
     direct_addons = @files.each.addons.flatten
     [ direct_addons,
-      direct_addons.collect{|project| project.addons}
-    ].flatten
+      *direct_addons.collect{|project| project.addons}
+    ]
   end
   
   private

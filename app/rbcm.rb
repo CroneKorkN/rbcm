@@ -23,10 +23,10 @@ module RBCM
       # create nodes
       @nodes = RBCM::NodeList.new get_nodes
       # parse node
-      #binding.pry
       @nodes.each.parse
       # collect actions
-      #@actions = RBCM::ActionList.new @nodes.each.actions
+      @actions = RBCM::ActionList.new @nodes.each.actions.flatten
+      #binding.pry
     end
     
     attr_reader :definitions

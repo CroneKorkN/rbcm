@@ -1,3 +1,3 @@
 def file *params
-  RBCM::Action::File.new *params
+  @env.node.actions.append RBCM::Action::File.new(@job, *params)
 end
