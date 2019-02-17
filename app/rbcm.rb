@@ -21,10 +21,9 @@ module RBCM
       # collect templates
       @templates = RBCM::TemplateList.new @projects.each.templates.flatten
       # create nodes
-      @nodes = get_nodes
-      # create groups
-      @groups = get_nodes
+      @nodes = RBCM::NodeList.new get_nodes
       # parse node
+      p @nodes.class.name
       #@nodes.each.parse
       # collect actions
       #@actions = RBCM::ActionList.new @nodes.each.actions
@@ -68,17 +67,8 @@ module RBCM
         }.each do |pattern_definition|
           node.jobs.append RBCM::Job.new type: :pattern, name: pattern_definition.name
         end
-        [node.name, node]
-      end.to_h
-    end
-    
-    def get_groups
-      # create groups
-      groups = RBCM::ArrayHash.new
-      @project.definitions(:group).each do |group_definition|
-        groups[group_definition.name].append RBCM::Job.new type: :group, name: group_definition.name
+        node
       end
-      groups
     end
   end
 end

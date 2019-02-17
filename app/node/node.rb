@@ -31,4 +31,4 @@ class RBCM::Node
   end
   
   private
-end
+end 
