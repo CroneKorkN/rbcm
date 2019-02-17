@@ -12,10 +12,12 @@ require 'unix_crypt'
 
 module RBCM
   class Core
-    def initialize path
+    def initialize project_path
+      @project_path = project_path
+      @app_path = File.expand_path(File.dirname(__FILE__)) 
       load_files
       # get involved projects
-      @projects = get_projects path
+      @projects = get_projects project_path
       # collect definitions
       @definitions = RBCM::DefinitionList.new @projects.each.definitions.flatten
       # collect templates
@@ -27,6 +29,8 @@ module RBCM
       # collect actions
       @actions = RBCM::ActionList.new @nodes.each.actions.flatten
       #binding.pry
+      #@dispatcher = RBCM::ActionDispatch.new
+      #@dispatcher.run @actions
     end
     
     attr_reader :definitions
@@ -38,21 +42,19 @@ module RBCM
     private
     
     def load_files
-      app_dir = File.expand_path(File.dirname(__FILE__)) 
-      Dir["#{app_dir}/lib/*.rb"].each {|file| require file }
-      Dir["#{app_dir}/project/*.rb"].each {|file| require file }
-      Dir["#{app_dir}/node/*.rb"].each {|file| require file }
-      require "#{app_dir}/action/action.rb"
-      Dir["#{app_dir}/action/*.rb"].each {|file| require file }
+      Dir["#{@app_path}/lib/*.rb"].each {|file| require file }
+      Dir["#{@app_path}/project/*.rb"].each {|file| require file }
+      Dir["#{@app_path}/node/*.rb"].each {|file| require file }
+      require "#{@app_path}/action/action.rb"
+      Dir["#{@app_path}/action/*.rb"].each {|file| require file }
     end
     
     def get_projects path
-      main_project = Project.new path
-      [
-        RBCM::Addon.new(type: :dir, name: "#{File.expand_path(File.dirname(__FILE__))}/capabilities"),
+      main_project = RBCM::Project.new path
+      [ RBCM::Addon.new(type: :dir, name: "#{@app_path}/capabilities"),
         main_project,
-        *main_project.addons.flatten
-      ]
+        *main_project.addons
+      ].flatten
     end
     
     def get_nodes
