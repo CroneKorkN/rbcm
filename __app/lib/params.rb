@@ -1,11 +1,9 @@
 class RBCM::Params
   attr_reader :ordered, :named
 
-  def initialize ordered, named, block
-    @ordered, @named, @block = ordered, named, block
+  def initialize ordered, named
+    @ordered, @named = ordered, named
   end
-  
-  attr_reader :block
 
   def [] key
     return ordered[key] if key.class == Integer

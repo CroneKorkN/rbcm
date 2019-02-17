@@ -1,43 +1,34 @@
 class RBCM::Node
   attr_reader   :jobs, :definitions, :files, :name, :remote, :rbcm, :sandbox,
                 :path
-  attr_accessor :actions, :memberships, :triggered, :providers
+  attr_accessor :actions, :memberships, :triggered, :providers, :definitions
 
-  def initialize rbcm, name, path
-    @rbcm = rbcm
+  def initialize project: project, name: name, project_file: project_file
+    @project = project
     @name = name
-    @path = path
-    @definitions = []
-    @providers = []
-    @sandbox = RBCM::Node::Sandbox.new self
+    @project_file = project_file
     @remote = RBCM::Node::Remote.new self
     @files = RBCM::Node::NodeFilesystem.new self, overlays: @remote.files
     @actions = RBCM::ActionList.new
     @memberships = []
     @jobs = []
-    @blocked_jobs = []
-    @triggered = [:file]
+    @env = {
+      node: self,
+      project: @project,
+      instance_variables: [],
+      class_variables: [],
+      jobs: @jobs,
+    }
+    @actions = []
   end
-
-  def << definition
-    @definitions << definition
-  end
-
+  
   def parse
-    @sandbox.evaluate definitions.flatten.compact
+    jobs.each.run @env
   end
-
-  def capabilities
-    jobs.each.capability.uniq
-  end
-
-  def additions
-    @rbcm.group_additions.select{ |group, additions|
-      memberships.include? group
-    }.values.flatten(1)
-  end
-
+  
   def to_str
     name.to_s
   end
+  
+  private
 end

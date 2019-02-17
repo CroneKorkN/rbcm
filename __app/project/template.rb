@@ -1,4 +1,4 @@
-class RBCM::Template
+class RBCM::Project::Template
   @@engines = [:erb, :mustache, :encrypted]
 
   def initialize project:, path:

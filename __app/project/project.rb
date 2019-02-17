@@ -6,29 +6,41 @@ class RBCM::Project
     @other = []
     @directories = []
     @template_engines = template_engines
-    load_files
-    load_nodes
+    load_files path
   end
 
-  attr_reader :path, :templates, :directories, :templates, :nodes
-  
-  def definitions
-    files.each.definitions.flatten
+  attr_reader :path, :files, :templates, :other, :directories, :templates
+
+  def capabilities
+    files.each.capabilities.flatten.compact
+  end
+
+  def definitions type=nil
+    with files.each.definitions.flatten do
+      return select{|definition| definition.type == type} if type
+      return self
+    end
+  end
+
+  def files
+    (@files + all_addons.each.files).flatten
+  end
+
+  def addons
+    @files.each.addons.flatten
   end
 
   # collect addons recursively
-  def addons
-    direct_addons = @files.each.addons.flatten
-    [ direct_addons,
-      direct_addons.collect{|project| project.addons}
-    ].flatten
+  def all_addons project=self
+    ( project.addons + project.addons.collect{|project| all_addons project}
+    ).flatten
   end
-  
+
   private
-  
-  def load_files
-    if File.directory? @path
-      Dir["#{@path}/**/*"].each do |file_path|
+
+  def load_files path
+    if File.directory? path
+      Dir["#{path}/**/*"].each do |file_path|
         if file_path.end_with? ".rb"
           @files.append RBCM::Project::ProjectFile.new(
             project: self,
@@ -39,7 +51,7 @@ class RBCM::Project
             project: self,
             path:    file_path
           )
-        elsif File.directory? @path
+        elsif File.directory? path
           @directories << file_path.sub(@path, "")
         else
           @other << file_path.sub(@path, "")
@@ -49,7 +61,7 @@ class RBCM::Project
       @files = [
         RBCM::Project::ProjectFile.new(
           project: self,
-          path:    @path
+          path:    path
         )
       ]
     end

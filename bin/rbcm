@@ -2,4 +2,4 @@
 
 require 'rbcm'
 
-RBCM::CLI.new ARGV
+RBCM::Core.new ARGV
