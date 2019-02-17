@@ -10,6 +10,6 @@ class RBCM::DefinitionList < Array
   end 
   
   def name query
-    self.class.new find{ |definition| definition.name == query}
+    find{ |definition| definition.name == query}
   end
 end

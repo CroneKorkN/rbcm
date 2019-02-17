@@ -1,10 +1,15 @@
 class RBCM::Context
-  def initialize definition: definition, job: job, env: env
+  def initialize definition:, job:, env:
+    puts "======== #{self.class.name} #{self.hash}"
     @env = env
     @job = job
     set_env
     define_singleton_method definition.name, definition.content
-    send definition.name, job.params
+    if definition.content.parameters.any?
+      send definition.name, *job.params.sendable
+    else
+      send definition.name
+    end
   end
   
   # def definition
@@ -13,8 +18,13 @@ class RBCM::Context
   
   # catch
   def method_missing name, *ordered, **named, &block
+    raise unless @env.rbcm.definitions.type(@job.type).name(@job.name)
     get_env
-    job = Job.new name, Params.new(ordered, named, block), parent: @job
+    job = RBCM::Job.new(
+      name: name, 
+      params: RBCM::Params.new(ordered, named, block), 
+      parent: @job
+    )
     @env.jobs.append job
     job.run @env
   end
@@ -31,11 +41,11 @@ class RBCM::Context
   end
 
   def get_env
-    instance_variables.each do |name|
+    instance_variables.select{|name| not [:"@env", :"@job"].include? name}.each do |name|
       @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
     end
-    class_variables.each do |name|
-      @env[:class_variables][name[2..-1].to_sym] = class_variable_get name
-    end
+    # class_variables.each do |name|
+    #   @env[:class_variables][name[2..-1].to_sym] = class_variable_get name
+    # end
   end
 end

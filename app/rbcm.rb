@@ -23,11 +23,13 @@ module RBCM
       # create nodes
       @nodes = RBCM::NodeList.new get_nodes
       # parse node
-      p @nodes.class.name
-      #@nodes.each.parse
+      #binding.pry
+      @nodes.each.parse
       # collect actions
       #@actions = RBCM::ActionList.new @nodes.each.actions
     end
+    
+    attr_reader :definitions
     
     def apply
       @actions.each.apply
@@ -56,7 +58,7 @@ module RBCM
     def get_nodes
       @definitions.type(:node).collect do |node_definition|
         node = RBCM::Node.new(
-          project: self,
+          rbcm: self,
           name: node_definition.name,
           project_file: node_definition.project_file
         )

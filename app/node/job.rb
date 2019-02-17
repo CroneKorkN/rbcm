@@ -4,7 +4,7 @@
 class RBCM::Job
   attr_reader :type, :name, :params, :done
 
-  def initialize type: :capability, name:, params: false, parent: false
+  def initialize type: :capability, name:, params: RBCM::Params.new(ordered: [1]), parent: false
     @type = type
     @name = name
     @params = params
@@ -13,11 +13,13 @@ class RBCM::Job
   end
   
   def run env
+    puts "======== #{self.class.name} #{self.hash}"
+    puts "#{@type} #{@name}"
     return if @done
     @context = RBCM::Context.new(
-      definition: env.project.definitions.type(job.type).name(job.name),
-      job:        job,
-      env:        @env,
+      definition: env.rbcm.definitions.type(@type).name(@name),
+      job:        self,
+      env:        env,
     )
     @done = true
   end

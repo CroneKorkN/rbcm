@@ -1,10 +1,9 @@
 class RBCM::Node
-  attr_reader   :jobs, :definitions, :files, :name, :remote, :rbcm, :sandbox,
-                :path
-  attr_accessor :actions, :memberships, :triggered, :providers, :definitions
+  attr_reader   :jobs, :files, :name, :remote, :rbcm, :sandbox, :path
+  attr_accessor :actions, :memberships, :triggered, :providers
 
-  def initialize project: project, name: name, project_file: project_file
-    @project = project
+  def initialize rbcm:, name:, project_file:
+    @rbcm = rbcm
     @name = name
     @project_file = project_file
     @remote = RBCM::Node::Remote.new self
@@ -14,9 +13,9 @@ class RBCM::Node
     @jobs = []
     @env = {
       node: self,
-      project: @project,
-      instance_variables: [],
-      class_variables: [],
+      rbcm: @rbcm,
+      instance_variables: {},
+      class_variables: {},
       jobs: @jobs,
     }
     @actions = []
