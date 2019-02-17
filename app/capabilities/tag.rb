@@ -1,3 +1,3 @@
-def tag name, &block
-  instance_eval &block
+def tag name
+  yield
 end

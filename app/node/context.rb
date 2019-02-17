@@ -1,6 +1,7 @@
 class RBCM::Context
   def initialize definition:, job:, env:
     puts "======== #{self.class.name} #{self.hash}"
+    @definition = definition
     @env = env
     @job = job
     set_env
@@ -41,7 +42,7 @@ class RBCM::Context
   end
 
   def get_env
-    instance_variables.select{|name| not [:"@env", :"@job"].include? name}.each do |name|
+    instance_variables.select{|name| not [:"@env", :"@job", :"@definition"].include? name}.each do |name|
       @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
     end
     # class_variables.each do |name|
