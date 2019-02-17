@@ -13,7 +13,7 @@ class RBCM::ProjectFile
     sandbox.module_eval(file)
     sandbox.instance_methods.each do |name|
       raise "ERROR: capability name '#{name}' not allowed" if [:node, :group].include? name
-      @definitions.append RBCM::Project::Definition.new(
+      @definitions.append RBCM::Definition.new(
         type:         :capability,
         name:         name,
         content:      sandbox.instance_method(name),
@@ -35,16 +35,16 @@ class RBCM::ProjectFile
     end
   end
 
-  def group name=nil, *named, **ordered
+  def group name=nil
     @definitions.append RBCM::Definition.new(
-      type:    :group,
-      name:    name,
-      content: Proc.new,
+      type:         :group,
+      name:         name,
+      content:      Proc.new,
       project_file: self
     )
   end
 
-  def node names=nil, *named, **ordered
+  def node names=nil
     [names].flatten(1).each do |name|
       @definitions.append RBCM::Definition.new(
         type:         name.class == Regexp ? :pattern : :node,

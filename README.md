@@ -289,6 +289,15 @@ node 'notebook.example.com' do
 end
 ```
 
+# Troubleshoot
+
+gem openssl error - use brew ruby:
+```
+brew install openssl
+brew install ruby
+export PATH="/usr/local/Cellar/ruby/2.6.1/bin:$PATH"
+```
+
 # TODO
 
 - interactive shell from within a virtual localhost-node to run actions

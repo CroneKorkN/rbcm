@@ -2,7 +2,7 @@ class RBCM::Project
   def initialize path, template_engines: [:mustache, :erb, :encrypted, :template], addon: false
     @path = path
     @files = []
-    @templates = RBCM::Project::TemplateList.new
+    @templates = RBCM::TemplateList.new
     @other = []
     @directories = []
     @template_engines = template_engines
