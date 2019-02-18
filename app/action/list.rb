@@ -2,8 +2,8 @@ class RBCM::ActionList < Array
   def resolve actions=nil
     with actions || self do
       self.class.new [ 
-        *collect{|action| resolve(dependencies(action))},
-        *self
+        collect{|action| resolve(dependencies(action))},
+        self
       ].flatten.compact.uniq
     end
   end
