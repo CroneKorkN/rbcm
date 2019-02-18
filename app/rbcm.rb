@@ -36,7 +36,7 @@ module RBCM
       ######
       puts "- stack: "
       @actions.each{|action| puts action.stack.collect(&:to_s).join(" > ")}
-      #binding.pry
+      binding.pry
       ######
       #@dispatcher = RBCM::ActionDispatch.new
       #@dispatcher.run @actions

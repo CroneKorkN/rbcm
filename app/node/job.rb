@@ -13,6 +13,7 @@ class RBCM::Job
   end
   
   def run env
+    puts "===== #{self.class.name} #{self.name}" 
     return if @done
     @context = RBCM::Context.new(
       definition: env[:rbcm].definitions.type(@type).name(@name),
