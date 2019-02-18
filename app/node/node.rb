@@ -1,5 +1,5 @@
 class RBCM::Node
-  attr_reader   :jobs, :files, :name, :remote, :rbcm, :checks
+  attr_reader   :jobs, :files, :name, :remote, :rbcm, :cache
   attr_accessor :actions, :memberships, :triggered, :providers
 
   def initialize rbcm:, name:, project_file:
@@ -20,8 +20,11 @@ class RBCM::Node
       checks: [],
     }
     @actions = []
-    @checks = {}
-    @triggered = []
+    @cache = {
+      checks: {},
+      targets: [],
+      triggered: [],
+    }
   end
   
   def parse

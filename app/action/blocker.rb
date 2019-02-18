@@ -12,7 +12,9 @@ class RBCM::Blocker
     [ *@action.job.stack.capability(:triggered_by).collect{|job| job.params[0]},
       *@action.job.stack.with(:triggered_by).collect{|job| job.params[:triggered_by]},
     ].collect{ |triggered_by| 
-      "triggered_by:#{triggered_by}" if not @action.node.triggered.include? triggered_by
+      if not @action.node.cache[:triggered].include? triggered_by
+        "triggered_by:#{triggered_by}"
+      end
     }
   end
   
@@ -22,11 +24,11 @@ class RBCM::Blocker
       *@action.job.stack.with(:check)
     ].collect{ |job|
       check = job.params[:check] || job.params[0]
-      if @action.node.checks[job.hash] != false
+      if @action.node.cache[:checks][job.hash] != false
         result = @action.node.remote.execute(job.params[0]).exitstatus == 0
-        @action.node.checks[job.hash] = result
+        @action.node.cache[:checks][job.hash] = result
       end
-      @action.node.checks[job.hash]
+      @action.node.cache[:checks][job.hash]
     }.all?
   end
 end
