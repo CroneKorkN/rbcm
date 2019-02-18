@@ -13,5 +13,4 @@ class RBCM::Action
   def params
     @job.params
   end
-
 end  

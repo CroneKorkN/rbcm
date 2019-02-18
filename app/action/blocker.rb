@@ -9,26 +9,15 @@ class RBCM::Blocker
   end
   
   def triggered_by
-    [ *@action.job.stack.capability(:triggered_by).collect{|job| job.params[0]},
-      *@action.job.stack.with(:triggered_by).collect{|job| job.params[:triggered_by]},
-    ].collect{ |triggered_by| 
-      if not @action.node.cache[:triggered].include? triggered_by
-        "triggered_by:#{triggered_by}"
-      end
-    }
+    if delta = @action.job.triggered_by - @action.node.cache[:triggered] 
+      delta.collect{|trigger| "trigger_missing:#{trigger}"}
+    end
   end
   
-  def check
-    "checks:successfull" if [ 
-      *@action.job.stack.capability(:check),
-      *@action.job.stack.with(:check)
-    ].collect{ |job|
-      check = job.params[:check] || job.params[0]
-      if @action.node.cache[:checks][job.hash] != false
-        result = @action.node.remote.execute(job.params[0]).exitstatus == 0
-        @action.node.cache[:checks][job.hash] = result
-      end
-      @action.node.cache[:checks][job.hash]
+  def check 
+    "checks:successfull" if @action.job.checks.collect{ |id, line|
+      @action.node.cache[:checks][id] ||= \
+        @action.node.remote.execute(line).exitstatus == 0
     }.all?
   end
 end

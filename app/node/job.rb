@@ -43,7 +43,21 @@ class RBCM::Job
     ].compact
   end
   
-  def [] name
+  def checks 
+    [ *stack.capability(:check),
+      *stack.with(:check)
+    ].collect{ |job|
+      [job.hash, job.params[0] || job.params[:check]] # {"2l46h2lk": "ls /test"}
+    }.to_h
+  end
+  
+  def triggered_by
+    [ stack.capability(:triggered_by).collect{|job| job.params[0]},
+      stack.with(:triggered_by).collect{|job| job.params[:triggered_by]},
+    ].flatten
+  end
+  
+  def [] name # ?
     params[name]
   end
   
