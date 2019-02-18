@@ -15,7 +15,7 @@ class RBCM::Job
   def run env
     return if @done
     @context = RBCM::Context.new(
-      definition: env.rbcm.definitions.type(@type).name(@name),
+      definition: env[:rbcm].definitions.type(@type).name(@name),
       job:        self,
       env:        env,
     )
