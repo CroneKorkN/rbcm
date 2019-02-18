@@ -19,9 +19,10 @@ class RBCM::Job
     @local_env = {
       node:               env[:node],
       rbcm:               env[:rbcm],
-      instance_variables: env[:instance_variables].dup,
+      instance_variables: env[:instance_variables].dup, # local_env
       class_variables:    env[:class_variables],
       jobs:               env[:jobs],
+      checks:             env[:checks].dup, # local_env
     }
     @context = RBCM::Context.new(
       definition: env[:rbcm].definitions.type(@type).name(@name),
@@ -32,11 +33,12 @@ class RBCM::Job
   end
   
   def stack
-    [*parents, self]
+    RBCM::JobList.new [*parents, self]
   end
     
   def parents
-    [ *@parent&.parents,
+    RBCM::JobList.new [ 
+      *@parent&.parents,
       @parent
     ].compact
   end

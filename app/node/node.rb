@@ -17,8 +17,10 @@ class RBCM::Node
       instance_variables: {},
       class_variables: {},
       jobs: @jobs,
+      checks: [],
     }
     @actions = []
+    @triggered = []
   end
   
   def parse

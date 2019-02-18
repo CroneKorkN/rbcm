@@ -47,7 +47,7 @@ module RBCM
       #binding.pry
       
       @actions.each do |action|
-        #action.apply if action.apply?
+        p action.blocker.reasons
       end
       ######
       #@dispatcher = RBCM::ActionDispatch.new
