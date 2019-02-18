@@ -4,7 +4,7 @@
 class RBCM::Job
   attr_reader :type, :name, :params, :done, :parent
 
-  def initialize type: :capability, name:, params: RBCM::Params.new(ordered: [1]), parent: false
+  def initialize type: :capability, name:, params: RBCM::Params.new(ordered: []), parent: nil
     @type = type
     @name = name
     @params = params
@@ -13,8 +13,6 @@ class RBCM::Job
   end
   
   def run env
-    puts "======== #{self.class.name} #{self.hash}"
-    puts "#{@type} #{@name}"
     return if @done
     @context = RBCM::Context.new(
       definition: env.rbcm.definitions.type(@type).name(@name),
@@ -24,7 +22,13 @@ class RBCM::Job
     @done = true
   end
   
+  def parents
+    [ @parent,
+      @parent&.parents
+    ].flatten.compact
+  end
+  
   def to_s
-    "#{@capability} #{@params}"
+    name
   end
 end

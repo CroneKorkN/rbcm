@@ -10,6 +10,8 @@ require 'base64'
 require 'ipaddress'
 require 'unix_crypt'
 
+puts "-----------------------------------------------"
+
 module RBCM
   class Core
     def initialize project_path
@@ -18,17 +20,24 @@ module RBCM
       load_files
       # get involved projects
       @projects = get_projects project_path
+      puts "- projects: " + @projects.collect(&:path).join(', ')
       # collect definitions
       @definitions = RBCM::DefinitionList.new @projects.each.definitions.flatten
+      puts "- capabilities: " + @definitions.type(:capability).collect(&:name).join(', ')
       # collect templates
       @templates = RBCM::TemplateList.new @projects.each.templates.flatten
       # create nodes
       @nodes = RBCM::NodeList.new get_nodes
+      puts "- nodes: " + @nodes.collect(&:name).join(', ')
       # parse node
       @nodes.each.parse
       # collect actions
       @actions = RBCM::ActionList.new @nodes.each.actions.flatten
+      ######
+      puts "- stack: "
+      @actions.each{|action| puts action.stack.collect(&:to_s).join(" > ")}
       #binding.pry
+      ######
       #@dispatcher = RBCM::ActionDispatch.new
       #@dispatcher.run @actions
     end
