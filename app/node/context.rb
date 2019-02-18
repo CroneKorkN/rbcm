@@ -26,7 +26,7 @@ class RBCM::Context
   def method_missing name, *ordered, **named, &block
     params = RBCM::Params.new(ordered, named, block)
     if name.to_s.end_with? '?'
-      return RBCM::JobSearch.new @env[:node].jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first)
+      return RBCM::JobSearch.new @env[:node].jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
     else
       # check if called method has definition available
       raise "capability not found: #{name}" unless @env[:rbcm].definitions.name(name)

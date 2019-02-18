@@ -1,5 +1,5 @@
 class RBCM::JobSearch < Array
   def [] name
-    collect{|job| job.params[name]}
+    collect{|job| params[name]}
   end
 end
