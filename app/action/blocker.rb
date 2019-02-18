@@ -18,8 +18,11 @@ class RBCM::Blocker
   
   def checks
     @action.job.stack.capability(:check).collect do |job|
-      execute = ->{node.remote.execute(job.params[:check]).exitstatus == 0}
-      "check:#{job.check}" if not node.checks[job.hash] ||= execute.call
+      if @action.node.checks[@action.job.params[:check]] != false
+        result = @action.node.remote.execute(@action.job.params[:check]).exitstatus == 0
+        @action.node.checks[@action.job.params[:check]] = result
+      end
+      "check:#{@action.job.params[:check]}" unless @action.node.checks[@action.job.params[:check]]
     end
   end
 end
