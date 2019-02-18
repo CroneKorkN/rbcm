@@ -10,13 +10,21 @@ require 'base64'
 require 'ipaddress'
 require 'unix_crypt'
 
+
 puts "-----------------------------------------------"
 
 module RBCM
+  @@app_path ||= File.expand_path(File.dirname(__FILE__))
+  require "#{@@app_path}/cli.rb"
+  require "#{@@app_path}/action/action.rb"
+  [:lib, :project, :node, :action].each do |dir|
+    Dir["#{@@app_path}/#{dir}/*.rb"].each {|file| require file }
+  end
+  
   class Core
     def initialize project_path
       @project_path = project_path
-      @app_path = File.expand_path(File.dirname(__FILE__)) 
+      @@app_path = File.expand_path(File.dirname(__FILE__)) 
       load_files
       # get involved projects
       @projects = get_projects project_path
@@ -51,16 +59,12 @@ module RBCM
     private
     
     def load_files
-      Dir["#{@app_path}/lib/*.rb"].each {|file| require file }
-      Dir["#{@app_path}/project/*.rb"].each {|file| require file }
-      Dir["#{@app_path}/node/*.rb"].each {|file| require file }
-      require "#{@app_path}/action/action.rb"
-      Dir["#{@app_path}/action/*.rb"].each {|file| require file }
+
     end
     
     def get_projects path
       main_project = RBCM::Project.new path
-      [ RBCM::Addon.new(type: :dir, name: "#{@app_path}/capabilities"),
+      [ RBCM::Addon.new(type: :dir, name: "#{@@app_path}/capabilities"),
         main_project,
         *main_project.addons
       ].flatten
