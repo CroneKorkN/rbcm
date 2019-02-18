@@ -11,6 +11,3 @@ class RBCM::Node::Remote
     @session.exec! action
   end
 end
-
-# @session = Net::SSH.start 'test.ckn.li'
-# @session.exec!("ls").class

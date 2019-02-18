@@ -21,16 +21,21 @@ class RBCM::Context
   
   # catch
   def method_missing name, *ordered, **named, &block
-    raise unless @env[:rbcm].definitions.type(@job.type).name(@job.name)
+    # check if called method has definition available
+    raise "context caught a non-capability call: #{name}" unless @env[:rbcm].definitions.name(name)
+    # collect env
     instance_variables.select{|name| not [:"@env", :"@job", :"@definition"].include? name}.each do |name|
       @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
     end
+    # create job
     job = RBCM::Job.new(
       name: name, 
       params: RBCM::Params.new(ordered, named, block),
       parent: @job
     )
+    # save job
     @env[:jobs].append job
-    job.run @env
+    # run job
+    return job.run @env
   end
 end
