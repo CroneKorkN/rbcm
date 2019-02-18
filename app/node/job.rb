@@ -23,15 +23,20 @@ class RBCM::Job
     return @context.__run
   end
   
+  def stack
+    [*parents, self]
+  end
+    
   def parents
-    [ @parent,
-      @parent&.parents
-    ].flatten.compact
+    [ *@parent&.parents,
+      @parent
+    ].compact
   end
   
   def to_s
     name
   end
+  
   def to_str
     name
   end

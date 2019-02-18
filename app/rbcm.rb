@@ -35,7 +35,7 @@ module RBCM
       @actions = RBCM::ActionList.new @nodes.each.actions.flatten
       ######
       puts "- stack: "
-      @actions.each{|action| puts action.stack.collect(&:to_s).join(" > ")}
+      @actions.each{|action| puts action.job.stack.collect(&:to_s).join(" > ")}
       #binding.pry
       ######
       #@dispatcher = RBCM::ActionDispatch.new
