@@ -6,6 +6,9 @@ class RBCM::Context
     @env[:instance_variables].each do |name, value|
       instance_variable_set :"@#{name}", value
     end
+    @env[:class_variables].each do |name, value|
+      self.class.class_variable_set :"@@#{name}", value
+    end
     define_singleton_method :abstract, @definition.content
   end
   
@@ -26,6 +29,9 @@ class RBCM::Context
     # collect env
     instance_variables.select{|name| not [:"@env", :"@job", :"@definition"].include? name}.each do |name|
       @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
+    end
+    self.class.class_variables.each do |name|
+      @env[:class_variables][name[2..-1].to_sym] = self.class.class_variable_get :"@@#{name}"
     end
     # create job
     job = RBCM::Job.new(
