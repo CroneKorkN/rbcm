@@ -2,17 +2,17 @@ class RBCM::ActionList < Array
   def resolve actions=nil
     with actions || self do
       self.class.new [ 
-        collect{|action| resolve(dependencies(action))},
-        actions
+        *collect{|action| resolve(dependencies(action))},
+        *self
       ].flatten.compact.uniq
     end
   end
   
-  def dependencies action
-    self.class.new collect{ |action|
-      action.job.triggered_by.collect{ |triggered_by|
-        find_all{|action| action.job.triggers.include? triggered_by}
+  def dependencies depending
+    self.class.new find_all{ |dependency|
+      dependency.job.triggers.one?{ |triggers|
+        depending.job.triggered_by.include? triggers
       }
-    }.flatten
+    }.flatten.compact
   end
 end

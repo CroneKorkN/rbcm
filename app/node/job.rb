@@ -58,8 +58,8 @@ class RBCM::Job
   end
   
   def triggers
-    [ stack.capability(:triggeres).collect{|job| job.params[0]},
-      stack.with(:triggeres).collect{|job| job.params[:triggeres]},
+    [ stack.capability(:triggers).collect{|job| job.params[0]},
+      stack.with(:triggers).collect{|job| job.params[:triggers]},
     ].flatten
   end
   

@@ -42,10 +42,13 @@ module RBCM
       @actions = RBCM::ActionList.new @nodes.each.actions.flatten
       ######
       puts "- stack: "
-      @actions.each{|action| puts action.job.stack.collect(&:to_s).join(" > ")}
-      #binding.pry
+      #@actions.each{|action| puts action.job.stack.collect(&:to_s).join(" > ")}
       
-      @actions.resolve.each do |action|
+      binding.pry
+      
+      @actions.resolve.each do |action| 
+        p "_________________ACTION"
+        p action.job.stack.collect(&:to_s).join(" > ")
         p action.blocker.reasons
       end
       ######
