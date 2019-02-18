@@ -6,11 +6,13 @@ class RBCM::Context
     @env[:instance_variables].each do |name, value|
       instance_variable_set :"@#{name}", value
     end
-    define_singleton_method @definition.name, @definition.content
+    define_singleton_method :abstract, @definition.content
   end
   
   def __run
-    send @definition.name, *@job.params.sendable, &@job.params.block
+    send :abstract, *@job.params.sendable do
+      instance_eval &@job.params.block
+    end
   end
   
   # def definition ...
