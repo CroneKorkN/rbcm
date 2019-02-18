@@ -9,7 +9,7 @@ class RBCM::Project
     load_files
   end
 
-  attr_reader :path, :templates, :directories, :templates, :nodes
+  attr_reader :path, :templates, :directories, :templates, :nodes, :files
   
   def definitions
     @files.each.definitions.flatten

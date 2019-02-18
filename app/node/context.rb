@@ -25,7 +25,7 @@ class RBCM::Context
   # catch
   def method_missing name, *ordered, **named, &block
     # check if called method has definition available
-    raise "context caught a non-capability call: #{name}" unless @env[:rbcm].definitions.name(name)
+    raise "capability not found: #{name}" unless @env[:rbcm].definitions.name(name)
     # collect env
     instance_variables.select{|name| not [:"@env", :"@job", :"@definition"].include? name}.each do |name|
       @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
