@@ -20,6 +20,7 @@ class RBCM::Job
       env:        env,
     )
     @done = true
+    @context.__run
   end
   
   def parents
