@@ -25,7 +25,6 @@ module RBCM
     def initialize project_path
       @project_path = project_path
       @@app_path = File.expand_path(File.dirname(__FILE__)) 
-      load_files
       # get involved projects
       @projects = get_projects project_path
       puts "- projects: " + @projects.collect(&:path).join(', ')
@@ -61,10 +60,6 @@ module RBCM
     end
     
     private
-    
-    def load_files
-
-    end
     
     def get_projects path
       main_project = RBCM::Project.new path

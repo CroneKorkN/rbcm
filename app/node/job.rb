@@ -57,10 +57,6 @@ class RBCM::Job
     ].flatten
   end
   
-  def [] name # ?
-    params[name]
-  end
-  
   def to_s
     name
   end
