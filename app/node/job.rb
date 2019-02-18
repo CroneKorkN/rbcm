@@ -2,7 +2,7 @@
 # used to read configuration via "?"-suffix methods
 
 class RBCM::Job
-  attr_reader :type, :name, :params, :done, :parent
+  attr_reader   :type, :name, :params, :done, :parent, :local_env
 
   def initialize type: :capability, name:, params: RBCM::Params.new, parent: nil
     @type = type
@@ -10,15 +10,23 @@ class RBCM::Job
     @params = params
     @parent = parent
     @done = false
+    @local_env
   end
   
   def run env
     return if @done
     @done = true
+    @local_env = {
+      node:               env[:node],
+      rbcm:               env[:rbcm],
+      instance_variables: env[:instance_variables].dup,
+      class_variables:    env[:class_variables],
+      jobs:               env[:jobs],
+    }
     @context = RBCM::Context.new(
       definition: env[:rbcm].definitions.type(@type).name(@name),
       job:        self,
-      env:        env,
+      env:        @local_env,
     )
     return @context.__run
   end
