@@ -10,7 +10,6 @@ class RBCM::Context
   end
   
   def __run
-    puts "======================================== context"
     send @definition.name, *@job.params.sendable, &@job.params.block
   end
   
@@ -29,10 +28,7 @@ class RBCM::Context
       params: RBCM::Params.new(ordered, named, block),
       parent: @job
     )
-    puts "----- #{job.parents.reverse.collect(&:name)}"
-    puts "#{@job.name} -> #{job.name}"
     @env[:jobs].append job
     job.run @env
-    puts "#{@job.name} <- #{job.name}"
   end
 end
