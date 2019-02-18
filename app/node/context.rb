@@ -1,21 +1,17 @@
 class RBCM::Context
   def initialize definition:, job:, env:
-    puts "===== #{self.class.name} #{job.name}" 
     @definition = definition
     @env = env
     @job = job
     @env[:instance_variables].each do |name, value|
       instance_variable_set :"@#{name}", value
     end
-    define_singleton_method definition.name, definition.content
+    define_singleton_method @definition.name, @definition.content
   end
   
   def __run
-    if @definition.content.parameters.any?
-      send @definition.name, *@job.params.sendable, &@job.params.block
-    else
-      send @definition.name, &@job.params.block
-    end
+    puts "======================================== context"
+    send @definition.name, *@job.params.sendable, &@job.params.block
   end
   
   # def definition ...
@@ -30,11 +26,13 @@ class RBCM::Context
     end
     job = RBCM::Job.new(
       name: name, 
-      params: RBCM::Params.new(ordered, named, block), 
+      params: RBCM::Params.new(ordered, named, block),
       parent: @job
     )
-    puts job.name
+    puts "----- #{job.parents.reverse.collect(&:name)}"
+    puts "#{@job.name} -> #{job.name}"
     @env[:jobs].append job
     job.run @env
+    puts "#{@job.name} <- #{job.name}"
   end
 end

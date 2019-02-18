@@ -1,7 +1,7 @@
 class RBCM::Params
   attr_reader :ordered, :named, :block
 
-  def initialize ordered, named={}, block=nil
+  def initialize ordered=[], named={}, block=nil
     @ordered, @named, @block = ordered, named, block
   end
   
