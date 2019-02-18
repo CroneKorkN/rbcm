@@ -1,3 +1,3 @@
-def tag name, &block
-  instance_eval &block # <- do it this way
+def tag name
+  instance_eval &Proc.new # <- do it this way
 end

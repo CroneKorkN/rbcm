@@ -308,5 +308,6 @@ export PATH="/usr/local/Cellar/ruby/2.6.1/bin:$PATH"
 - warn if apt? hasnt been called yet
 - dont
 - https://shopify.github.io/liquid/basics/introduction/
+- def singleton_method_added(id)
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`
