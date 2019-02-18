@@ -10,7 +10,7 @@ class RBCM::Node
     @files = RBCM::Node::NodeFilesystem.new self, overlays: @remote.files
     @actions = RBCM::ActionList.new
     @memberships = []
-    @jobs = []
+    @jobs = RBCM::JobList.new
     @env = {
       node: self,
       rbcm: @rbcm,

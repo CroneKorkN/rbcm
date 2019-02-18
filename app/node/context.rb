@@ -24,24 +24,29 @@ class RBCM::Context
   
   # catch
   def method_missing name, *ordered, **named, &block
-    # check if called method has definition available
-    raise "capability not found: #{name}" unless @env[:rbcm].definitions.name(name)
-    # collect env
-    instance_variables.select{|name| not [:"@env", :"@job", :"@definition"].include? name}.each do |name|
-      @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
+    params = RBCM::Params.new(ordered, named, block)
+    if name.to_s.end_with? '?'
+      return RBCM::JobSearch.new @env[:node].jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first)
+    else
+      # check if called method has definition available
+      raise "capability not found: #{name}" unless @env[:rbcm].definitions.name(name)
+      # collect env
+      instance_variables.select{|name| not [:"@env", :"@job", :"@definition"].include? name}.each do |name|
+        @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
+      end
+      self.class.class_variables.each do |name|
+        @env[:class_variables][name[2..-1].to_sym] = self.class.class_variable_get :"@@#{name}"
+      end
+      # create job
+      job = RBCM::Job.new(
+        name: name, 
+        params: params,
+        parent: @job
+      )
+      # save job
+      @env[:jobs].append job
+      # run job
+      return job.run @env
     end
-    self.class.class_variables.each do |name|
-      @env[:class_variables][name[2..-1].to_sym] = self.class.class_variable_get :"@@#{name}"
-    end
-    # create job
-    job = RBCM::Job.new(
-      name: name, 
-      params: RBCM::Params.new(ordered, named, block),
-      parent: @job
-    )
-    # save job
-    @env[:jobs].append job
-    # run job
-    return job.run @env
   end
 end

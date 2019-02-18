@@ -45,6 +45,10 @@ module RBCM
       puts "- stack: "
       @actions.each{|action| puts action.job.stack.collect(&:to_s).join(" > ")}
       #binding.pry
+      
+      @actions.each do |action|
+        #action.apply if action.apply?
+      end
       ######
       #@dispatcher = RBCM::ActionDispatch.new
       #@dispatcher.run @actions
