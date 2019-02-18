@@ -1,16 +1,10 @@
 class RBCM::Action
   def initialize job
     @job = job
+    @node = @job.local_env[:node]
+    @params = @job.params
     @blocker = RBCM::Blocker.new self
   end
-
-  attr_reader :job, :blocker
   
-  def node
-    @job.local_env[:node]
-  end
-  
-  def params
-    @job.params
-  end
+  attr_reader :job, :node, :params, :blocker
 end  

@@ -45,7 +45,7 @@ module RBCM
       @actions.each{|action| puts action.job.stack.collect(&:to_s).join(" > ")}
       #binding.pry
       
-      @actions.each do |action|
+      @actions.resolve.each do |action|
         p action.blocker.reasons
       end
       ######

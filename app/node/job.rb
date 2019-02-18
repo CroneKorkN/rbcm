@@ -43,7 +43,7 @@ class RBCM::Job
     ].compact
   end
   
-  def checks 
+  def checks
     [ *stack.capability(:check),
       *stack.with(:check)
     ].collect{ |job|
@@ -54,6 +54,12 @@ class RBCM::Job
   def triggered_by
     [ stack.capability(:triggered_by).collect{|job| job.params[0]},
       stack.with(:triggered_by).collect{|job| job.params[:triggered_by]},
+    ].flatten
+  end
+  
+  def triggers
+    [ stack.capability(:triggeres).collect{|job| job.params[0]},
+      stack.with(:triggeres).collect{|job| job.params[:triggeres]},
     ].flatten
   end
   
