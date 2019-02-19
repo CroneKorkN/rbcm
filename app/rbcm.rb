@@ -43,23 +43,18 @@ module RBCM
       puts "#  stack: "
       @actions.each{|action| puts action.job.stack.collect(&:to_s).join(" > ")}
       
-      puts "#  apply"
+      puts "#  run: "
       @actions.resolve.each do |action| 
         print action.job.stack.collect(&:to_s).join(" > ")
-        print "    "
-        puts "#  blocker #{action.blocker.reasons}"
-        
+        if action.blocker.reasons.any?
+          puts " # blocker #{action.blocker.reasons}"
+        else
+          puts action.run!
+        end
       end
-      ######
-      #@dispatcher = RBCM::ActionDispatch.new
-      #@dispatcher.run @actions
     end
     
     attr_reader :definitions
-    
-    def apply
-      @actions.each.apply
-    end
     
     private
     
@@ -79,7 +74,7 @@ module RBCM
           project_file: node_definition.project_file
         )
         node.jobs.append RBCM::Job.new type: :node, name: node_definition.name
-        # apply pattern definitions to node
+        # run pattern definitions to node
         @definitions.type(:pattern).select { |pattern_definition|
           node_definition.name =~ /#{pattern_definition.name}/
         }.each do |pattern_definition|

@@ -2,7 +2,7 @@
 class RBCM::Action::File < RBCM::Action
   attr_reader :path, :content
 
-  def check!
+  def check
     @job.node.files[path].content
   end
 
