@@ -14,22 +14,28 @@ class RBCM::Job
   end
   
   def run env
-    return if @done
-    @done = true
-    @local_env = {
-      node:               env[:node],
-      rbcm:               env[:rbcm],
-      instance_variables: env[:instance_variables].dup, # local_env
-      class_variables:    env[:class_variables],
-      jobs:               env[:jobs],
-      checks:             env[:checks].dup, # local_env
-    }
-    @context = RBCM::Context.new(
-      definition: env[:rbcm].definitions.type(@type).name(@name),
-      job:        self,
-      env:        @local_env,
-    )
-    return @context.__run
+    if runnable = true
+      return if @done
+      @done = true
+      @local_env = {
+        node:               env[:node],
+        rbcm:               env[:rbcm],
+        instance_variables: env[:instance_variables].dup, # local_env
+        class_variables:    env[:class_variables],
+        jobs:               RBCM::JobList.new,
+        checks:             env[:checks].dup, # local_env
+      }
+      @context = RBCM::Context.new(
+        definition: env[:rbcm].definitions.type(@type).name(@name),
+        job:        self,
+        env:        @local_env,
+      )
+      result = @context.__run
+    else
+      # if a definition contains a search, delay definition (rollback)
+      # delayed jobs cant have return values
+      :delayed_job
+    end
   end
   
   def stack
