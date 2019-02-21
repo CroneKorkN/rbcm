@@ -65,7 +65,7 @@ class RBCM::Job
   def rollback
   end
   
-  def stack
+  def trace
     RBCM::JobList.new [*parents, self]
   end
     
@@ -97,10 +97,10 @@ class RBCM::Job
   end
   
   def to_s
-    name
+    to_str
   end
   
   def to_str
-    name
+    type == :file ? name.split("/").last : name
   end
 end

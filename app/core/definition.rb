@@ -7,7 +7,7 @@ class RBCM::Definition
 
   attr_reader :type, :name, :content, :parent
   
-  def to_str
-    "#{type}:#{name}"
+  def to_s
+    "#{type}:#{type == :file ? name.split("/").last : name}"
   end
 end
