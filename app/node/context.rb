@@ -34,7 +34,7 @@ class RBCM::Context
     puts "================== #{self.class.name} JOB #{name} #{ordered} #{named}"
     params = RBCM::Params.new(ordered, named, block)
     if name.to_s.end_with? '?'
-      return RBCM::JobSearch.new @env[:node].jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
+      return RBCM::JobSearch.new @env[:jobs].capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
     else
       # check if called method has definition available
       raise "capability not found: #{name}" unless @env[:rbcm].definitions.name(name)

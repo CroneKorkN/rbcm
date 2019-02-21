@@ -20,7 +20,7 @@ class RBCM::Job
       rbcm:               env[:rbcm],
       instance_variables: env[:instance_variables].dup, # local_env
       class_variables:    env[:class_variables],
-      jobs:               RBCM::JobList.new, # local_env
+      jobs:               env[:jobs], # local_env
       checks:             env[:checks].dup, # local_env
       definitions:        env[:definitions],
       actions:            env[:actions],
@@ -49,10 +49,10 @@ class RBCM::Job
       @status = :done
       #puts "================== #{self.class.name} RESULT #{result}"
       result
-    rescue
+    rescue => e
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
-      puts "================== #{self.class.name} DELAYED #{name}"
+      puts "================== #{self.class.name} DELAYED #{name} REASON #{e}"
       @status = :delayed
       :delayed_job
     end
