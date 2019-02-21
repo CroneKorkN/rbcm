@@ -22,7 +22,7 @@ class RBCM::Job
       class_variables:    env[:class_variables],
       jobs:               env[:jobs],
       checks:             env[:checks].dup, # local_env
-      definitions:        env[:definitions],
+      definitions:        RBCM::DefinitionList.new,
       actions:            env[:actions],
       children:           RBCM::JobList.new,
     }
@@ -65,6 +65,16 @@ class RBCM::Job
   def rollback
   end
   
+  def definitions
+    [*@local_env&.fetch(:definitions)]
+  end
+  
+  def all_definitions
+    [ definitions,
+      children.collect(&:all_definitions)
+    ]
+  end
+  
   def stack
     [ children,
       children.collect(&:children)
@@ -72,7 +82,7 @@ class RBCM::Job
   end
   
   def children
-    [*@local_env[:children]]
+    [*@local_env&.fetch(:children)]
   end
   
   def trace

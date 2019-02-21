@@ -50,7 +50,7 @@ module RBCM
     end
     
     def definitions
-      @definitions ||= RBCM::DefinitionList.new projects.each.definitions.flatten
+      RBCM::DefinitionList.new projects.collect(&:definitions).flatten
     end
     
     def projects
@@ -69,7 +69,6 @@ module RBCM
         class_variables: {},
         jobs: @jobs,
         checks: [],
-        definitions: definitions
       }
     end
   end
