@@ -24,6 +24,7 @@ class RBCM::Job
         class_variables:    env[:class_variables],
         jobs:               RBCM::JobList.new,
         checks:             env[:checks].dup, # local_env
+        definitions:             env[:definitions],
       }
       @context = RBCM::Context.new(
         definition: env[:rbcm].definitions.type(@type).name(@name),

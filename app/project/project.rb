@@ -46,7 +46,5 @@ class RBCM::Project
       type: :file, 
       name: path
     )
-    end
-    
-
+  end
 end

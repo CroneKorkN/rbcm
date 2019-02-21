@@ -58,14 +58,13 @@ class RBCM::Context
     end
   end
   
-  # def self.method_added name
-  #   puts "================== #{self} CAP #{name}"
-  #   @env[:definitions].append RBCM::Definition.new(
-  #     type:         :capability,
-  #     name:         name,
-  #     content:      sandbox.instance_method(name),
-  #     project_file: self
-  #   )
-  #   undef_method name
-  # end
+  def singleton_method_added name
+    puts "================== #{self} CAP #{name}"
+    @env[:definitions].append RBCM::Definition.new(
+      type:    :capability,
+      name:    name,
+      content: method(name)
+    )
+    # TODO undef method
+  end
 end
