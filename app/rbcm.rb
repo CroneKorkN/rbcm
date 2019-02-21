@@ -51,22 +51,24 @@ module RBCM
       
       @nodes = RBCM::NodeList.new 
       @jobs.capability(:node).each do |job| 
-        node = @nodes.name(job.name) || RBCM::Node.new(
+        @nodes[job.params[0]] ||= RBCM::Node.new(
           rbcm: self, 
           name: job.params[0]
         )
-        node.jobs << job
-        @nodes << node
+        @nodes[job.params[0]].jobs
       end
+      @actions = @nodes.collect(&:actions).flatten
 
       ## print
       
       puts "-- projects (#{@projects.count}) --\n#{@projects.collect(&:path)}"
       puts "-- definitions (#{@definitions.count}) --\n#{@definitions.collect(&:to_s)}"
       puts "-- jobs (#{@jobs.count}) --"
-      @jobs.childless.each{|job| puts job.trace.collect(&:to_s).join(" > ")}
+      puts @jobs.childless.collect{|job| job.trace.collect(&:to_s).join(" > ")}.join("\n")
       puts "-- nodes (#{@nodes.count}) --\n#{@nodes.collect(&:name)}"
-      
+      puts "-- actions (#{@actions.count}) --"
+      puts @actions.collect{|action| action.job.trace.collect(&:to_s).join(" > ")}.join("\n")
+
       #binding.pry
     end
     

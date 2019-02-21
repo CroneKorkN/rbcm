@@ -1,3 +1,3 @@
 def run *params
-  @env[:actions].append RBCM::Action::Command.new(@job)
+  #@env[:actions].append RBCM::Action::Command.new(@job)
 end

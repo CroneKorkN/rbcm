@@ -1,7 +1,7 @@
 class RBCM::Action
-  def initialize job
+  def initialize node: node, job: job
     @job = job
-    @node = @job.local_env[:node]
+    @node = node
     @params = @job.params
     @blocker = RBCM::Blocker.new self
   end
