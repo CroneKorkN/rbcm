@@ -24,6 +24,9 @@ module RBCM
 
     def initialize project_path
       @project_path = project_path
+      
+      ## get jobs
+      
       @projects = [ 
         RBCM::Project.new("#{@@app_path}/capabilities"),
         RBCM::Project.new(project_path),
@@ -31,8 +34,6 @@ module RBCM
       @definitions = RBCM::DefinitionList.new @projects.each.definitions.flatten
       @jobs = RBCM::JobList.new @projects.each.jobs.flatten
       @actions = RBCM::ActionList.new
-
-      # run jobs
       @env = {
         rbcm: self,
         instance_variables: {},
@@ -46,17 +47,17 @@ module RBCM
         job.run @env
       end
 
-      # projects
+      # print
       puts "-- projects (#{@projects.count}) --\n#{@projects.collect(&:path)}"
-            
-      # definitions
       puts "-- definitions (#{@definitions.count}) --\n#{@definitions.collect(&:to_s)}"
-            
-      # jobs
       puts "-- jobs (#{@jobs.count}) --"
-      @jobs.select{|finishing| @jobs.none?{|job| job.parent == finishing}}.each do |job|
+      @jobs.childless.each do |job|
         puts job.trace.collect(&:to_s).join(" > ")
       end
+      
+      ## get actions
+      
+      #@jobs.
       
       # init cache
       @cache = {

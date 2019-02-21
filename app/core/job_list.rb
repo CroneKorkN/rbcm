@@ -11,4 +11,8 @@ class RBCM::JobList < Array
   def status query
     self.class.new find_all{|job| job.status == query}
   end
+  
+  def childless
+    self.class.new select{|job| none?{|other| other.parent == job}}
+  end
 end
