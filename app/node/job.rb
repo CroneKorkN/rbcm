@@ -14,18 +14,36 @@ class RBCM::Job
   end
   
   def run env
+    puts "================== #{self.class.name} RUN #{name}"
+    
+    @local_env = {
+      node:               env[:node],
+      rbcm:               env[:rbcm],
+      instance_variables: env[:instance_variables].dup, # local_env
+      class_variables:    env[:class_variables],
+      jobs:               RBCM::JobList.new,
+      checks:             env[:checks].dup, # local_env
+      definitions:        env[:definitions],
+      actions:            env[:actions],
+    }
+    
+    # load capabilities
+    if type == :file
+      sandbox = RBCM::Project::Sandbox.dup
+      sandbox.module_eval(File.read(name))
+      sandbox.instance_methods.each do |name|
+        puts "================== #{self.class.name} CAP #{name}"
+        @local_env[:definitions].append RBCM::Definition.new(
+          type:    :capability,
+          name:    name,
+          content: sandbox.instance_method(name),
+        )
+      end
+    end
+    
     if true
       return if @done
       @status = :done
-      @local_env = {
-        node:               env[:node],
-        rbcm:               env[:rbcm],
-        instance_variables: env[:instance_variables].dup, # local_env
-        class_variables:    env[:class_variables],
-        jobs:               RBCM::JobList.new,
-        checks:             env[:checks].dup, # local_env
-        definitions:             env[:definitions],
-      }
       @context = RBCM::Context.new(
         definition: env[:rbcm].definitions.type(@type).name(@name),
         job:        self,

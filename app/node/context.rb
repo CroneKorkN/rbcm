@@ -15,7 +15,7 @@ class RBCM::Context
   end
   
   def __run
-    puts "================== #{self.class.name} RUN #{@job.name}"
+    puts "================== #{self.class.name} RUN #{@job.name} PARAMS #{@job.params.sendable}"
     if @definition.type == :file
       instance_eval File.read(@definition.name)
     else
@@ -58,13 +58,13 @@ class RBCM::Context
     end
   end
   
-  def singleton_method_added name
-    puts "================== #{self} CAP #{name}"
-    @env[:definitions].append RBCM::Definition.new(
-      type:    :capability,
-      name:    name,
-      content: method(name)
-    )
-    # TODO undef method
-  end
+  # def singleton_method_added name
+  #   puts "================== #{self} CAP #{name}"
+  #   @env[:definitions].append RBCM::Definition.new(
+  #     type:    :capability,
+  #     name:    name,
+  #     content: method(name)
+  #   )
+  #   # TODO undef method
+  # end
 end
