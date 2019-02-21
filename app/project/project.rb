@@ -13,7 +13,9 @@ class RBCM::Project
   attr_reader :path, :templates, :directories, :templates, :jobs
   
   def definitions
-    RBCM::DefinitionList.new [@definitions + @jobs.collect(&:all_definitions)].flatten 
+    RBCM::DefinitionList.new [
+      @definitions + @jobs.collect(&:all_definitions)
+    ].flatten 
   end
   
   private
