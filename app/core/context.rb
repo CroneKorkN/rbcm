@@ -53,6 +53,7 @@ class RBCM::Context
       )
       # save job
       @env[:jobs].append job
+      @env[:children].append job
       # run job
       return job.run @env
     end

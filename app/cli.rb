@@ -11,5 +11,8 @@ class RBCM::CLI
       puts "-- actions (#{actions.count}) --"
       puts actions.collect{|action| action.job.trace.collect(&:to_s).join(" > ")}.join("\n")
     end
+    
+    binding.pry
+    
   end
 end

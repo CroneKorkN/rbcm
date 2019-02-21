@@ -20,10 +20,11 @@ class RBCM::Job
       rbcm:               env[:rbcm],
       instance_variables: env[:instance_variables].dup, # local_env
       class_variables:    env[:class_variables],
-      jobs:               env[:jobs], # local_env
+      jobs:               env[:jobs],
       checks:             env[:checks].dup, # local_env
       definitions:        env[:definitions],
       actions:            env[:actions],
+      children:           RBCM::JobList.new,
     }
     # load capabilities
     if type == :file and @status == :new
@@ -62,6 +63,16 @@ class RBCM::Job
   end
   
   def rollback
+  end
+  
+  def stack
+    [ children,
+      children.collect(&:children)
+    ].flatten
+  end
+  
+  def children
+    [*@local_env[:children]]
   end
   
   def trace

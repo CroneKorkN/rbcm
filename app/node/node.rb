@@ -16,13 +16,14 @@ class RBCM::Node
   
   def jobs
     RBCM::JobList.new \
-      @rbcm.jobs.capability(:node).collect{|job| job.params.first == @name}
+      @rbcm.jobs 
+      #@rbcm.jobs.capability(:node).collect{|job| job.stack}.flatten # TODO
     # TODO: filter nestet nodes
   end
   
   def actions
     @actions ||= \
-    [*@rbcm.jobs.capability(:file), *@rbcm.jobs.capability(:run)].collect do |job|
+    [*jobs.capability(:file), *jobs.capability(:run)].collect do |job|
       RBCM::Action::File.new node: self, job: job
     end  
   end
