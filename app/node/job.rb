@@ -14,21 +14,19 @@ class RBCM::Job
   end
   
   def run env
+    return if @status == :done
     puts "================== #{self.class.name} RUN #{name}"
-    
     @local_env = {
-      node:               env[:node],
       rbcm:               env[:rbcm],
       instance_variables: env[:instance_variables].dup, # local_env
       class_variables:    env[:class_variables],
-      jobs:               RBCM::JobList.new,
+      jobs:               RBCM::JobList.new, # local_env
       checks:             env[:checks].dup, # local_env
       definitions:        env[:definitions],
       actions:            env[:actions],
     }
-    
     # load capabilities
-    if type == :file
+    if type == :file and @status == :new
       sandbox = RBCM::Project::Sandbox.dup
       sandbox.module_eval(File.read(name))
       sandbox.instance_methods.each do |name|
@@ -40,24 +38,25 @@ class RBCM::Job
         )
       end
     end
-    
-    if true
-      return if @done
-      @status = :done
+    # perform job
+    begin
       @context = RBCM::Context.new(
         definition: env[:rbcm].definitions.type(@type).name(@name),
         job:        self,
         env:        @local_env,
       )
       result = @context.__run
-      puts "================== #{self.class.name} RESULT #{result}"
+      @status = :done
+      #puts "================== #{self.class.name} RESULT #{result}"
       result
-    else
+    rescue
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
+      puts "================== #{self.class.name} DELAYED #{name}"
       @status = :delayed
       :delayed_job
     end
+    p @status
   end
   
   def delay

@@ -47,7 +47,6 @@ module RBCM
         actions: @actions,
         definitions: @definitions
       }
-      @actions = []
       @cache = {
         checks: {},
         targets: [],
@@ -60,7 +59,7 @@ module RBCM
       p @jobs.status(:delayed).count
       p @jobs.status(:done).count
       
-      while job = @jobs.status(:new).first
+      while job = @jobs.status(:new).first || @jobs.status(:delayed).first
         job.run @env
       end
 
@@ -100,8 +99,7 @@ binding.pry
       # end
     end
     
-    attr_reader :definitions
-    attr_accessor :actions
+    attr_accessor :actions, :definitions, :jobs, :projects
     
     private
     
