@@ -17,7 +17,7 @@ module RBCM
   @@app_path ||= File.expand_path(File.dirname(__FILE__))
   require "#{@@app_path}/cli.rb"
   require "#{@@app_path}/action/action.rb"
-  [:lib, :project, :node, :action].each do |dir|
+  [:lib, :project, :node, :action, :core].each do |dir|
     Dir["#{@@app_path}/#{dir}/*.rb"].each {|file| require file }
   end
   
