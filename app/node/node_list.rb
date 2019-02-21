@@ -2,6 +2,6 @@
 
 class RBCM::NodeList < Array
   def name query
-    self.class.new find{|node| node.name == query}
+    self.class.new [*find{|node| node.name == query}]
   end
 end

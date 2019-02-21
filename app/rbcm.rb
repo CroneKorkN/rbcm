@@ -46,25 +46,21 @@ module RBCM
       while job = @jobs.status(:new).first || @jobs.status(:delayed).first
         job.run @env
       end
+      
+      ## get actions
+      
+      @nodes = RBCM::NodeList.new @jobs.capability(:node).collect{ |job| 
+        RBCM::Node.new rbcm: self, name: job.params[0]
+      }
 
       # print
       puts "-- projects (#{@projects.count}) --\n#{@projects.collect(&:path)}"
       puts "-- definitions (#{@definitions.count}) --\n#{@definitions.collect(&:to_s)}"
       puts "-- jobs (#{@jobs.count}) --"
-      @jobs.childless.each do |job|
-        puts job.trace.collect(&:to_s).join(" > ")
-      end
+      @jobs.childless.each{|job| puts job.trace.collect(&:to_s).join(" > ")}
+      puts "-- nodes (#{@nodes.count}) --\n#{@nodes.collect(&:name)}"
       
-      ## get actions
-      
-      #@jobs.
-      
-      # init cache
-      @cache = {
-        checks: {},
-        targets: [],
-        triggered: [],
-      }
+      binding.pry
     end
     
     attr_accessor :actions, :definitions, :jobs, :projects

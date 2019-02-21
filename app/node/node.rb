@@ -5,7 +5,6 @@ class RBCM::Node
   def initialize rbcm:, name:
     @rbcm = rbcm
     @name = name
-    @project_file = project_file
     @remote = RBCM::Node::Remote.new self
     @files = RBCM::Node::NodeFilesystem.new self, overlays: @remote.files
     @actions = RBCM::ActionList.new
