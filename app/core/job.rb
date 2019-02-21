@@ -14,8 +14,8 @@ class RBCM::Job
   end
   
   def run env
-    return if @status == :done
-    puts "================== #{self.class.name} RUN #{name}"
+    raise "already done" if @status == :done
+    puts "#{self.class.name} RUN #{name}"
     @local_env = {
       rbcm:               env[:rbcm],
       instance_variables: env[:instance_variables].dup, # local_env
@@ -30,7 +30,7 @@ class RBCM::Job
       sandbox = RBCM::Project::Sandbox.dup
       sandbox.module_eval(File.read(name))
       sandbox.instance_methods.each do |name|
-        puts "================== #{self.class.name} CAP #{name}"
+        puts "#{self.class.name} CAP #{name}"
         @local_env[:definitions].append RBCM::Definition.new(
           type:    :capability,
           name:    name,
@@ -47,16 +47,15 @@ class RBCM::Job
       )
       result = @context.__run
       @status = :done
-      #puts "================== #{self.class.name} RESULT #{result}"
+      #puts "#{self.class.name} RESULT #{result}"
       result
     rescue => e
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
-      puts "================== #{self.class.name} DELAYED #{name} REASON #{e}"
+      puts "#{self.class.name} DELAYED #{name} REASON #{e}"
       @status = :delayed
       :delayed_job
     end
-    p @status
   end
   
   def delay

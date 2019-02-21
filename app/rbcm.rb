@@ -45,16 +45,15 @@ module RBCM
       while job = @jobs.status(:new).first || @jobs.status(:delayed).first
         job.run @env
       end
-      
 
       # projects
-      puts "--projects (#{@projects.count}):\n#{@projects.collect(&:path)}"
+      puts "-- projects (#{@projects.count}) --\n#{@projects.collect(&:path)}"
             
-      # projects
-      puts "--definitions (#{@definitions.count}):\n#{@definitions.collect(&:to_s)}"
+      # definitions
+      puts "-- definitions (#{@definitions.count}) --\n#{@definitions.collect(&:to_s)}"
             
       # jobs
-      puts "--jobs (#{@jobs.count}):"
+      puts "-- jobs (#{@jobs.count}) --"
       @jobs.select{|finishing| @jobs.none?{|job| job.parent == finishing}}.each do |job|
         puts job.trace.collect(&:to_s).join(" > ")
       end
