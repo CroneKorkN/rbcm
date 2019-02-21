@@ -9,12 +9,19 @@ class RBCM::Context
     @env[:class_variables].each do |name, value|
       self.class.class_variable_set :"@@#{name}", value
     end
-    define_singleton_method :abstract, @definition.content
+    if definition.type != :file
+      define_singleton_method :abstract, @definition.content
+    end
   end
   
   def __run
-    send :abstract, *@job.params.sendable do
-      instance_eval &@job.params.block
+    puts "================== #{self.class.name} RUN #{@job.name}"
+    if @definition.type == :file
+      instance_eval File.read(@definition.name)
+    else
+      send :abstract, *@job.params.sendable do
+        instance_eval &@job.params.block
+      end
     end
   end
   
@@ -24,6 +31,7 @@ class RBCM::Context
   
   # catch
   def method_missing name, *ordered, **named, &block
+    puts "================== #{self.class.name} JOB #{name} #{ordered} #{named}"
     params = RBCM::Params.new(ordered, named, block)
     if name.to_s.end_with? '?'
       return RBCM::JobSearch.new @env[:node].jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
@@ -49,4 +57,15 @@ class RBCM::Context
       return job.run @env
     end
   end
+  
+  # def self.method_added name
+  #   puts "================== #{self} CAP #{name}"
+  #   @env[:definitions].append RBCM::Definition.new(
+  #     type:         :capability,
+  #     name:         name,
+  #     content:      sandbox.instance_method(name),
+  #     project_file: self
+  #   )
+  #   undef_method name
+  # end
 end

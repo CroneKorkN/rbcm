@@ -2,21 +2,21 @@
 # used to read configuration via "?"-suffix methods
 
 class RBCM::Job
-  attr_reader   :type, :name, :params, :done, :parent, :local_env
+  attr_reader   :type, :name, :params, :status, :parent, :local_env
 
   def initialize type: :capability, name:, params: RBCM::Params.new, parent: nil
     @type = type
     @name = name
     @params = params
     @parent = parent
-    @done = false
+    @status = :new
     @local_env
   end
   
   def run env
-    if runnable = true
+    if true
       return if @done
-      @done = true
+      @status = :done
       @local_env = {
         node:               env[:node],
         rbcm:               env[:rbcm],
@@ -31,11 +31,20 @@ class RBCM::Job
         env:        @local_env,
       )
       result = @context.__run
+      puts "================== #{self.class.name} RESULT #{result}"
+      result
     else
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
+      @status = :delayed
       :delayed_job
     end
+  end
+  
+  def delay
+  end
+  
+  def rollback
   end
   
   def stack

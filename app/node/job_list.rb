@@ -7,4 +7,8 @@ class RBCM::JobList < Array
     return self unless query
     self.class.new find_all{|job| job.params[query]}
   end
+  
+  def status query
+    self.class.new find_all{|job| job.status == query}
+  end
 end

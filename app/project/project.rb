@@ -1,27 +1,16 @@
 class RBCM::Project
   def initialize path, template_engines: [:mustache, :erb, :encrypted, :template], addon: false
     @path = path
-    @files = []
     @templates = RBCM::TemplateList.new
     @other = []
     @directories = []
     @template_engines = template_engines
+    @jobs = RBCM::JobList.new
+    @definitions = RBCM::DefinitionList.new
     load_files
   end
 
-  attr_reader :path, :templates, :directories, :templates, :nodes, :files
-  
-  def definitions
-    @files.each.definitions.flatten
-  end
-
-  # collect addons recursively
-  def addons
-    direct_addons = @files.each.addons.flatten
-    [ direct_addons,
-      *direct_addons.collect{|project| project.addons}
-    ]
-  end
+  attr_reader :path, :templates, :directories, :templates, :jobs, :definitions
   
   private
   
@@ -29,10 +18,7 @@ class RBCM::Project
     if File.directory? @path
       Dir["#{@path}/**/*"].each do |file_path|
         if file_path.end_with? ".rb"
-          @files.append RBCM::ProjectFile.new(
-            project: self,
-            path:    file_path
-          )
+          load_file file_path
         elsif @template_engines.include? file_path.split(".").last.to_sym
           @templates.append RBCM::Template.new(
             project: self,
@@ -45,13 +31,22 @@ class RBCM::Project
         end
       end
     else
-      @files = [
-        RBCM::ProjectFile.new(
-          project: self,
-          path:    @path
-        )
-      ]
+      load_file @path
     end
-    raise "ERROR: empty project" unless @files.any?
+    raise "ERROR: empty project" unless @definitions.any?
   end
+  
+  def load_file path
+    @definitions.append RBCM::Definition.new(
+      type:    :file,
+      name:    path,
+      content: ->{load path}
+    )
+    @jobs.append RBCM::Job.new(
+      type: :file, 
+      name: path
+    )
+    end
+    
+
 end
