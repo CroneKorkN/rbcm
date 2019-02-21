@@ -27,7 +27,7 @@ module RBCM
     end
     
     def actions
-      RBCM::ActionList.new nodes.collect(&:actions).flatten
+      RBCM::ActionList.new(nodes.collect(&:actions).flatten)
     end
     
     def nodes
@@ -66,7 +66,6 @@ module RBCM
       ]
     end
     
-    attr_accessor :actions
     attr_writer :projects, :definitions, :jobs
   end
 end

@@ -1,5 +1,5 @@
 class RBCM::Action
-  def initialize node: node, job: job
+  def initialize node:, job:
     @job = job
     @node = node
     @params = @job.params
