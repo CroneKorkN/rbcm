@@ -1,12 +1,13 @@
 class RBCM::Node
-  attr_reader   :jobs, :files, :name, :remote, :rbcm, :cache
-  attr_accessor :actions, :memberships, :triggered, :providers
+  attr_reader   :rbcm, :cache, :name
+  attr_accessor :jobs, :actions
 
   def initialize rbcm:, name:
     @rbcm = rbcm
     @name = name
     @remote = RBCM::Node::Remote.new self
     @files = RBCM::Node::NodeFilesystem.new self, overlays: @remote.files
+    @jobs = RBCM::JobList.new
     @actions = RBCM::ActionList.new
     @cache = {
       checks: {},

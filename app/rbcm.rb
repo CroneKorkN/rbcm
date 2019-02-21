@@ -49,18 +49,25 @@ module RBCM
       
       ## get actions
       
-      @nodes = RBCM::NodeList.new @jobs.capability(:node).collect{ |job| 
-        RBCM::Node.new rbcm: self, name: job.params[0]
-      }
+      @nodes = RBCM::NodeList.new 
+      @jobs.capability(:node).each do |job| 
+        node = @nodes.name(job.name) || RBCM::Node.new(
+          rbcm: self, 
+          name: job.params[0]
+        )
+        node.jobs << job
+        @nodes << node
+      end
 
-      # print
+      ## print
+      
       puts "-- projects (#{@projects.count}) --\n#{@projects.collect(&:path)}"
       puts "-- definitions (#{@definitions.count}) --\n#{@definitions.collect(&:to_s)}"
       puts "-- jobs (#{@jobs.count}) --"
       @jobs.childless.each{|job| puts job.trace.collect(&:to_s).join(" > ")}
       puts "-- nodes (#{@nodes.count}) --\n#{@nodes.collect(&:name)}"
       
-      binding.pry
+      #binding.pry
     end
     
     attr_accessor :actions, :definitions, :jobs, :projects
