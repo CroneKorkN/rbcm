@@ -26,6 +26,8 @@ module RBCM
       @project_path = project_path
     end
     
+    attr_writer :projects, :definitions, :jobs
+    
     def actions
       RBCM::ActionList.new(nodes.collect(&:actions).flatten)
     end
@@ -40,16 +42,8 @@ module RBCM
     def jobs
       unless @jobs
         @jobs = RBCM::JobList.new projects.each.jobs.flatten
-        @env = {
-          rbcm: self,
-          instance_variables: {},
-          class_variables: {},
-          jobs: @jobs,
-          checks: [],
-          definitions: definitions
-        }
         while job = @jobs.status(:new).first || @jobs.status(:delayed).first
-          job.run @env
+          job.run env
         end
       end
       @jobs
@@ -66,6 +60,17 @@ module RBCM
       ]
     end
     
-    attr_writer :projects, :definitions, :jobs
+    private
+    
+    def env
+      @env ||= {
+        rbcm: self,
+        instance_variables: {},
+        class_variables: {},
+        jobs: @jobs,
+        checks: [],
+        definitions: definitions
+      }
+    end
   end
 end

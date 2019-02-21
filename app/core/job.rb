@@ -15,7 +15,7 @@ class RBCM::Job
   
   def run env
     raise "already done" if @status == :done
-    puts "#{self.class.name} RUN #{name}"
+    puts "#{'  '*trace.count}#{self.class.name} RUN #{name}"
     @local_env = {
       rbcm:               env[:rbcm],
       instance_variables: env[:instance_variables].dup, # local_env
@@ -52,7 +52,7 @@ class RBCM::Job
     rescue => e
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
-      puts "#{self.class.name} DELAYED #{name} REASON #{e}"
+      puts "#{'  '*trace.count}#{self.class.name} DELAYED #{name} REASON #{e}"
       @status = :delayed
       :delayed_job
     end

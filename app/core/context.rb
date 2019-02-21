@@ -15,7 +15,7 @@ class RBCM::Context
   end
   
   def __run
-    puts "#{self.class.name} RUN #{@job.name} PARAMS #{@job.params.sendable}"
+    puts "#{'  '*@job.trace.count}#{self.class.name} RUN #{@job.name} PARAMS #{@job.params.sendable}"
     if @definition.type == :file
       instance_eval File.read(@definition.name)
     else
@@ -31,7 +31,7 @@ class RBCM::Context
   
   # catch
   def method_missing name, *ordered, **named, &block
-    puts "#{self.class.name} JOB #{name} #{ordered} #{named}"
+    puts "#{'  '*@job.trace.count}#{self.class.name} JOB #{name} #{ordered} #{named}"
     params = RBCM::Params.new(ordered, named, block)
     if name.to_s.end_with? '?'
       return RBCM::JobSearch.new @env[:jobs].capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
