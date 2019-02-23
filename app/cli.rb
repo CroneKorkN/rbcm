@@ -3,6 +3,7 @@ class RBCM::CLI
     @rbcm = rbcm = RBCM::Core.new argv[0] || `pwd`.chomp
     
     with @rbcm do
+      actions
       puts "-- projects (#{projects.count}) --\n#{projects.collect(&:path)}"
       puts "-- definitions (#{definitions.count}) --\n#{definitions.collect(&:to_s)}"
       puts "-- jobs (#{jobs.count}) --"
