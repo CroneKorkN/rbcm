@@ -21,7 +21,7 @@ class RBCM::CLI
         end
         if action.checks.any? && action.checks.all?{|check| check.result == 0}
           puts "  UNECCESSARY"
-          #next
+          next
         end
         puts "  << " + action.run!.to_s.split("\n").join("\n  << ")
       end

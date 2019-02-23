@@ -31,13 +31,16 @@ class RBCM::Job
       @status = :done
       #puts "#{self.class.name} RESULT #{result}"
       return result
-    rescue => e
+    rescue NameError
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
       puts "#{'  '*trace.count}#{self.class.name} DELAYED #{name} REASON #{e}"
       @status = :delayed
       return RBCM::Unusable.new
     end
+  end
+
+  def delay
   end
   
   def get_definitions
@@ -51,9 +54,6 @@ class RBCM::Job
         content: sandbox.instance_method(name),
       )
     end
-  end
-  
-  def delay
   end
   
   def rollback

@@ -4,7 +4,7 @@ class RBCM::JobList < Array
   end
   
   def capability query
-    self.class.new find_all{|job| job.name == query.to_sym}
+    self.class.new find_all{|job| job.name.to_sym == query.to_sym}
   end
   
   def with query

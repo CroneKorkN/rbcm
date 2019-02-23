@@ -30,7 +30,7 @@ class RBCM::Context
     if name.to_s.end_with? '?'
       # search
       return RBCM::JobSearch.new \
-        @job.jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
+        @job.rbcm.jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
     else
       # run
       # check if called method has definition available
