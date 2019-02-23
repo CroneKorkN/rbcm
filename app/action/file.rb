@@ -10,6 +10,9 @@ class RBCM::Action::File < RBCM::Action
   
   def run!
     @applied = true
+    p @node.name
+    p @params[0]
+    p content
     @result = Net::SCP::upload!(@node.name, nil, StringIO.new(content), @params[0])
     def @result.exitstatus
       self.class == TrueClass ? 0 : 1

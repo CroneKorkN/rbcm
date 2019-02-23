@@ -20,8 +20,6 @@ module RBCM
   end
   
   class Core
-    @@app_path = File.expand_path(File.dirname(__FILE__))
-
     def initialize project_path
       @project_path = project_path
     end
@@ -33,12 +31,12 @@ module RBCM
     end
     
     def nodes
-      parse_jobs unless @nodes
+      run_jobs if jobs.pending
       @nodes ||= RBCM::NodeList.new \
         jobs.node_names.collect{|name| RBCM::Node.new rbcm: self, name: name}
     end
     
-    def parse_jobs
+    def run_jobs
       while job = RBCM::JobList.new(projects.collect(&:stack).flatten).pending.first
         job.run 
       end
@@ -54,7 +52,7 @@ module RBCM
     
     def projects
       @projects ||= [ 
-        RBCM::Project.new("#{@@app_path}/capabilities", rbcm: self),
+        RBCM::Project.new("#{File.expand_path(File.dirname(__FILE__))}/capabilities", rbcm: self),
         RBCM::Project.new(@project_path, rbcm: self),
       ]
     end

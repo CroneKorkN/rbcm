@@ -14,6 +14,7 @@ class RBCM::Job
       instance_variables: env[:instance_variables].dup, # local env
       class_variables:    env[:class_variables],
     }
+    get_definitions if type == :file
   end
 
   attr_accessor :jobs, :env
@@ -23,32 +24,32 @@ class RBCM::Job
     #p @rbcm.jobs
     raise "already done" if @status == :done
     puts "#{'  '*trace.count}#{self.class.name} RUN #{name}"
-    # load capabilities
-    if type == :file and @status == :new
-      sandbox = RBCM::Project::Sandbox.dup
-      sandbox.module_eval(File.read(name))
-      sandbox.instance_methods.each do |name|
-        puts "#{self.class.name} CAP #{name}"
-        @definitions.append RBCM::Definition.new(
-          type:    :capability,
-          name:    name,
-          content: sandbox.instance_method(name),
-        )
-      end
-    end
     # perform job
     begin
       @context = RBCM::Context.new job: self
       result = @context.__run
       @status = :done
       #puts "#{self.class.name} RESULT #{result}"
-      result
+      return result
     rescue => e
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
       puts "#{'  '*trace.count}#{self.class.name} DELAYED #{name} REASON #{e}"
       @status = :delayed
-      :delayed_job
+      return RBCM::Unusable.new
+    end
+  end
+  
+  def get_definitions
+    sandbox = RBCM::Project::Sandbox.dup
+    sandbox.module_eval(File.read(name))
+    sandbox.instance_methods.each do |name|
+      puts "#{self.class.name} CAP #{name}"
+      @definitions.append RBCM::Definition.new(
+        type:    :capability,
+        name:    name,
+        content: sandbox.instance_method(name),
+      )
     end
   end
   
@@ -56,14 +57,15 @@ class RBCM::Job
   end
   
   def rollback
+    @jobs = RBCM::JobList.new
   end
   
   def stack
-    [self, *anchestors]
+    RBCM::JobList.new [self, *anchestors]
   end
   
   def anchestors
-    [ jobs,
+    RBCM::JobList.new [ jobs,
       jobs.collect(&:anchestors),
     ].flatten
   end
@@ -108,6 +110,6 @@ class RBCM::Job
   end
   
   def to_str
-    type == :file ? name.split("/").last : name
+    type == :file ? name.split("/").last : name.to_s
   end
 end

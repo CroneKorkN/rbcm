@@ -1,5 +1,5 @@
 class RBCM::Node
-  attr_reader   :rbcm, :cache, :name
+  attr_reader   :rbcm, :cache, :name, :remote
   attr_accessor :actions
 
   def initialize rbcm:, name:
@@ -24,7 +24,11 @@ class RBCM::Node
   def actions
     @actions ||= \
     [*jobs.capability(:file), *jobs.capability(:run)].collect do |job|
-      RBCM::Action::File.new node: self, job: job
+      if job.name == :file
+        RBCM::Action::File.new node: self, job: job
+      elsif job.name == :run
+        RBCM::Action::Command.new node: self, job: job
+      end
     end  
   end
   

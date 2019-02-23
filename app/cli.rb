@@ -11,9 +11,12 @@ class RBCM::CLI
       puts "-- nodes (#{nodes.count}) --\n#{nodes.collect(&:name)}"
       puts "-- actions (#{actions.count}) --"
       puts actions.collect{|action| action.job.trace.collect(&:to_s).join(" > ")}.join("\n")
+      puts "-- apply (#{actions.count}) --"
+      actions.resolve.each do |action|
+        puts action.job.trace.join(" > ")
+        puts action.run!
+      end
+      #binding.pry
     end
-    
-    #binding.pry
-    
   end
 end
