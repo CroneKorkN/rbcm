@@ -73,6 +73,10 @@ class RBCM::Job
   def trace
     RBCM::JobList.new [*parents, self]
   end
+  
+  def scope capability
+    RBCM::JobList.new trace.capability(capability).first.stack
+  end
 
   def parents
     RBCM::JobList.new [ 

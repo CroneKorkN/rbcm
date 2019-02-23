@@ -7,6 +7,10 @@ class RBCM::JobList < Array
     self.class.new find_all{|job| job.name.to_sym == query.to_sym}
   end
   
+  def scope query
+    self.class.new capability(query).last.stack
+  end
+  
   def with query
     return self unless query
     self.class.new find_all{|job| job.params[query]}
