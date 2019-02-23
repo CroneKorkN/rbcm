@@ -16,9 +16,7 @@ class RBCM::Node
   
   def jobs
     RBCM::JobList.new \
-      @rbcm.jobs 
-      #@rbcm.jobs.capability(:node).collect{|job| job.stack}.flatten # TODO
-    # TODO: filter nestet nodes
+      @rbcm.jobs.capability(:node).select{|job| job.params.first == @name}.collect{|job| job.stack}.flatten # TODO
   end
   
   def actions
