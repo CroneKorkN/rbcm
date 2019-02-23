@@ -13,8 +13,17 @@ class RBCM::CLI
       puts actions.collect{|action| action.job.trace.collect(&:to_s).join(" > ")}.join("\n")
       puts "-- apply (#{actions.count}) --"
       actions.resolve.each do |action|
-        puts action.job.trace.join(" > ")
-        puts action.run!
+        puts "---------------------------------------------------------"
+        puts "#{action.job.trace.join(" > ")} || #{action.params.first}"
+        action.checks.each do |check|
+          print "  CHECKING #{check.command}: "
+          puts check.result
+        end
+        if action.checks.any? && action.checks.all?{|check| check.result == 0}
+          puts "  UNECCESSARY"
+          #next
+        end
+        puts "  << " + action.run!.to_s.split("\n").join("\n  << ")
       end
       #binding.pry
     end

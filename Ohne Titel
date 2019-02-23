@@ -1,0 +1,24 @@
+require 'net/ssh'
+require 'pty'
+
+Net::SSH.start("test.sublimity.de") do |ssh|
+  channel = ssh.open_channel do |ch| 
+    ch.exec "apt-get update" do |ch, success|
+      raise "could not execute command" unless success
+
+      # "on_data" is called when the process writes something to stdout
+      ch.on_data do |c, data|
+        p data
+      end
+
+      # "on_extended_data" is called when the process writes something to stderr
+      ch.on_extended_data do |c, type, data|
+        p data
+      end
+
+      ch.on_close { puts "done!" }
+    end
+      channel.wait
+    ssh.loop
+  end
+end
