@@ -34,7 +34,7 @@ class RBCM::Job
     rescue NameError
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
-      puts "#{'  '*trace.count}#{self.class.name} DELAYED #{name} REASON #{e}"
+      puts "#{'  '*trace.count}#{self.class.name} DELAYED #{name} REASON #{name} missing"
       @status = :delayed
       return RBCM::Unusable.new
     end
