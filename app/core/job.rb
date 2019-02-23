@@ -20,6 +20,7 @@ class RBCM::Job
   attr_reader :rbcm, :type, :name, :params, :status, :definitions
 
   def run
+    #p @rbcm.jobs
     raise "already done" if @status == :done
     puts "#{'  '*trace.count}#{self.class.name} RUN #{name}"
     # load capabilities
@@ -62,15 +63,13 @@ class RBCM::Job
   end
   
   def anchestors
-    jobs.collect(&:anchestors).flatten
+    [ jobs,
+      jobs.collect(&:anchestors),
+    ].flatten
   end
 
   def trace
     RBCM::JobList.new [*parents, self]
-  end
-
-  def parent
-    @rbcm.jobs.parent(self)
   end
 
   def parents
@@ -78,6 +77,10 @@ class RBCM::Job
       *@parent&.parents,
       @parent
     ].compact
+  end
+  
+  def parent
+    @rbcm.jobs.parent(self)
   end
   
   def checks
