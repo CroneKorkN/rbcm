@@ -1,25 +1,19 @@
 class RBCM::Context
-  def initialize definition:, job:, env:
-    @definition = definition
-    @env = env
+  def initialize job:
     @job = job
-    @env[:instance_variables].each do |name, value|
-      instance_variable_set :"@#{name}", value
-    end
-    @env[:class_variables].each do |name, value|
-      self.class.class_variable_set :"@@#{name}", value
-    end
+    set_env
+    definition = @job.rbcm.definitions.type(@job.type).name(@job.name)
     if definition.type != :file
-      define_singleton_method :abstract, @definition.content
+      define_singleton_method :__abstract, definition.content
     end
   end
   
   def __run
     puts "#{'  '*@job.trace.count}#{self.class.name} RUN #{@job.name} PARAMS #{@job.params.sendable}"
-    if @definition.type == :file
-      instance_eval File.read(@definition.name)
+    if @job.type == :file
+      instance_eval File.read(@job.name)
     else
-      send :abstract, *@job.params.sendable do
+      send :__abstract, *@job.params.sendable do
         instance_eval &@job.params.block
       end
     end
@@ -34,38 +28,46 @@ class RBCM::Context
     puts "#{'  '*@job.trace.count}#{self.class.name} JOB #{name} #{ordered} #{named}"
     params = RBCM::Params.new(ordered, named, block)
     if name.to_s.end_with? '?'
-      return RBCM::JobSearch.new @env[:jobs].capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
+      # search
+      return RBCM::JobSearch.new \
+        @job.jobs.capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
     else
+      # run
       # check if called method has definition available
-      raise "capability not found: #{name}" unless @env[:rbcm].definitions.name(name)
+      raise "capability not found: #{name}" unless @job.rbcm.definitions.name(name)
       # collect env
-      instance_variables.select{|name| not [:"@env", :"@job", :"@definition"].include? name}.each do |name|
-        @env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
-      end
-      self.class.class_variables.each do |name|
-        @env[:class_variables][name[2..-1].to_sym] = self.class.class_variable_get :"@@#{name}"
-      end
+      get_env
       # create job
       job = RBCM::Job.new(
+        rbcm: @job.rbcm,
         name: name, 
         params: params,
-        parent: @job
+        env: @job.env
       )
       # save job
-      @env[:jobs].append job
-      @env[:children].append job
+      @job.jobs.append job
       # run job
-      return job.run @env
+      return job.run
     end
   end
   
-  # def singleton_method_added name
-  #   puts "#{self} CAP #{name}"
-  #   @env[:definitions].append RBCM::Definition.new(
-  #     type:    :capability,
-  #     name:    name,
-  #     content: method(name)
-  #   )
-  #   # TODO undef method
-  # end
+  private
+  
+  def get_env
+    @job.env[:instance_variables].each do |name, value|
+      instance_variable_set :"@#{name}", value
+    end
+    @job.env[:class_variables].each do |name, value|
+      self.class.class_variable_set :"@@#{name}", value
+    end
+  end
+  
+  def set_env
+    instance_variables.select{|name| not :"@job" == name}.each do |name|
+      @job.env[:instance_variables][name[1..-1].to_sym] = instance_variable_get name
+    end
+    self.class.class_variables.each do |name|
+      @job.env[:class_variables][name[2..-1].to_sym] = self.class.class_variable_get :"@@#{name}"
+    end
+  end
 end

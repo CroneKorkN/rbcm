@@ -2,37 +2,33 @@
 # used to read configuration via "?"-suffix methods
 
 class RBCM::Job
-  attr_reader   :type, :name, :params, :status, :parent, :local_env
-
-  def initialize type: :capability, name:, params: RBCM::Params.new, parent: nil
+  def initialize rbcm:, type: :capability, name:, params: RBCM::Params.new, env:
+    @status = :new
+    @rbcm = rbcm
     @type = type
     @name = name
     @params = params
-    @parent = parent
-    @status = :new
-    @local_env
+    @jobs = RBCM::JobList.new
+    @definitions = RBCM::DefinitionList.new
+    @env = {
+      instance_variables: env[:instance_variables].dup, # local env
+      class_variables:    env[:class_variables],
+    }
   end
-  
-  def run env
+
+  attr_accessor :jobs, :env
+  attr_reader :rbcm, :type, :name, :params, :status, :definitions
+
+  def run
     raise "already done" if @status == :done
     puts "#{'  '*trace.count}#{self.class.name} RUN #{name}"
-    @local_env = {
-      rbcm:               env[:rbcm],
-      instance_variables: env[:instance_variables].dup, # local_env
-      class_variables:    env[:class_variables],
-      jobs:               env[:jobs],
-      checks:             env[:checks].dup, # local_env
-      definitions:        RBCM::DefinitionList.new,
-      actions:            env[:actions],
-      children:           RBCM::JobList.new,
-    }
     # load capabilities
     if type == :file and @status == :new
       sandbox = RBCM::Project::Sandbox.dup
       sandbox.module_eval(File.read(name))
       sandbox.instance_methods.each do |name|
         puts "#{self.class.name} CAP #{name}"
-        @local_env[:definitions].append RBCM::Definition.new(
+        @definitions.append RBCM::Definition.new(
           type:    :capability,
           name:    name,
           content: sandbox.instance_method(name),
@@ -41,11 +37,7 @@ class RBCM::Job
     end
     # perform job
     begin
-      @context = RBCM::Context.new(
-        definition: env[:rbcm].definitions.type(@type).name(@name),
-        job:        self,
-        env:        @local_env,
-      )
+      @context = RBCM::Context.new job: self
       result = @context.__run
       @status = :done
       #puts "#{self.class.name} RESULT #{result}"
@@ -65,30 +57,22 @@ class RBCM::Job
   def rollback
   end
   
-  def definitions
-    [*@local_env&.fetch(:definitions)]
-  end
-  
-  def all_definitions
-    [ definitions,
-      children.collect(&:all_definitions)
-    ]
-  end
-  
   def stack
-    [ children,
-      children.collect(&:children)
-    ].flatten
+    [self, *anchestors]
   end
   
-  def children
-    [*@local_env&.fetch(:children)]
+  def anchestors
+    jobs.collect(&:anchestors).flatten
   end
-  
+
   def trace
     RBCM::JobList.new [*parents, self]
   end
-    
+
+  def parent
+    @rbcm.jobs.parent(self)
+  end
+
   def parents
     RBCM::JobList.new [ 
       *@parent&.parents,

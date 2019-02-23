@@ -29,24 +29,19 @@ module RBCM
     attr_writer :projects, :definitions, :jobs
     
     def actions
-      RBCM::ActionList.new(nodes.collect(&:actions).flatten)
+      RBCM::ActionList.new nodes.collect(&:actions).flatten
     end
     
     def nodes
       @nodes ||= RBCM::NodeList.new \
-        jobs.capability(:node).collect{|j| j.params.first}.uniq.collect{ |name| 
-          RBCM::Node.new rbcm: self, name: name
-        }
+        jobs.node_names.collect{|name| RBCM::Node.new rbcm: self, name: name}
     end
     
     def jobs
-      unless @jobs
-        @jobs = RBCM::JobList.new projects.each.jobs.flatten
-        while job = @jobs.status(:new).first || @jobs.status(:delayed).first
-          job.run env
-        end
+      while job = RBCM::JobList.new(projects.collect(&:stack).flatten).pending.first
+        job.run 
       end
-      @jobs
+      RBCM::JobList.new projects.collect(&:stack).flatten
     end
     
     def definitions
@@ -55,21 +50,9 @@ module RBCM
     
     def projects
       @projects ||= [ 
-        RBCM::Project.new("#{@@app_path}/capabilities"),
-        RBCM::Project.new(@project_path),
+        RBCM::Project.new("#{@@app_path}/capabilities", rbcm: self),
+        RBCM::Project.new(@project_path, rbcm: self),
       ]
-    end
-    
-    private
-    
-    def env
-      @env ||= {
-        rbcm: self,
-        instance_variables: {},
-        class_variables: {},
-        jobs: @jobs,
-        checks: [],
-      }
     end
   end
 end

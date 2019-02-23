@@ -1,28 +1,33 @@
 class RBCM::Project
-  def initialize path, template_engines: [:mustache, :erb, :encrypted, :template], addon: false
+  def initialize path, rbcm:, template_engines: [:mustache, :erb, :encrypted, :template], addon: false
     @path = path
+    @rbcm = rbcm
     @templates = RBCM::TemplateList.new
     @other = []
     @directories = []
     @template_engines = template_engines
     @jobs = RBCM::JobList.new
     @definitions = RBCM::DefinitionList.new
-    load_files
+    load_files path
   end
 
   attr_reader :path, :templates, :directories, :templates, :jobs
   
+  def stack
+    @jobs.collect(&:stack).flatten
+  end
+  
   def definitions
     RBCM::DefinitionList.new [
-      @definitions + @jobs.collect(&:all_definitions)
+      @definitions + stack.collect(&:definitions).flatten
     ].flatten 
   end
   
   private
   
-  def load_files
-    if File.directory? @path
-      Dir["#{@path}/**/*"].each do |file_path|
+  def load_files path
+    if File.directory? path
+      Dir["#{path}/**/*"].each do |file_path|
         if file_path.end_with? ".rb"
           load_file file_path
         elsif @template_engines.include? file_path.split(".").last.to_sym
@@ -30,14 +35,14 @@ class RBCM::Project
             project: self,
             path:    file_path
           )
-        elsif File.directory? @path
-          @directories << file_path.sub(@path, "")
+        elsif File.directory? path
+          @directories << file_path.sub(path, "")
         else
-          @other << file_path.sub(@path, "")
+          @other << file_path.sub(path, "")
         end
       end
     else
-      load_file @path
+      load_file path
     end
     raise "ERROR: empty project" unless @definitions.any?
   end
@@ -49,8 +54,13 @@ class RBCM::Project
       content: ->{load path}
     )
     @jobs.append RBCM::Job.new(
+      rbcm: @rbcm,
       type: :file, 
-      name: path
+      name: path,
+      env: {
+        instance_variables: {},
+        class_variables: {},
+      }
     )
   end
 end

@@ -1,10 +1,10 @@
 class RBCM::Addon < RBCM::Project
-  def initialize type:, name:
-    @type, @name = type, name
+  def initialize type:, name:, rbcm:
+    @type, @name, @rbcm = type, name, rbcm
     if [:file, :dir].include? type
       super name
     elsif type == :github
-      super load_from_github name
+      super load_from_github(name), rbcm: rbcm
     end
   end
 

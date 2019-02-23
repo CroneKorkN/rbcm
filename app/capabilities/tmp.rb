@@ -14,9 +14,11 @@ def addon branch: "master", **named
     keys = named.keys - [:github, :dir, :file]
   ).any?
   named.each do |type, name|
-    addon = RBCM::Addon.new type: type, name: name
-    @env[:rbcm].projects.append  addon
-    @env[:rbcm].definitions.push *addon.definitions.flatten
-    @env[:rbcm].jobs.push        *addon.jobs.flatten
+    addon = RBCM::Addon.new(
+      type: type, 
+      name: name, 
+      rbcm: @job.rbcm,
+    )
+    @job.rbcm.projects.append  addon
   end
 end

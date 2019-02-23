@@ -12,7 +12,7 @@ class RBCM::CLI
       puts actions.collect{|action| action.job.trace.collect(&:to_s).join(" > ")}.join("\n")
     end
     
-    binding.pry
+    #binding.pry
     
   end
 end
