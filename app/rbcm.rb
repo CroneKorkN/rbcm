@@ -33,14 +33,18 @@ module RBCM
     end
     
     def nodes
+      parse_jobs unless @nodes
       @nodes ||= RBCM::NodeList.new \
         jobs.node_names.collect{|name| RBCM::Node.new rbcm: self, name: name}
     end
     
-    def jobs
+    def parse_jobs
       while job = RBCM::JobList.new(projects.collect(&:stack).flatten).pending.first
         job.run 
       end
+    end
+    
+    def jobs
       RBCM::JobList.new projects.collect(&:stack).flatten
     end
     

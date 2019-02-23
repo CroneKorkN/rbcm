@@ -74,9 +74,9 @@ class RBCM::Job
 
   def parents
     RBCM::JobList.new [ 
-      *@parent&.parents,
-      @parent
-    ].compact
+      *parent&.parents,
+      parent
+    ].flatten.compact
   end
   
   def parent

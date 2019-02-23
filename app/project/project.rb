@@ -19,7 +19,8 @@ class RBCM::Project
   
   def definitions
     RBCM::DefinitionList.new [
-      @definitions + stack.collect(&:definitions).flatten
+      @definitions,
+      stack.collect(&:definitions)
     ].flatten 
   end
   
