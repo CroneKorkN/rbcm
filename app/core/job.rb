@@ -19,6 +19,17 @@ class RBCM::Job
 
   attr_accessor :jobs, :env
   attr_reader :rbcm, :type, :name, :params, :status, :definitions
+  
+  def definition
+    @rbcm.definitions.type(@type).name(@name)
+  end
+  
+  def path
+    # get the job which yielded this jobs definition and find the nearest file job
+    @rbcm.jobs.find{|job| 
+      job.definitions.include? definition
+    }.trace.type(:file).first.name
+  end
 
   def run
     #p @rbcm.jobs
@@ -31,10 +42,10 @@ class RBCM::Job
       @status = :done
       #puts "#{self.class.name} RESULT #{result}"
       return result
-    rescue NameError
+    rescue NameError => e
       # if a definition contains a search, delay definition (rollback)
       # delayed jobs cant have return values
-      puts "#{'  '*trace.count}#{self.class.name} DELAYED #{name} REASON #{name} missing"
+      puts "#{'  '*trace.count}#{self.class.name} DELAYED #{name} REASON #{e} missing ---------------------------------------------------------------------"
       @status = :delayed
       return RBCM::Unusable.new
     end

@@ -21,13 +21,17 @@ class RBCM::Node
   
   def actions
     @actions ||= \
-    [*jobs.capability(:file), *jobs.capability(:run)].collect do |job|
+    jobs.collect do |job|
       if job.name == :file
         RBCM::Action::File.new node: self, job: job
+      elsif job.name == :dir
+        p "==================================="
+        p job.parent.path 
+        nil
       elsif job.name == :run
         RBCM::Action::Command.new node: self, job: job
       end
-    end  
+    end.flatten.compact
   end
   
   def to_s

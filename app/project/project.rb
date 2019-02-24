@@ -52,7 +52,7 @@ class RBCM::Project
     @definitions.append RBCM::Definition.new(
       type:    :file,
       name:    path,
-      content: ->{load path}
+      content: ->{load path},
     )
     @jobs.append RBCM::Job.new(
       rbcm: @rbcm,

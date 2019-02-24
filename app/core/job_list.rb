@@ -3,6 +3,10 @@ class RBCM::JobList < Array
     self.class.new [*status(:new), *status(:delayed)]
   end
   
+  def type query
+    self.class.new find_all{|job| job.type.to_sym == query.to_sym}
+  end
+  
   def capability query
     self.class.new find_all{|job| job.name.to_sym == query.to_sym}
   end

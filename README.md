@@ -310,5 +310,6 @@ export PATH="/usr/local/Cellar/ruby/2.6.1/bin:$PATH"
 - https://shopify.github.io/liquid/basics/introduction/
 - def singleton_method_added(id)
 - Entweder keine Instanzvariablen oder keine verschachtelten Definitionen
+- name comby? COnfig Managament in ruBY
 
 `rm ./rbcm-0.0.0.gem; gem build ./rbcm.gemspec; gem install ./rbcm-0.0.0.gem; rbcm ../config/`

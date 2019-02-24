@@ -5,6 +5,8 @@ class RBCM::CLI
     with @rbcm do
       actions
       puts "-- projects (#{projects.count}) --\n#{projects.collect(&:path)}"
+      puts "-- templates (#{templates.count}) --"
+      puts templates.collect(&:clean_filename).join(", ")
       puts "-- definitions (#{definitions.count}) --\n#{definitions.collect(&:to_s)}"
       puts "-- jobs (#{jobs.count}) --"
       puts jobs.childless.collect{|job| job.trace.collect(&:to_s).join(" > ")}.join("\n")

@@ -41,13 +41,17 @@ module RBCM
         job.run 
       end
     end
-    
+            
     def jobs
       RBCM::JobList.new projects.collect(&:stack).flatten
     end
     
     def definitions
       RBCM::DefinitionList.new projects.collect(&:definitions).flatten
+    end
+
+    def templates
+      RBCM::TemplateList.new projects.collect(&:templates).flatten
     end
     
     def projects

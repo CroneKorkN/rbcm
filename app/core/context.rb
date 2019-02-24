@@ -2,9 +2,8 @@ class RBCM::Context
   def initialize job:
     @job = job
     set_env
-    definition = @job.rbcm.definitions.type(@job.type).name(@job.name)
-    if definition.type != :file
-      define_singleton_method :__abstract, definition.content
+    if @job.definition.type != :file
+      define_singleton_method :__abstract, @job.definition.content
     end
   end
   
@@ -13,7 +12,7 @@ class RBCM::Context
     if @job.type == :file
       instance_eval File.read(@job.name)
     else
-      send :__abstract, *@job.params.sendable do
+      send :__abstract, *@job.params.delete(:triggers, :triggered_by, :tag).sendable do
         instance_eval &@job.params.block
       end
     end
@@ -33,8 +32,8 @@ class RBCM::Context
         @job.scope(:node).capability(name.to_s[0..-2].to_sym).with(ordered.first).collect(&:params)
     else
       # run
-      # check if called method has definition available
-      raise "capability not found: #{name}" unless @job.rbcm.definitions.name(name)
+      # break unless called method has definition available
+      super name unless @job.rbcm.definitions.name(name)
       # collect env
       get_env
       # create job
