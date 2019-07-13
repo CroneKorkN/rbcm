@@ -28,7 +28,7 @@ class RBCM::Job
     # get the job which yielded this jobs definition and find the nearest file job
     @rbcm.jobs.find{|job| 
       job.definitions.include? definition
-    }.trace.type(:file).first.name
+    }.trace.type(:file).last.name
   end
 
   def run

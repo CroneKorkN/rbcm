@@ -6,6 +6,7 @@ class RBCM::Action::File < RBCM::Action
   
   def run!
     @applied = true
+    @node.remote.execute("mkdir -p #{params.first.split("/")[0..-2].join("/")}") # TODO
     @result = Net::SCP::upload!(@node.name, nil, StringIO.new(content), @params[0])
     def @result.exitstatus
       self.class == TrueClass ? 0 : 1
@@ -20,7 +21,7 @@ class RBCM::Action::File < RBCM::Action
       old = @node.files[path].content
       (old.include? @params[:includes]) ? old : [old, @params[:includes]].join("\n")
     elsif @params[:template]
-      project_file.project.templates.for(self).render(
+      @node.rbcm.templates.for(self).render(
         context: @params[:context]
       )
     elsif @params[:provide] or @params[:provide_once]

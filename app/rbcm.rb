@@ -56,8 +56,8 @@ module RBCM
     
     def projects
       @projects ||= [ 
-        RBCM::Project.new("#{File.expand_path(File.dirname(__FILE__))}/capabilities", rbcm: self),
         RBCM::Project.new(@project_path, rbcm: self),
+        RBCM::Project.new("#{File.expand_path(File.dirname(__FILE__))}/capabilities", rbcm: self),
       ]
     end
   end

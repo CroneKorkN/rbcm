@@ -3,7 +3,8 @@ class RBCM::Context
     @job = job
     set_env
     if @job.definition.type != :file
-      define_singleton_method :__abstract, @job.definition.content
+      define_singleton_method :__abstract, 
+        @job.definition.content
     end
   end
   
@@ -12,13 +13,15 @@ class RBCM::Context
     if @job.type == :file
       instance_eval File.read(@job.name)
     else
-      send :__abstract, *@job.params.delete(:triggers, :triggered_by, :tag).sendable do
+      send :__abstract, *@job.params.delete(
+        :triggers, :triggered_by, :tag
+      ).sendable do
         instance_eval &@job.params.block
       end
     end
   end
   
-  # def definition ...
+  # def definition *params
   #   Proc
   # end
   

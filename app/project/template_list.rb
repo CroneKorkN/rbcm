@@ -1,11 +1,11 @@
 class RBCM::TemplateList < Array
-  def for file_action
-    template_name = file_action.job.params[:template]
+  def for action
+    template_name = action.job.params[:template]
     if template_name.start_with? "/" # `/template.txt`
       find{|template| template.clean_path == template_name}
     else # `template.txt`
       find{ |template|
-        template.path.start_with? File.dirname(file_action.project_file.path) and
+        template.path.start_with? File.dirname(action.job.parent.path) and
         template.clean_filename == template_name
       }
     end

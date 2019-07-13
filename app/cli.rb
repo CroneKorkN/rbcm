@@ -21,6 +21,7 @@ class RBCM::CLI
           print "  CHECKING #{check.command}: "
           puts check.result
         end
+        puts action.content if action.class == RBCM::Action::File
         if action.checks.any? && action.checks.all?{|check| check.result == 0}
           puts "  UNECCESSARY"
           next
